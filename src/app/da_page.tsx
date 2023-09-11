@@ -1,9 +1,13 @@
 import Image from 'next/image'
 import styles from './page.module.css'
+import { useSession } from 'next-auth/react';
 
 export default function Home() {
+  const { data, status } = useSession();
+
   return (
     <main className={styles.main}>
+
       <div className={styles.description}>
         <p>
           Get started by editing&nbsp;
