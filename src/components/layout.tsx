@@ -1,8 +1,10 @@
 import Session from "./session";
+import '../main.css'
+import NavBar from "./navbar";
 
 export default function Layout(props: any) {
     return <div>
-        <nav>NAVIGATION</nav>
+        <NavBar />
         <div>
             <Session />
         </div>
