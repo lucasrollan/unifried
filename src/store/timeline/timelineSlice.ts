@@ -2,10 +2,14 @@ import { createSlice } from '@reduxjs/toolkit'
 import type { PayloadAction } from '@reduxjs/toolkit'
 
 export interface TimelineState {
-    dayWidthPx: number
+    startDate: Date,
+    endDate: Date, //not inclusive
+    dayWidthPx: number,
 }
 
 const initialState: TimelineState = {
+    startDate: new Date('2023-10-01'),
+    endDate: new Date('2024-02-01'),
     dayWidthPx: 20,
 }
 
