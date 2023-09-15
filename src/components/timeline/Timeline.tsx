@@ -2,7 +2,7 @@ import React from "react";
 import style from './Timeline.module.css'
 import { useSelector } from "react-redux";
 import { RootState } from "@/store";
-import { selectMonthPeriods } from "@/store/timeline/selectors";
+import { selectMonthPeriods, selectWeekPeriods } from "@/store/timeline/selectors";
 
 function join(...classNames: string[]): string {
     return classNames.join(' ')
@@ -19,7 +19,8 @@ const events = [
 export default function Timeline() {
     const dayWidthPx = useSelector((state: RootState) => state.timeline.dayWidthPx)
     const months = useSelector(selectMonthPeriods)
-    console.log(months)
+    const weeks = useSelector(selectWeekPeriods)
+    console.log(weeks)
 
     function scale(size: number): string {
         return `${size * dayWidthPx}px`
@@ -46,18 +47,14 @@ export default function Timeline() {
                         }
                     </div>
                     <div className={style.periodLane}>
-                        <div className={style.period} style={{
-                            width: scale(7),
-                            left: scale(1),
-                        }}><span>Week 40</span></div>
-                        <div className={style.period} style={{
-                            width: scale(7),
-                            left: scale(8),
-                        }}><span>Week 41</span></div>
-                        <div className={style.period} style={{
-                            width: scale(7),
-                            left: scale(15),
-                        }}><span>Week 42</span></div>
+                        {
+                            weeks.map(week => (
+                                <div className={style.period} key={week.start.format()} style={{
+                                    width: scale(week.timeWindow.daysLength),
+                                    left: scale(week.timeWindow.daysSinceStart),
+                                }}><span>{week.label}</span></div>
+                            ))
+                        }
                     </div>
                 </div>
                 <div className={style.timelineRow}>

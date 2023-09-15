@@ -46,9 +46,46 @@ export const selectMonthPeriodsFromDates = (startDate: Date, endDate: Date) => {
     return periods
 }
 
+
+export const selectWeekPeriodsFromDates = (startDate: Date, endDate: Date) => {
+    const periods: Period[] = []
+
+    const startMoment = moment(startDate).startOf('day')
+    const endMoment = moment(endDate).startOf('day')
+
+    let currentStart = moment(startMoment)
+
+    while (currentStart.isBefore(endMoment, 'day')) {
+        const currentEnd = moment(currentStart).add(1, 'week').startOf('isoWeek')
+
+        const periodStart = moment.max(startMoment, currentStart)
+        const periodEnd = moment.min(endMoment, currentEnd)
+
+        periods.push({
+            label: 'Week ' + currentStart.format('WW'),
+            start: periodStart,
+            end: periodEnd,
+            timeWindow: {
+                daysSinceStart: periodStart.diff(startMoment, 'day'),
+                daysLength: periodEnd.diff(periodStart, 'day'),
+            }
+        })
+
+        // move to the next period
+        currentStart = currentEnd
+    }
+
+    return periods
+}
+
 export const selectMonthPeriods = createSelector(
     selectTimelineStart,
     selectTimelineEnd,
     selectMonthPeriodsFromDates,
 )
 
+export const selectWeekPeriods = createSelector(
+    selectTimelineStart,
+    selectTimelineEnd,
+    selectWeekPeriodsFromDates,
+)
