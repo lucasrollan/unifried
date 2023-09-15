@@ -2,6 +2,7 @@ import React from "react";
 import style from './Timeline.module.css'
 import { useSelector } from "react-redux";
 import { RootState } from "@/store";
+import { selectMonthPeriods } from "@/store/timeline/selectors";
 
 function join(...classNames: string[]): string {
     return classNames.join(' ')
@@ -17,6 +18,9 @@ const events = [
 
 export default function Timeline() {
     const dayWidthPx = useSelector((state: RootState) => state.timeline.dayWidthPx)
+    const months = useSelector(selectMonthPeriods)
+    console.log(months)
+
     function scale(size: number): string {
         return `${size * dayWidthPx}px`
     }
@@ -32,18 +36,14 @@ export default function Timeline() {
                 </div>
                 <div className={style.periods}>
                     <div className={style.periodLane}>
-                        <div className={style.period} style={{
-                            width: scale(31),
-                            left: scale(0),
-                        }}><span>October</span></div>
-                        <div className={style.period} style={{
-                            width: scale(30),
-                            left: scale(31),
-                        }}><span>November</span></div>
-                        <div className={style.period} style={{
-                            width: scale(31),
-                            left: scale(61),
-                        }}><span>December</span></div>
+                        {
+                            months.map(month => (
+                                <div className={style.period} key={month.start.format()} style={{
+                                    width: scale(month.timeWindow.daysLength),
+                                    left: scale(month.timeWindow.daysSinceStart),
+                                }}><span>{month.label}</span></div>
+                            ))
+                        }
                     </div>
                     <div className={style.periodLane}>
                         <div className={style.period} style={{
