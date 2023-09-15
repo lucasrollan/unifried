@@ -27,6 +27,12 @@ type TimelineCard = {
 export const selectTimelineStart = (state: RootState) => state.timeline.startDate
 export const selectTimelineEnd = (state: RootState) => state.timeline.endDate
 
+export const selectTimeframeLengthDays = createSelector(
+    selectTimelineStart,
+    selectTimelineEnd,
+    (start, end) => moment(end).diff(start, 'day')
+)
+
 export const selectMonthPeriodsFromDates = (startDate: Date, endDate: Date) => {
     const periods: Period[] = []
 

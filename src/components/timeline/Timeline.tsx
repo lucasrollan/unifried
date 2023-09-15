@@ -2,7 +2,7 @@ import React from "react";
 import style from './Timeline.module.css'
 import { useSelector } from "react-redux";
 import { RootState } from "@/store";
-import { selectMonthPeriods, selectTimelineCardsByRowIds, selectTimelineRows, selectWeekPeriods } from "@/store/timeline/selectors";
+import { selectMonthPeriods, selectTimeframeLengthDays, selectTimelineCardsByRowIds, selectTimelineRows, selectWeekPeriods } from "@/store/timeline/selectors";
 
 function join(...classNames: string[]): string {
     return classNames.join(' ')
@@ -18,6 +18,7 @@ const events = [
 
 export default function Timeline() {
     const dayWidthPx = useSelector((state: RootState) => state.timeline.dayWidthPx)
+    const lengthDays = useSelector(selectTimeframeLengthDays)
     const months = useSelector(selectMonthPeriods)
     const weeks = useSelector(selectWeekPeriods)
 
@@ -31,7 +32,7 @@ export default function Timeline() {
 
     return (
         <div className={style.timeline}>
-            <div className={style.viewport}>
+            <div className={style.viewport} style={{ width: scale(lengthDays) }}>
                 <div className={style.annotation} style={{
                     width: scale(4),
                     left: scale(36),
