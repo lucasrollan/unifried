@@ -118,7 +118,9 @@ export const selectTimelineCardsByRowIds = createSelector(
     (timelineStart, timelineEnd, rowIds, rowsById, entriesById) =>
         rowIds.reduce((acc, rowId) => {
             const row = rowsById[rowId]
+            // TODO: filter to only entries that are within the timeframe
             const entries = row.entryIds.map(entryId => entriesById[entryId])
+
             const cards: TimelineCard[] = entries.map(entry => ({
                 id: entry.id,
                 label: entry.label,
