@@ -2,7 +2,7 @@ import React from "react";
 import style from './Timeline.module.css'
 import { useSelector } from "react-redux";
 import { RootState } from "@/store";
-import { selectMonthPeriods, selectWeekPeriods } from "@/store/timeline/selectors";
+import { selectMonthPeriods, selectTimelineCardsByRowIds, selectTimelineRows, selectWeekPeriods } from "@/store/timeline/selectors";
 
 function join(...classNames: string[]): string {
     return classNames.join(' ')
@@ -20,7 +20,10 @@ export default function Timeline() {
     const dayWidthPx = useSelector((state: RootState) => state.timeline.dayWidthPx)
     const months = useSelector(selectMonthPeriods)
     const weeks = useSelector(selectWeekPeriods)
-    console.log(weeks)
+
+    const rows = useSelector(selectTimelineRows)
+    const cards = useSelector(selectTimelineCardsByRowIds)
+    console.log(cards)
 
     function scale(size: number): string {
         return `${size * dayWidthPx}px`
@@ -57,29 +60,31 @@ export default function Timeline() {
                         }
                     </div>
                 </div>
-                <div className={style.timelineRow}>
-                    <h4 className={style.timelineRowTitle}>Celebrations</h4>
-                    <div className={style.timelineRowLanes}>
-                        <div className={style.annotation} style={{
-                            width: scale(1),
-                            left: scale(30),
-                        }}>
-                            <div className={style.annotationLabel}>Halloween</div>
+                {
+                    rows.map(row => (
+                         <div className={style.timelineRow} key={row.id}>
+                            <h4 className={style.timelineRowTitle}>{row.label}</h4>
+                            <div className={style.timelineRowLanes}>
+                                <div className={style.annotation} style={{
+                                    width: scale(1),
+                                    left: scale(30),
+                                }}>
+                                    <div className={style.annotationLabel}>Halloween</div>
+                                </div>
+                                {
+                                    cards[row.id].map(card => (
+                                        <div className={style.timelineRowLane} key={card.id}>
+                                            <div className={style.timelineCard} style={{
+                                                width: scale(card.timeWindow.daysLength),
+                                                left: scale(card.timeWindow.daysSinceStart),
+                                            }}><span>{card.label}</span></div>
+                                        </div>
+                                    ))
+                                }
+                            </div>
                         </div>
-                        <div className={style.timelineRowLane}>
-                            <div className={style.timelineCard} style={{
-                                width: scale(5),
-                                left: scale(26),
-                            }}><span>Witch week</span></div>
-                        </div>
-                        <div className={style.timelineRowLane}>
-                            <div className={style.timelineCard} style={{
-                                width: scale(5),
-                                left: scale(28),
-                            }}><span>Skeleton week</span></div>
-                        </div>
-                    </div>
-                </div>
+                    ))
+                }
             </div>
         </div>
     );

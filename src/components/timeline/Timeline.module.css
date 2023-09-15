@@ -48,6 +48,7 @@
 
 .timelineRow {
     position: relative;
+    margin-top: 40px;
 }
 .timelineRowTitle {
     margin: 12px 0 0;
