@@ -1,13 +1,10 @@
 import React from "react";
 import style from './Timeline.module.css'
+import { useSelector } from "react-redux";
+import { RootState } from "@/store";
 
 function join(...classNames: string[]): string {
     return classNames.join(' ')
-}
-
-const dayWidthPx = 25
-function scale(size: number): string {
-    return `${size * dayWidthPx}px`
 }
 
 const events = [
@@ -19,6 +16,11 @@ const events = [
 ]
 
 export default function Timeline() {
+    const dayWidthPx = useSelector((state: RootState) => state.timeline.dayWidthPx)
+    function scale(size: number): string {
+        return `${size * dayWidthPx}px`
+    }
+
     return (
         <div className={style.timeline}>
             <div className={style.viewport}>
