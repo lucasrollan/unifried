@@ -1,15 +1,12 @@
 import Session from "./session";
 import '../main.css'
-import NavBar from "./navbar";
+import NavBar from "./NavBar";
 
 export default function Layout(props: any) {
-    return <div>
+    return <div className="layout">
         <NavBar />
-        <div>
-            <Session />
-        </div>
-        <main>{
+        <div className="fullHeight">{
             props.children
-        }</main>
+        }</div>
     </div>
 }

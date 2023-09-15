@@ -1,0 +1,67 @@
+.timeline {
+    font-size: 14px;
+    height: 100%;
+    overflow-y: scroll;
+}
+
+.periods {
+
+}
+.periodLane {
+    position: relative;
+    height: 20px;
+}
+.period {
+    position: absolute;
+    top: 0;
+    background-color: aquamarine;
+    border: 1px solid lightseagreen;
+    border-radius: 2px;
+}
+
+.annotations {
+}
+.annotationLane {
+    position: relative;
+    height: 22px;
+}
+.annotation {
+    position: absolute;
+    height: calc(100% + 8px);
+    top: -8px;
+    background-color: rgba(239, 220, 145, 0.2);
+    border: 1px solid rgba(144, 120, 24, 0.3);
+}
+.annotationLabel {
+    position: absolute;
+    top: 0;
+    left: 0;
+    transform: translate(0, -100%);
+    background-color: rgba(239, 220, 145, 0.8);
+    border: 1px solid rgba(144, 120, 24, 0.8);
+}
+
+.timelineRow {
+    position: relative;
+}
+.timelineRowTitle {
+    margin: 0;
+}
+.timelineRowLanes {
+    border: 1px solid lightgray;
+    border-left: none;
+    border-right: none;
+    padding: 5px 0;
+    position: relative;
+}
+.timelineRowLane {
+    position: relative;
+    height: 24px;
+}
+.timelineCard {
+    position: absolute;
+    top: 0;
+    background-color: rgb(145, 239, 189);
+    border: 1px solid rgb(54, 144, 24);
+    border-radius: 2px;
+}
