@@ -1,13 +1,11 @@
 import { Button, Classes, Menu, MenuItem, Popover } from "@blueprintjs/core";
-import { useSession, signIn, signOut } from 'next-auth/react';
+import { useSession, signOut } from 'next-auth/react';
 import styles from './userMenu.module.css'
 
 export default function UserMenu() {
     // popover content gets no padding by default; add the "bp5-popover-content-sizing"
     // class to the popover to set nice padding between its border and content.
     const { data, status } = useSession();
-
-    console.log('styles', styles.userProfilePicture)
 
     return (
         <Popover

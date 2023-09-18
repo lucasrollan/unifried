@@ -15,4 +15,3 @@ export default function NavBar() {
         </Navbar.Group>
     </Navbar>)
 }
-
