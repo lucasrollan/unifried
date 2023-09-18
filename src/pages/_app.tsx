@@ -2,7 +2,7 @@ import React from "react";
 
 import { SessionProvider } from "next-auth/react";
 import { AppProps } from "next/app";
-import Layout from "@/components/layout";
+import Layout from "../components/layout";
 import { store } from '@/store'
 import { Provider as StateProvider } from 'react-redux'
 
