@@ -1,6 +1,6 @@
 import Session from "./session";
 import '../main.css'
-import NavBar from "@/components/NavBar";
+import NavBar from "./NavBar";
 
 export default function Layout(props: any) {
     return <div className="layout">
