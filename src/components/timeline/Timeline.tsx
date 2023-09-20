@@ -1,14 +1,17 @@
 import React from "react";
 import style from './Timeline.module.css'
-import { useSelector } from "react-redux";
-import { RootState } from "@/store";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState, useAppDispatch } from "@/store";
 import { selectTimelineCardsByRowIds, selectTimelineRows } from "@/store/timeline/selectors";
 import TimelineCard from "./TimelineCard";
 import TimelinePeriods from "./TimelinePeriods";
 import { scale } from "./utils";
-
+import { fetchTimelineRows } from "@/store/timeline/timelineSlice";
 
 export default function Timeline() {
+    const dispatch = useAppDispatch()
+    dispatch(fetchTimelineRows()) // TODO: This is re-triggering the fetch on every render
+
     const dayWidthPx = useSelector((state: RootState) => state.timeline.dayWidthPx)
 
     const rows = useSelector(selectTimelineRows)

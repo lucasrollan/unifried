@@ -1,11 +1,7 @@
-import { createSlice } from '@reduxjs/toolkit'
+import { TimelineRow } from '@/types/timeline'
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import type { PayloadAction } from '@reduxjs/toolkit'
 
-type TimelineRow = {
-    id: string,
-    label: string,
-    entryIds: string[],
-}
 type TimelineEntry = {
     id: string,
     label: string,
@@ -63,6 +59,19 @@ const initialState: TimelineState = {
     },
 }
 
+const api_fetchRows = async function (): Promise<TimelineRow[]> {
+    const result = await fetch('/api/timeline/rows')
+    return result.json()
+}
+
+export const fetchTimelineRows = createAsyncThunk(
+    'timeline/fetchRows',
+    async (thunkAPI) => {
+        const response = await api_fetchRows()
+        return response
+    }
+)
+
 export const timelineSlice = createSlice({
     name: 'timeline',
     initialState,
@@ -80,6 +89,23 @@ export const timelineSlice = createSlice({
         incrementByAmount: (state, action: PayloadAction<number>) => {
             state.dayWidthPx += action.payload
         },
+    },
+    extraReducers: (builder) => {
+        // Add reducers for additional action types here, and handle loading state as needed
+        builder.addCase(fetchTimelineRows.fulfilled, (state, action) => {
+            const rows = action.payload
+            console.log('rows', rows)
+
+            rows.forEach(row => {
+                if (!state.rowsById[row.id]) {
+                    state.rowsById[row.id] = row
+                }
+
+                if (!state.rowIds.includes(row.id)) {
+                    state.rowIds.push(row.id)
+                }
+            })
+        })
     },
 })
 
