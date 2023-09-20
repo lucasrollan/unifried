@@ -18,6 +18,7 @@ type TimelineCard = {
     label: string,
     start: Moment,
     end: Moment,
+    isHighlighted?: boolean,
     timeWindow: { // how this period relates to the selected time window
         daysSinceStart: number,
         daysLength: number,
@@ -115,6 +116,38 @@ export const selectTimelineRows = createSelector(
         rowIds.map(rowId => rowsById[rowId])
 )
 
+export const selectedHighlightedTimelineCards = createSelector(
+    selectTimelineStart,
+    selectTimelineEnd,
+    (state: RootState) => state.timeline.rowIds,
+    (state: RootState) => state.timeline.rowsById,
+    (state: RootState) => state.timeline.entriesById,
+    (timelineStart, timelineEnd, rowIds, rowsById, entriesById) =>
+        rowIds.reduce((acc: TimelineCard[], rowId) => {
+            const row = rowsById[rowId]
+            // TODO: filter to only entries that are within the timeframe
+            const entries = row.entryIds.map(entryId => entriesById[entryId])
+                .filter(entry => entry.isHighlighted)
+
+            const cards: TimelineCard[] = entries.map(entry => ({
+                id: entry.id,
+                label: entry.label,
+                start: moment(entry.start),
+                end: moment(entry.end),
+                isHighlighted: entry.isHighlighted,
+                timeWindow: { // how this entry relates to the selected time window
+                    daysSinceStart: moment(entry.start).diff(timelineStart, 'day'),
+                    daysLength: moment(entry.end).diff(entry.start, 'day'),
+                }
+            }))
+
+            return ([
+                ...acc,
+                ...cards,
+            ])
+        }, []) as TimelineCard[]
+)
+
 export const selectTimelineCardsByRowIds = createSelector(
     selectTimelineStart,
     selectTimelineEnd,
@@ -132,6 +165,7 @@ export const selectTimelineCardsByRowIds = createSelector(
                 label: entry.label,
                 start: moment(entry.start),
                 end: moment(entry.end),
+                isHighlighted: entry.isHighlighted,
                 timeWindow: { // how this entry relates to the selected time window
                     daysSinceStart: moment(entry.start).diff(timelineStart, 'day'),
                     daysLength: moment(entry.end).diff(entry.start, 'day'),

@@ -11,6 +11,7 @@ type TimelineEntry = {
     label: string,
     start: Date,
     end: Date,
+    isHighlighted?: boolean,
 }
 
 export interface TimelineState {
@@ -45,6 +46,7 @@ const initialState: TimelineState = {
             label: 'Witch week 2',
             start: new Date('2023-10-25T00:00'),
             end: new Date('2023-11-01T00:00'),
+            isHighlighted: true,
         },
         'skeletonWeek': {
             id: 'skeletonWeek',

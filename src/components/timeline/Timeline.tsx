@@ -2,19 +2,11 @@ import React from "react";
 import style from './Timeline.module.css'
 import { useSelector } from "react-redux";
 import { RootState } from "@/store";
-import { selectMonthPeriods, selectTimeframeLengthDays, selectTimelineCardsByRowIds, selectTimelineRows, selectWeekPeriods } from "@/store/timeline/selectors";
+import { selectMonthPeriods, selectTimeframeLengthDays, selectTimelineCardsByRowIds, selectTimelineRows, selectWeekPeriods, selectedHighlightedTimelineCards } from "@/store/timeline/selectors";
 
-function join(...classNames: string[]): string {
-    return classNames.join(' ')
+function classes(...classNames: string[]): string {
+    return classNames.filter(Boolean).join(' ')
 }
-
-const events = [
-    {
-        start: new Date('2023-09-12'),
-        end: new Date('2023-09-15'),
-        label: 'Refactor da thing'
-    }
-]
 
 export default function Timeline() {
     const dayWidthPx = useSelector((state: RootState) => state.timeline.dayWidthPx)
@@ -24,7 +16,7 @@ export default function Timeline() {
 
     const rows = useSelector(selectTimelineRows)
     const cards = useSelector(selectTimelineCardsByRowIds)
-    console.log(cards)
+    const highlightedCards = useSelector(selectedHighlightedTimelineCards)
 
     function scale(size: number): string {
         return `${size * dayWidthPx}px`
@@ -33,12 +25,26 @@ export default function Timeline() {
     return (
         <div className={style.timeline}>
             <div className={style.viewport} style={{ width: scale(lengthDays) }}>
-                <div className={style.annotation} style={{
-                    width: scale(4),
-                    left: scale(36),
-                }}>
-                    <div className={style.annotationLabel}>Weird week</div>
-                </div>
+                {
+                    highlightedCards.map(card => (
+                        <div className={style.timelineRowLane} key={card.id}>
+                            <div
+                                className={
+                                    classes(
+                                        style.timelineCard,
+                                        card.isHighlighted ? style.highlightedCard : '',
+                                    )
+                                }
+                                style={{
+                                    width: scale(card.timeWindow.daysLength),
+                                    left: scale(card.timeWindow.daysSinceStart),
+                                }
+                            }>
+                                <span>{card.label}</span>
+                            </div>
+                        </div>
+                    ))
+                }
                 <div className={style.periods}>
                     <div className={style.periodLane}>
                         {
@@ -66,19 +72,18 @@ export default function Timeline() {
                          <div className={style.timelineRow} key={row.id}>
                             <h4 className={style.timelineRowTitle}>{row.label}</h4>
                             <div className={style.timelineRowLanes}>
-                                <div className={style.annotation} style={{
-                                    width: scale(1),
-                                    left: scale(30),
-                                }}>
-                                    <div className={style.annotationLabel}>Halloween</div>
-                                </div>
                                 {
                                     cards[row.id].map(card => (
                                         <div className={style.timelineRowLane} key={card.id}>
-                                            <div className={style.timelineCard} style={{
-                                                width: scale(card.timeWindow.daysLength),
-                                                left: scale(card.timeWindow.daysSinceStart),
-                                            }}><span>{card.label}</span></div>
+                                            <div
+                                                className={ style.timelineCard }
+                                                style={{
+                                                    width: scale(card.timeWindow.daysLength),
+                                                    left: scale(card.timeWindow.daysSinceStart),
+                                                }
+                                            }>
+                                                <span>{card.label}</span>
+                                            </div>
                                         </div>
                                     ))
                                 }
