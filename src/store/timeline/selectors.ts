@@ -1,24 +1,12 @@
 import { RootState } from "@/store";
 import { createSelector } from "@reduxjs/toolkit";
-import moment, { Moment, months } from "moment";
-import { TimelineState } from "./timelineSlice";
+import moment, { Moment } from "moment";
+import { TimelineCard } from "./types";
 
 type Period = {
     label: string,
     start: Moment,
     end: Moment,
-    timeWindow: { // how this period relates to the selected time window
-        daysSinceStart: number,
-        daysLength: number,
-    }
-}
-
-type TimelineCard = {
-    id: string,
-    label: string,
-    start: Moment,
-    end: Moment,
-    isHighlighted?: boolean,
     timeWindow: { // how this period relates to the selected time window
         daysSinceStart: number,
         daysLength: number,

@@ -3,6 +3,7 @@ import style from './Timeline.module.css'
 import { useSelector } from "react-redux";
 import { RootState } from "@/store";
 import { selectMonthPeriods, selectTimeframeLengthDays, selectTimelineCardsByRowIds, selectTimelineRows, selectWeekPeriods, selectedHighlightedTimelineCards } from "@/store/timeline/selectors";
+import TimelineCard from "./TimelineCard";
 
 function classes(...classNames: string[]): string {
     return classNames.filter(Boolean).join(' ')
@@ -16,7 +17,6 @@ export default function Timeline() {
 
     const rows = useSelector(selectTimelineRows)
     const cards = useSelector(selectTimelineCardsByRowIds)
-    const highlightedCards = useSelector(selectedHighlightedTimelineCards)
 
     function scale(size: number): string {
         return `${size * dayWidthPx}px`
@@ -25,26 +25,6 @@ export default function Timeline() {
     return (
         <div className={style.timeline}>
             <div className={style.viewport} style={{ width: scale(lengthDays) }}>
-                {
-                    highlightedCards.map(card => (
-                        <div className={style.timelineRowLane} key={card.id}>
-                            <div
-                                className={
-                                    classes(
-                                        style.timelineCard,
-                                        card.isHighlighted ? style.highlightedCard : '',
-                                    )
-                                }
-                                style={{
-                                    width: scale(card.timeWindow.daysLength),
-                                    left: scale(card.timeWindow.daysSinceStart),
-                                }
-                            }>
-                                <span>{card.label}</span>
-                            </div>
-                        </div>
-                    ))
-                }
                 <div className={style.periods}>
                     <div className={style.periodLane}>
                         {
@@ -75,15 +55,13 @@ export default function Timeline() {
                                 {
                                     cards[row.id].map(card => (
                                         <div className={style.timelineRowLane} key={card.id}>
-                                            <div
-                                                className={ style.timelineCard }
+                                            <TimelineCard
+                                                card={card}
                                                 style={{
                                                     width: scale(card.timeWindow.daysLength),
                                                     left: scale(card.timeWindow.daysSinceStart),
-                                                }
-                                            }>
-                                                <span>{card.label}</span>
-                                            </div>
+                                                }}
+                                            />
                                         </div>
                                     ))
                                 }
