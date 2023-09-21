@@ -1,18 +1,10 @@
-import { TimelineRow } from '@/types/timeline'
+import { TimelineEntry, TimelineRow } from '@/types/timeline'
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import type { PayloadAction } from '@reduxjs/toolkit'
 
-type TimelineEntry = {
-    id: string,
-    label: string,
-    start: Date,
-    end: Date,
-    isHighlighted?: boolean,
-}
-
 export interface TimelineState {
-    startDate: Date,
-    endDate: Date, //not inclusive
+    startDate: string,
+    endDate: string, //not inclusive
     dayWidthPx: number,
     rowIds: string[],
     rowsById: Record<string, TimelineRow>,
@@ -20,8 +12,8 @@ export interface TimelineState {
 }
 
 const initialState: TimelineState = {
-    startDate: new Date('2023-10-01T00:00'),
-    endDate: new Date('2024-02-01T00:00'),
+    startDate: '2023-10-01T00:00',
+    endDate: '2024-02-01T00:00',
     dayWidthPx: 20,
     rowIds: ['holidays', 'houseProjects'],
     rowsById: {
@@ -40,21 +32,21 @@ const initialState: TimelineState = {
         'witchWeek': {
             id: 'witchWeek',
             label: 'Witch week 2',
-            start: new Date('2023-10-25T00:00'),
-            end: new Date('2023-11-01T00:00'),
+            start: '2023-10-25T00:00',
+            end: '2023-11-01T00:00',
             isHighlighted: true,
         },
         'skeletonWeek': {
             id: 'skeletonWeek',
             label: 'Skelingtong week',
-            start: new Date('2023-10-28T00:00'),
-            end: new Date('2023-11-04T00:00'),
+            start: '2023-10-28T00:00',
+            end: '2023-11-04T00:00',
         },
         'diningRoomPaneling': {
             id: 'diningRoomPaneling',
             label: 'Dining room paneling',
-            start: new Date('2023-10-03T00:00'),
-            end: new Date('2023-10-15T00:00'),
+            start: '2023-10-03T00:00',
+            end: '2023-10-15T00:00',
         },
     },
 }
@@ -68,6 +60,19 @@ export const fetchTimelineRows = createAsyncThunk(
     'timeline/fetchRows',
     async (thunkAPI) => {
         const response = await api_fetchRows()
+        return response
+    }
+)
+
+const api_fetchEntries = async function (): Promise<TimelineEntry[]> {
+    const result = await fetch('/api/timeline/entries')
+    return result.json()
+}
+
+export const fetchTimelineEntries = createAsyncThunk(
+    'timeline/fetchEntries',
+    async (thunkAPI) => {
+        const response = await api_fetchEntries()
         return response
     }
 )
@@ -103,6 +108,16 @@ export const timelineSlice = createSlice({
 
                 if (!state.rowIds.includes(row.id)) {
                     state.rowIds.push(row.id)
+                }
+            })
+        })
+        builder.addCase(fetchTimelineEntries.fulfilled, (state, action) => {
+            const entries = action.payload
+            console.log('entries', entries)
+
+            entries.forEach(entry => {
+                if (!state.entriesById[entry.id]) {
+                    state.entriesById[entry.id] = entry
                 }
             })
         })

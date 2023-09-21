@@ -22,7 +22,7 @@ export const selectTimeframeLengthDays = createSelector(
     (start, end) => moment(end).diff(start, 'day')
 )
 
-export const selectMonthPeriodsFromDates = (startDate: Date, endDate: Date) => {
+export const selectMonthPeriodsFromDates = (startDate: string, endDate: string) => {
     const periods: Period[] = []
 
     const startMoment = moment(startDate).startOf('day')
@@ -54,7 +54,7 @@ export const selectMonthPeriodsFromDates = (startDate: Date, endDate: Date) => {
 }
 
 
-export const selectWeekPeriodsFromDates = (startDate: Date, endDate: Date) => {
+export const selectWeekPeriodsFromDates = (startDate: string, endDate: string) => {
     const periods: Period[] = []
 
     const startMoment = moment(startDate).startOf('day')

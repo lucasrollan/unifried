@@ -1,25 +1,29 @@
 import React from "react";
 import style from './Timeline.module.css'
 import { useDispatch, useSelector } from "react-redux";
-import { RootState, useAppDispatch } from "@/store";
-import { selectTimelineCardsByRowIds, selectTimelineRows } from "@/store/timeline/selectors";
+import { RootState, useAppDispatch, useAppSelector } from "@/store";
+import { selectTimeframeLengthDays, selectTimelineCardsByRowIds, selectTimelineRows } from "@/store/timeline/selectors";
 import TimelineCard from "./TimelineCard";
 import TimelinePeriods from "./TimelinePeriods";
 import { scale } from "./utils";
-import { fetchTimelineRows } from "@/store/timeline/timelineSlice";
+import { fetchTimelineEntries, fetchTimelineRows } from "@/store/timeline/timelineSlice";
 
 export default function Timeline() {
     const dispatch = useAppDispatch()
+    dispatch(fetchTimelineEntries()) // TODO: This is re-triggering the fetch on every render
     dispatch(fetchTimelineRows()) // TODO: This is re-triggering the fetch on every render
 
+    const daysLength = useAppSelector(selectTimeframeLengthDays)
     const dayWidthPx = useSelector((state: RootState) => state.timeline.dayWidthPx)
 
     const rows = useSelector(selectTimelineRows)
     const cards = useSelector(selectTimelineCardsByRowIds)
 
+    console.log('CARDS', cards)
+
     return (
         <div className={style.timeline}>
-            <div className={style.viewport}>
+            <div className={style.viewport} style={{ width: scale(daysLength, dayWidthPx) }}>
                 <TimelinePeriods />
                 {
                     rows.map(row => (

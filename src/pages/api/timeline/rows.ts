@@ -9,7 +9,7 @@ export default function handler(
     {
         id: 'ROW_TEST',
         label: 'Test',
-        entryIds: [],
+        entryIds: ['TST0000001'],
     }
   ])
 }
