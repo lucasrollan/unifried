@@ -16,6 +16,8 @@ export const authOptions: AuthOptions = {
     callbacks: {
         async signIn({ user, account, profile, email, credentials }) {
             const isAllowedToSignIn = user.email === 'lucas.rollan@gmail.com'
+                || user.email === 'agustina.a.navarro@gmail.com'g
+
             if (isAllowedToSignIn) {
                 return true
             } else {
