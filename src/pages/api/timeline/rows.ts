@@ -1,13 +1,15 @@
 import { TimelineRow } from '@/types/timeline'
+import { getServerSession } from 'next-auth/next'
+import { authOptions } from "../auth/[...nextauth]"
+
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { getToken } from 'next-auth/jwt'
 
 export default async function handler(
     req: NextApiRequest,
     res: NextApiResponse<TimelineRow[]>
 ) {
-    const token = await getToken({ req })
-    if (token) {
+    const session = await getServerSession(req, res, authOptions)
+    if (session) {
         // Signed in
         res.status(200).json([
             {
