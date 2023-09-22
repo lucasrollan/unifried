@@ -19,8 +19,6 @@ export default function Timeline() {
     const rows = useSelector(selectTimelineRows)
     const cards = useSelector(selectTimelineCardsByRowIds)
 
-    console.log('CARDS', cards)
-
     return (
         <div className={style.timeline}>
             <div className={style.viewport} style={{ width: scale(daysLength, dayWidthPx) }}>
@@ -31,7 +29,7 @@ export default function Timeline() {
                             <h4 className={style.timelineRowTitle}>{row.label}</h4>
                             <div className={style.timelineRowLanes}>
                                 {
-                                    cards[row.id].map(card => (
+                                    (cards[row.id] || []).map(card => (
                                         <div className={style.timelineRowLane} key={card.id}>
                                             <TimelineCard
                                                 card={card}

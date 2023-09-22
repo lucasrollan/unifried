@@ -1,7 +1,6 @@
 export type TimelineRow = {
     id: string,
     label: string,
-    entryIds: string[],
 }
 
 export type TimelineEntry = {
@@ -9,5 +8,6 @@ export type TimelineEntry = {
     label: string,
     start: string,
     end: string,
+    rowId: string,
     isHighlighted?: boolean,
 }

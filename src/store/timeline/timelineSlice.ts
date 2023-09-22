@@ -8,6 +8,7 @@ export interface TimelineState {
     dayWidthPx: number,
     rowIds: string[],
     rowsById: Record<string, TimelineRow>,
+    entryIds: string[],
     entriesById: Record<string, TimelineEntry>,
 }
 
@@ -15,40 +16,10 @@ const initialState: TimelineState = {
     startDate: '2023-10-01T00:00',
     endDate: '2024-02-01T00:00',
     dayWidthPx: 20,
-    rowIds: ['holidays', 'houseProjects'],
-    rowsById: {
-        'holidays': {
-            id: 'holidays',
-            label: 'Holidays',
-            entryIds: ['witchWeek', 'skeletonWeek'],
-        },
-        'houseProjects': {
-            id: 'houseProjects',
-            label: 'House Projects',
-            entryIds: ['diningRoomPaneling'],
-        },
-    },
-    entriesById: {
-        'witchWeek': {
-            id: 'witchWeek',
-            label: 'Witch week 2',
-            start: '2023-10-25T00:00',
-            end: '2023-11-01T00:00',
-            isHighlighted: true,
-        },
-        'skeletonWeek': {
-            id: 'skeletonWeek',
-            label: 'Skelingtong week',
-            start: '2023-10-28T00:00',
-            end: '2023-11-04T00:00',
-        },
-        'diningRoomPaneling': {
-            id: 'diningRoomPaneling',
-            label: 'Dining room paneling',
-            start: '2023-10-03T00:00',
-            end: '2023-10-15T00:00',
-        },
-    },
+    rowIds: [],
+    rowsById: {},
+    entryIds: [],
+    entriesById: {},
 }
 
 const api_fetchRows = async function (): Promise<TimelineRow[]> {
@@ -118,6 +89,10 @@ export const timelineSlice = createSlice({
             entries.forEach(entry => {
                 if (!state.entriesById[entry.id]) {
                     state.entriesById[entry.id] = entry
+                }
+
+                if (!state.entryIds.includes(entry.id)) {
+                    state.entryIds.push(entry.id)
                 }
             })
         })
