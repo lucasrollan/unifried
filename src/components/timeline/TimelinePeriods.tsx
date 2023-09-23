@@ -27,21 +27,21 @@ export default function TimelinePeriods() {
             </div>
             <div className={style.periodLane}>
                 {
-                    weeks.map(week => (
-                        <div className={style.period} key={week.start.format()} style={{
-                            width: scale(week.timeWindow.daysLength, dayWidthPx),
-                            left: scale(week.timeWindow.daysSinceStart, dayWidthPx),
-                        }}><span className={style.periodLabel}>{week.label}</span></div>
-                    ))
-                }
-            </div>
-            <div className={style.periodLane}>
-                {
                     days.map(day => (
                         <div className={classes(style.period, style[day.style || ''])} key={day.start.format()} style={{
                             width: scale(day.timeWindow.daysLength, dayWidthPx),
                             left: scale(day.timeWindow.daysSinceStart, dayWidthPx),
                         }}><span className={style.periodLabel}>{day.label}</span></div>
+                    ))
+                }
+            </div>
+            <div className={style.periodLane}>
+                {
+                    weeks.map(week => (
+                        <div className={style.period} key={week.start.format()} style={{
+                            width: scale(week.timeWindow.daysLength, dayWidthPx),
+                            left: scale(week.timeWindow.daysSinceStart, dayWidthPx),
+                        }}><span className={style.periodLabel}>{week.label}</span></div>
                     ))
                 }
             </div>
