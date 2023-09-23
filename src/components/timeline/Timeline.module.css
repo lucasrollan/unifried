@@ -68,6 +68,9 @@
 }
 .timelineRowTitle {
     margin: 12px 0 0;
+    padding: 4px 8px;
+    position: sticky;
+    left: 0;
 }
 .timelineRowLanes {
     background-color: white;

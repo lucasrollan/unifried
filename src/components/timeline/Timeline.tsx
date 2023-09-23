@@ -26,7 +26,9 @@ export default function Timeline() {
                 {
                     rows.map(row => (
                          <div className={style.timelineRow} key={row.id}>
-                            <h4 className={style.timelineRowTitle}>{row.label}</h4>
+                            <h4>
+                                <span className={style.timelineRowTitle}>{row.label}</span>
+                            </h4>
                             <div className={style.timelineRowLanes}>
                                 {
                                     (cards[row.id] || []).map(card => (
