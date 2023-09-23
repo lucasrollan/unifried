@@ -13,6 +13,8 @@ type Period = {
     }
 }
 
+const USE_DECIMAL_DAYS = true
+
 export const selectTimelineStart = (state: RootState) => state.timeline.startDate
 export const selectTimelineEnd = (state: RootState) => state.timeline.endDate
 
@@ -121,8 +123,8 @@ export const selectTimelineCardsByRowIds = createSelector(
                 end: moment(entry.end),
                 isHighlighted: entry.isHighlighted,
                 timeWindow: { // how this entry relates to the selected time window
-                    daysSinceStart: moment(entry.start).diff(timelineStart, 'day'),
-                    daysLength: moment(entry.end).diff(entry.start, 'day'),
+                    daysSinceStart: moment(entry.start).diff(timelineStart, 'day', USE_DECIMAL_DAYS),
+                    daysLength: moment(entry.end).diff(entry.start, 'day', USE_DECIMAL_DAYS),
                 }
             })
 
