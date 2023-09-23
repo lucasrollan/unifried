@@ -1,13 +1,13 @@
 import React from "react";
 import style from './Timeline.module.css'
-import { useSelector } from "react-redux";
 import { RootState, useAppSelector } from "@/store";
-import { selectDayPeriodsFromDates, selectMonthPeriods, selectPregnancyWeekPeriodsFromDates, selectWeekPeriods } from "@/store/timeline/selectors";
+import { selectDayPeriodsFromDates, selectMonthPeriods, selectPregnancyWeekPeriodsFromDates, selectTodayTimeframeDays, selectWeekPeriods } from "@/store/timeline/selectors";
 import { classes, scale } from "./utils";
 
 
 export default function TimelinePeriods() {
     const dayWidthPx = useAppSelector((state: RootState) => state.timeline.dayWidthPx)
+    const todayDays = useAppSelector(selectTodayTimeframeDays)
     const months = useAppSelector(selectMonthPeriods)
     const weeks = useAppSelector(selectWeekPeriods)
     const burbujaWeeks = useAppSelector(selectPregnancyWeekPeriodsFromDates)
@@ -54,6 +54,11 @@ export default function TimelinePeriods() {
                         }}><span className={style.periodLabel}>{week.label}</span></div>
                     ))
                 }
+            </div>
+            <div className={style.todayMarker} style={{
+                left: scale(todayDays, dayWidthPx)
+            }}>
+                <span className={style.todayLabel}>Now</span>
             </div>
         </div>
     );

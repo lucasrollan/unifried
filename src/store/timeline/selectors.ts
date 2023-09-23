@@ -18,6 +18,8 @@ const USE_DECIMAL_DAYS = true
 
 export const selectTimelineStart = (state: RootState) => state.timeline.startDate
 export const selectTimelineEnd = (state: RootState) => state.timeline.endDate
+export const selectTodayTimeframeDays = (state: RootState) =>
+    moment().diff(state.timeline.startDate, 'day', true)
 
 export const selectTimeframeLengthDays = createSelector(
     selectTimelineStart,
