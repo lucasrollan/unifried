@@ -87,6 +87,41 @@ export const selectWeekPeriodsFromDates = (startDate: string, endDate: string) =
     return periods
 }
 
+const pregnancyStart = moment('2023-07-16')
+const pregnancyDueDate = moment('2024-04-20')
+export const selectPregnancyWeekPeriodsFromDates = createSelector(
+    selectTimelineStart,
+    selectTimelineEnd,
+    (startDate: string, endDate: string) => {
+        const periods: Period[] = []
+
+        const startMoment = moment(startDate).startOf('day')
+        const endMoment = moment(endDate).startOf('day')
+
+        let current = moment(pregnancyStart)
+        const weekIndex = 0
+        for (let week = weekIndex; week <= 42 + weekIndex && current.isBefore(endMoment); week += 1) {
+            const currentEnd = moment(current).add(1, 'week')
+            if (current.isBefore(endMoment) && currentEnd.isAfter(startMoment)) {
+                periods.push({
+                    label: 'Burbuja week ' + week,
+                    start: moment.max(current, startMoment),
+                    end: moment.min(currentEnd, endMoment),
+                    timeWindow: {
+                        daysSinceStart: current.diff(startMoment, 'day'),
+                        daysLength: currentEnd.diff(current, 'day'),
+                    }
+                })
+            }
+
+            current = currentEnd
+        }
+
+
+        return periods
+    }
+)
+
 export const selectMonthPeriods = createSelector(
     selectTimelineStart,
     selectTimelineEnd,

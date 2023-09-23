@@ -1,15 +1,16 @@
 import React from "react";
 import style from './Timeline.module.css'
 import { useSelector } from "react-redux";
-import { RootState } from "@/store";
-import { selectMonthPeriods, selectWeekPeriods } from "@/store/timeline/selectors";
+import { RootState, useAppSelector } from "@/store";
+import { selectMonthPeriods, selectPregnancyWeekPeriodsFromDates, selectWeekPeriods } from "@/store/timeline/selectors";
 import { scale } from "./utils";
 
 
 export default function TimelinePeriods() {
-    const dayWidthPx = useSelector((state: RootState) => state.timeline.dayWidthPx)
-    const months = useSelector(selectMonthPeriods)
-    const weeks = useSelector(selectWeekPeriods)
+    const dayWidthPx = useAppSelector((state: RootState) => state.timeline.dayWidthPx)
+    const months = useAppSelector(selectMonthPeriods)
+    const weeks = useAppSelector(selectWeekPeriods)
+    const burbujaWeeks = useAppSelector(selectPregnancyWeekPeriodsFromDates)
 
     return (
         <div className={style.periods}>
@@ -26,6 +27,16 @@ export default function TimelinePeriods() {
             <div className={style.periodLane}>
                 {
                     weeks.map(week => (
+                        <div className={style.period} key={week.start.format()} style={{
+                            width: scale(week.timeWindow.daysLength, dayWidthPx),
+                            left: scale(week.timeWindow.daysSinceStart, dayWidthPx),
+                        }}><span>{week.label}</span></div>
+                    ))
+                }
+            </div>
+            <div className={style.periodLane}>
+                {
+                    burbujaWeeks.map(week => (
                         <div className={style.period} key={week.start.format()} style={{
                             width: scale(week.timeWindow.daysLength, dayWidthPx),
                             left: scale(week.timeWindow.daysSinceStart, dayWidthPx),
