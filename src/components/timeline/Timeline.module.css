@@ -2,7 +2,6 @@
     font-size: 14px;
     height: 100%;
     overflow-y: scroll;
-    padding: 35px 0 0;
     background-color: aliceblue;
 }
 
@@ -12,17 +11,33 @@
 }
 
 .periods {
+    position: sticky;
+    top: 0;
+    z-index: 11000;
 }
 .periodLane {
     position: relative;
-    height: 20px;
+    height: 23px;
 }
 .period {
     position: absolute;
     top: 0;
     background-color: aquamarine;
     border: 1px solid lightseagreen;
-    border-radius: 2px;
+    border-top: none;
+    border-left: none;
+    padding: 2px 8px;
+    /* border-radius: 2px; */
+}
+.period.weekend {
+    background-color: rgb(239, 203, 145);
+    border: 1px solid rgb(144, 114, 24);
+    border-top: none;
+    border-left: none;
+}
+.periodLabel {
+    position: sticky;
+    left: 8px;
 }
 
 .annotations {
@@ -74,6 +89,11 @@
     border: 1px solid rgb(54, 144, 24);
     border-radius: 2px;
     z-index: 10100;
+    padding: 2px 8px;
+}
+.timelineCardLabel {
+    position: sticky;
+    left: 8px
 }
 
 .highlightedCard::after,

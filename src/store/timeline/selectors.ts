@@ -7,6 +7,7 @@ type Period = {
     label: string,
     start: Moment,
     end: Moment,
+    style?: string,
     timeWindow: { // how this period relates to the selected time window
         daysSinceStart: number,
         daysLength: number,
@@ -99,7 +100,7 @@ export const selectPregnancyWeekPeriodsFromDates = createSelector(
         const endMoment = moment(endDate).startOf('day')
 
         let current = moment(pregnancyStart)
-        const weekIndex = 0
+        const weekIndex = 1
         for (let week = weekIndex; week <= 42 + weekIndex && current.isBefore(endMoment); week += 1) {
             const currentEnd = moment(current).add(1, 'week')
             if (current.isBefore(endMoment) && currentEnd.isAfter(startMoment)) {
@@ -117,6 +118,44 @@ export const selectPregnancyWeekPeriodsFromDates = createSelector(
             current = currentEnd
         }
 
+
+        return periods
+    }
+)
+
+export const selectDayPeriodsFromDates = createSelector(
+    selectTimelineStart,
+    selectTimelineEnd,
+    (startDate: string, endDate: string) => {
+        const periods: Period[] = []
+
+        const startMoment = moment(startDate).startOf('day')
+        const endMoment = moment(endDate).startOf('day')
+
+        let currentStart = moment(startMoment)
+
+        while (currentStart.isBefore(endMoment, 'day')) {
+            const currentEnd = moment(currentStart).add(1, 'day').startOf('day')
+
+            const periodStart = moment.max(startMoment, currentStart)
+            const periodEnd = moment.min(endMoment, currentEnd)
+
+            periods.push({
+                label: currentStart.format('DD'),
+                start: periodStart,
+                end: periodEnd,
+                style: currentStart.isoWeekday() >= 6
+                    ? 'weekend'
+                    : '',
+                timeWindow: {
+                    daysSinceStart: periodStart.diff(startMoment, 'day'),
+                    daysLength: periodEnd.diff(periodStart, 'day'),
+                }
+            })
+
+            // move to the next period
+            currentStart = currentEnd
+        }
 
         return periods
     }

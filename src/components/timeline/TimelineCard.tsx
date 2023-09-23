@@ -2,6 +2,7 @@ import React from "react";
 import timelineStyle from './Timeline.module.css'
 import { TimelineCard } from "@/store/timeline/types";
 import { classes } from "./utils";
+import styles from './Timeline.module.css'
 
 type TimelineCardProps = {
     card: TimelineCard,
@@ -19,7 +20,7 @@ export default function TimelineCard({ card, style }: TimelineCardProps) {
             }
             style={style}
         >
-            <span>{card.label}</span>
+            <span className={styles.timelineCardLabel}>{card.label}</span>
         </div>
     )
 }
