@@ -92,11 +92,12 @@
     border: 1px solid rgb(54, 144, 24);
     border-radius: 2px;
     z-index: 10100;
-    padding: 2px 8px;
+    white-space: nowrap;
+    padding: 2px 2px;
 }
 .timelineCardLabel {
     position: sticky;
-    left: 8px
+    left: 2px;
 }
 
 .highlightedCard::after,

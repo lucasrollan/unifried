@@ -25,23 +25,27 @@ export default function Timeline() {
                 <TimelinePeriods />
                 {
                     rows.map(row => (
-                         <div className={style.timelineRow} key={row.id}>
+                        <div className={style.timelineRow} key={row.id}>
                             <h4>
                                 <span className={style.timelineRowTitle}>{row.label}</span>
                             </h4>
                             <div className={style.timelineRowLanes}>
                                 {
-                                    (cards[row.id] || []).map(card => (
-                                        <div className={style.timelineRowLane} key={card.id}>
-                                            <TimelineCard
-                                                card={card}
-                                                style={{
-                                                    width: scale(card.timeWindow.daysLength, dayWidthPx),
-                                                    left: scale(card.timeWindow.daysSinceStart, dayWidthPx),
-                                                }}
-                                            />
+                                     (cards[row.id] || []).map((lane, laneIndex) => (
+                                        <div className={style.timelineRowLane} key={`${row.id}-${laneIndex}`}>
+                                            {
+                                                lane.map(card => (
+                                                    <TimelineCard
+                                                        card={card}
+                                                        style={{
+                                                            width: scale(card.timeWindow.daysLength, dayWidthPx),
+                                                            left: scale(card.timeWindow.daysSinceStart, dayWidthPx),
+                                                        }}
+                                                    />
+                                                ))
+                                            }
                                         </div>
-                                    ))
+                                     ))
                                 }
                             </div>
                         </div>

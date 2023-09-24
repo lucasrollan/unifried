@@ -30,7 +30,8 @@ async function fetchEntriesFromAirtable(): Promise<TimelineEntry[]> {
     const results: any[] = []
 
     base('Entries').select({
-      view: "Grid view"
+      view: "Grid view",
+      sort: [{field: "start", direction: "asc"}],
     }).eachPage(function page(records, fetchNextPage) {
       // This function (`page`) will get called for each page of records.
 

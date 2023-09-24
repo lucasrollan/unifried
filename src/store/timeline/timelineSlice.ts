@@ -15,7 +15,7 @@ export interface TimelineState {
 const initialState: TimelineState = {
     startDate: '2023-07-15T00:00',
     endDate: '2024-03-01T00:00',
-    dayWidthPx: 40,
+    dayWidthPx: 80,
     rowIds: [],
     rowsById: {},
     entryIds: [],

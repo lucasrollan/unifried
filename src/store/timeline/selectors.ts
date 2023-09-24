@@ -1,7 +1,9 @@
-import { RootState } from "@/store";
-import { createSelector } from "@reduxjs/toolkit";
-import moment, { Moment } from "moment";
-import { TimelineCard } from "./types";
+import { RootState } from "@/store"
+import { createSelector } from "@reduxjs/toolkit"
+import moment, { Moment } from "moment"
+import { TimelineCard } from "./types"
+
+type timelineCardsByRow = Record<string, Array<TimelineCard[]>>
 
 type Period = {
     label: string,
@@ -187,8 +189,8 @@ export const selectTimelineCardsByRowIds = createSelector(
     selectTimelineEnd,
     (state: RootState) => state.timeline.entryIds,
     (state: RootState) => state.timeline.entriesById,
-    (timelineStart, timelineEnd, entryIds, entriesById) =>
-        entryIds.reduce((acc, entryId) => {
+    (timelineStart, timelineEnd, entryIds, entriesById) => {
+        const byRowId = entryIds.reduce((acc, entryId) => {
             // TODO: filter to only entries that are within the timeframe
             const entry = entriesById[entryId]
 
@@ -208,5 +210,62 @@ export const selectTimelineCardsByRowIds = createSelector(
                 ...acc,
                 [entry.rowId]: [...(acc[entry.rowId] || []), card],
             }
-    }, {} as Record<string, TimelineCard[]>)
+        }, {} as Record<string, TimelineCard[]>)
+
+        return Object.keys(byRowId).reduce((acc, rowId) => {
+            return ({
+                ...acc,
+                [rowId]: groupCardsIntoLanes(byRowId[rowId]),
+            })
+        }, {} as timelineCardsByRow)
+    }
 )
+
+const groupCardsIntoLanes = (cards: TimelineCard[]): Array<TimelineCard[]> => {
+    let lanes: Array<TimelineCard[]> = []
+
+    for (let card of cards) {
+        let addedToLane = false
+
+        for (let lane of lanes) {
+            if (!overlapsWithCardInLane(card, lane)) {
+                lane.push(card)
+                addedToLane = true
+                break
+            }
+        }
+
+        if (!addedToLane) {
+            // create new lane
+            lanes.push([ card ])
+        }
+    }
+
+    return lanes
+}
+
+function overlapsWithCardInLane(card: TimelineCard, lane: TimelineCard[]) {
+    return lane.some(current => cardsOverlap(current, card))
+}
+
+function cardsOverlap (cardA: TimelineCard, cardB: TimelineCard) {
+    const segment1 = [cardA.timeWindow.daysSinceStart, cardA.timeWindow.daysSinceStart + cardA.timeWindow.daysLength]
+    const segment2 = [cardB.timeWindow.daysSinceStart, cardB.timeWindow.daysSinceStart + cardB.timeWindow.daysLength]
+    return segmentsOverlap(segment1, segment2) || segmentsOverlap(segment2, segment1)
+}
+
+function segmentsOverlap (seg1: number[], seg2: number[]) {
+    return seg2[0] >= seg1[0] && seg2[0] < seg1[1]
+        || seg2[1] > seg1[0] && seg2[1] <= seg1[1]
+}
+
+/**
+ *
+ * @param number
+ * @param start (inclusive)
+ * @param end (not inclusive)
+ * @returns
+ */
+function isNumberBetween (number: number, start: number, end: number) {
+    return number >= start && number < end
+}
