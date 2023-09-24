@@ -37,6 +37,7 @@ export default function Timeline() {
                                             {
                                                 lane.map(card => (
                                                     <TimelineCard
+                                                        key={card.id}
                                                         card={card}
                                                         style={{
                                                             width: scale(card.timeWindow.daysLength, dayWidthPx),
