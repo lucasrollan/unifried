@@ -23,6 +23,7 @@ export default function Timeline() {
         <div className={style.timeline}>
             <div className={style.viewport} style={{ width: scale(daysLength, dayWidthPx) }}>
                 <TimelinePeriods />
+                <div className={style.timelineRows}>
                 {
                     rows.map(row => (
                         <div className={style.timelineRow} key={row.id}>
@@ -31,7 +32,7 @@ export default function Timeline() {
                             </h4>
                             <div className={style.timelineRowLanes}>
                                 {
-                                     (cards[row.id] || []).map((lane, laneIndex) => (
+                                    (cards[row.id] || []).map((lane, laneIndex) => (
                                         <div className={style.timelineRowLane} key={`${row.id}-${laneIndex}`}>
                                             {
                                                 lane.map(card => (
@@ -45,12 +46,13 @@ export default function Timeline() {
                                                 ))
                                             }
                                         </div>
-                                     ))
+                                    ))
                                 }
                             </div>
                         </div>
                     ))
                 }
+                </div>
             </div>
         </div>
     );

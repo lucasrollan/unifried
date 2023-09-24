@@ -62,19 +62,23 @@
     border: 1px solid rgba(144, 120, 24, 0.8);
 }
 
+.timelineRows {
+    margin-top: 50px;
+    border-top: 1px solid lightgray;
+}
 .timelineRow {
+    padding-top: 4px;
     position: relative;
-    margin-top: 40px;
+    background-color: white;
+    border-bottom: 1px solid lightgray;
 }
 .timelineRowTitle {
-    margin: 12px 0 0;
     padding: 4px 8px;
     position: sticky;
     left: 0;
+    opacity: 0.5;
 }
 .timelineRowLanes {
-    background-color: white;
-    border: 1px solid lightgray;
     border-left: none;
     border-right: none;
     padding: 5px 0;
@@ -82,7 +86,8 @@
 }
 .timelineRowLane {
     position: relative;
-    height: 24px;
+    height: 32px;
+    padding: 4px 0;
 }
 
 .timelineCard {
@@ -131,7 +136,7 @@
 .todayLabel {
     position: absolute;
     left: 0;
-    top: 100px;
+    top: 105px;
     transform: translateX(-50%);
     background-color: rgb(145, 223, 239);
     border: 1px solid rgb(82, 148, 162);
