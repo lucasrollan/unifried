@@ -5,8 +5,8 @@ import style from './TimelineControls.module.css'
 import { ButtonGroup, Button, Popover } from "@blueprintjs/core";
 
 export default function TimelineControls() {
-    const [startDate, setStartDate] = React.useState<Date>(new Date());
-    const [endDate, setEndDate] = React.useState<Date>(new Date());
+    const [startDate, setStartDate] = React.useState<Date | undefined>(new Date());
+    const [endDate, setEndDate] = React.useState<Date | undefined>(new Date());
 
     return <div className={style.controlPanel}>
         <ButtonGroup >
