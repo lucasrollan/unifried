@@ -22,10 +22,8 @@ export default function Timeline() {
 
     return (
         <div className={style.timeline}>
-            <TimelineControls />
             <div className={style.viewport} style={{ width: scale(daysLength, dayWidthPx) }}>
                 <div className={style.timelineContent}>
-                    <TimelinePeriods />
                     <div className={style.timelineRows}>
                         {
                             rows.map(row => (
@@ -57,8 +55,10 @@ export default function Timeline() {
                             ))
                         }
                     </div>
+                    <TimelinePeriods />
                 </div>
             </div>
+            <TimelineControls />
         </div>
     );
 }
