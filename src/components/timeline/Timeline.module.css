@@ -1,13 +1,19 @@
 .timeline {
     font-size: 14px;
     height: 100%;
-    overflow-y: scroll;
-    background-color: aliceblue;
+    display: flex;
+    flex-direction: column;
 }
 
 .viewport {
+    overflow-y: scroll;
+    background-color: aliceblue;
+    flex: 1;
+}
+
+.timelineContent {
     position: relative;
-    padding-bottom: 8px;
+    height: 100%;
 }
 
 .periods {

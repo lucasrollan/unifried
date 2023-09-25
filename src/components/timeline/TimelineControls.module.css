@@ -1,0 +1,8 @@
+.controlPanel {
+    position: sticky;
+    left: 0;
+    top: 0;
+    padding: 8px 12px;
+    text-align: right;
+    border-bottom: 1px sold gray;
+}

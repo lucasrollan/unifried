@@ -7,6 +7,7 @@ import TimelineCard from "./TimelineCard";
 import TimelinePeriods from "./TimelinePeriods";
 import { scale } from "./utils";
 import { fetchTimelineEntries, fetchTimelineRows } from "@/store/timeline/timelineSlice";
+import TimelineControls from "./TimelineControls";
 
 export default function Timeline() {
     const dispatch = useAppDispatch()
@@ -21,38 +22,41 @@ export default function Timeline() {
 
     return (
         <div className={style.timeline}>
+            <TimelineControls />
             <div className={style.viewport} style={{ width: scale(daysLength, dayWidthPx) }}>
-                <TimelinePeriods />
-                <div className={style.timelineRows}>
-                {
-                    rows.map(row => (
-                        <div className={style.timelineRow} key={row.id}>
-                            <h4>
-                                <span className={style.timelineRowTitle}>{row.label}</span>
-                            </h4>
-                            <div className={style.timelineRowLanes}>
-                                {
-                                    (cards[row.id] || []).map((lane, laneIndex) => (
-                                        <div className={style.timelineRowLane} key={`${row.id}-${laneIndex}`}>
-                                            {
-                                                lane.map(card => (
-                                                    <TimelineCard
-                                                        key={card.id}
-                                                        card={card}
-                                                        style={{
-                                                            width: scale(card.timeWindow.daysLength, dayWidthPx),
-                                                            left: scale(card.timeWindow.daysSinceStart, dayWidthPx),
-                                                        }}
-                                                    />
-                                                ))
-                                            }
-                                        </div>
-                                    ))
-                                }
-                            </div>
-                        </div>
-                    ))
-                }
+                <div className={style.timelineContent}>
+                    <TimelinePeriods />
+                    <div className={style.timelineRows}>
+                        {
+                            rows.map(row => (
+                                <div className={style.timelineRow} key={row.id}>
+                                    <h4>
+                                        <span className={style.timelineRowTitle}>{row.label}</span>
+                                    </h4>
+                                    <div className={style.timelineRowLanes}>
+                                        {
+                                            (cards[row.id] || []).map((lane, laneIndex) => (
+                                                <div className={style.timelineRowLane} key={`${row.id}-${laneIndex}`}>
+                                                    {
+                                                        lane.map(card => (
+                                                            <TimelineCard
+                                                                key={card.id}
+                                                                card={card}
+                                                                style={{
+                                                                    width: scale(card.timeWindow.daysLength, dayWidthPx),
+                                                                    left: scale(card.timeWindow.daysSinceStart, dayWidthPx),
+                                                                }}
+                                                            />
+                                                        ))
+                                                    }
+                                                </div>
+                                            ))
+                                        }
+                                    </div>
+                                </div>
+                            ))
+                        }
+                    </div>
                 </div>
             </div>
         </div>

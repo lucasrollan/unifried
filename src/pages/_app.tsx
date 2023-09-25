@@ -9,6 +9,7 @@ import '../main.css'
 import "normalize.css";
 import "@blueprintjs/core/lib/css/blueprint.css";
 import "@blueprintjs/icons/lib/css/blueprint-icons.css";
+import 'react-day-picker/dist/style.css';
 
 function App({ Component, pageProps }: AppProps) {
     return (
