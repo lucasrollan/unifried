@@ -1,5 +1,4 @@
 import React from "react";
-import '../main.css'
 import NavBar from "./NavBar";
 import SessionGuard from "./SessionGuard";
 

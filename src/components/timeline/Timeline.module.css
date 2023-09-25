@@ -126,6 +126,10 @@
     bottom: 100%;
 }
 
+.timelineCardDetails {
+    padding: 4px 8px;
+}
+
 .todayMarker {
     position: absolute;
     left: 0;
