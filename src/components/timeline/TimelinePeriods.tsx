@@ -57,9 +57,7 @@ export default function TimelinePeriods() {
             </div>
             <div className={style.todayMarker} style={{
                 left: scale(todayDays, dayWidthPx)
-            }}>
-                <span className={style.todayLabel}>Now</span>
-            </div>
+            }} />
         </div>
     );
 }

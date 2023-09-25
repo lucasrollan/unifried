@@ -70,8 +70,6 @@
 }
 
 .timelineRows {
-    margin-top: 50px;
-    border-top: 1px solid lightgray;
 }
 .timelineRow {
     padding-top: 4px;
@@ -137,19 +135,20 @@
 
 .todayMarker {
     position: absolute;
-    left: 0;
+    left: -1px;
     top: 0;
-    border-left: 2px dashed rgba(82, 148, 162, 0.5);
-    height: 100vh;
-}
-.todayLabel {
-    position: absolute;
-    left: 0;
-    top: 105px;
+    width: 0;
+    height: 0;
     transform: translateX(-50%);
-    background-color: rgb(145, 223, 239);
-    border: 1px solid rgb(82, 148, 162);
-    border-radius: 16px;
-    padding: 2px 8px;
-    font-size: 14gpx;
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
+    border-top: 10px solid rgb(82, 148, 162);
+}
+.todayMarker::before {
+    content: " ";
+    border-left: 2px dashed rgba(82, 148, 162, 0.5);
+    position: absolute;
+    left: -1px;
+    top: 0;
+    height: 100vh;
 }
