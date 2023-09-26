@@ -6,3 +6,13 @@
     text-align: right;
     border-bottom: 1px solid lightgray;
 }
+
+.zoomControl {
+    display: inline-flex;
+    margin-right: 12px;
+}
+
+.zoomContainer {
+    width: 150px;
+    margin: 0 16px 0 10px;
+}

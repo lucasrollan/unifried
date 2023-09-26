@@ -2,10 +2,10 @@ import React from "react";
 import { DayPicker } from 'react-day-picker';
 
 import style from './TimelineControls.module.css'
-import { ButtonGroup, Button, Popover } from "@blueprintjs/core";
+import { ButtonGroup, Button, Popover, Slider, Icon } from "@blueprintjs/core";
 import { useAppDispatch, useAppSelector } from "@/store";
-import { selectTimelineEnd, selectTimelineStart } from "@/store/timeline/selectors";
-import { updateEndDate, updateStartDate } from "@/store/timeline/timelineSlice";
+import { selectNumberOfDaysInView, selectTimeframeLengthDays, selectTimelineEnd, selectTimelineStart } from "@/store/timeline/selectors";
+import { updateDaysInView, updateEndDate, updateStartDate } from "@/store/timeline/timelineSlice";
 import moment from "moment";
 
 export default function TimelineControls() {
@@ -13,15 +13,37 @@ export default function TimelineControls() {
 
     const timelineStart = useAppSelector(selectTimelineStart)
     const timelineEnd = useAppSelector(selectTimelineEnd)
+    const daysInView = useAppSelector(selectNumberOfDaysInView)
+    const timeframeLengthDays = useAppSelector(selectTimeframeLengthDays)
+    const elementsOutsizeOfView = timeframeLengthDays - daysInView
 
     const startDate = new Date(timelineStart)
     const endDate = new Date(moment(timelineEnd).subtract(1, 'day').format('YYYY-MM-DD'))
 
     const setStartDate = (date: Date | undefined) => dispatch(updateStartDate(moment(date).format('YYYY-MM-DD')))
     const setEndDate = (date: Date | undefined) => dispatch(updateEndDate(moment(date).add(1, 'day').format('YYYY-MM-DD')))
+    const setDaysInView = (newElementsOutsideOfView: number) => {
+        const newElementsInView = timeframeLengthDays - newElementsOutsideOfView
+        dispatch(updateDaysInView(newElementsInView))
+    }
 
     return <div className={style.controlPanel}>
-        <ButtonGroup >
+        <ButtonGroup>
+            <div className={style.zoomControl + " bp5-button"}>
+                <Icon icon="zoom-out" />
+                <div className={style.zoomContainer}>
+                    <Slider
+                        value={elementsOutsizeOfView}
+                        labelRenderer={false}
+                        min={0}
+                        max={timeframeLengthDays - 1}
+                        onChange={setDaysInView}
+                    />
+                </div>
+                <Icon icon="zoom-in" />
+            </div>
+        </ButtonGroup>
+        <ButtonGroup>
             <Popover
                 content={
                         <DayPicker

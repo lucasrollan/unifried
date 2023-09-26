@@ -58,6 +58,9 @@ export const timelineSlice = createSlice({
         updateEndDate: (state, action: PayloadAction<string>) => {
             state.endDate = action.payload
         },
+        updateDaysInView: (state, action: PayloadAction<number>) => {
+            state.daysInView = action.payload
+        },
     },
     extraReducers: (builder) => {
         // Add reducers for additional action types here, and handle loading state as needed
@@ -93,6 +96,6 @@ export const timelineSlice = createSlice({
 })
 
 // Action creators are generated for each case reducer function
-export const { updateStartDate, updateEndDate } = timelineSlice.actions
+export const { updateStartDate, updateEndDate, updateDaysInView } = timelineSlice.actions
 
 export default timelineSlice.reducer
