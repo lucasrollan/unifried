@@ -135,14 +135,20 @@
 
 .todayMarker {
     position: absolute;
-    left: -1px;
+    height: 100%;
+    top: 0;
+}
+.todayMarker::after {
+    content: " ";
+    position: absolute;
+    left: 0;
     top: 0;
     width: 0;
     height: 0;
     transform: translateX(-50%);
-    border-left: 10px solid transparent;
-    border-right: 10px solid transparent;
-    border-top: 10px solid rgb(82, 148, 162);
+    border-left: 12px solid transparent;
+    border-right: 12px solid transparent;
+    border-top: 12px solid rgb(82, 148, 162);
 }
 .todayMarker::before {
     content: " ";
@@ -150,5 +156,5 @@
     position: absolute;
     left: -1px;
     top: 0;
-    height: 100vh;
+    height: 100%;
 }

@@ -2,7 +2,7 @@ import React from "react";
 import style from './Timeline.module.css'
 import { useDispatch, useSelector } from "react-redux";
 import { RootState, useAppDispatch, useAppSelector } from "@/store";
-import { selectTimeframeLengthDays, selectTimelineCardsByRowIds, selectTimelineRows } from "@/store/timeline/selectors";
+import { selectTimeframeLengthDays, selectTimelineCardsByRowIds, selectTimelineRows, selectTodayTimeframeDays } from "@/store/timeline/selectors";
 import TimelineCard from "./TimelineCard";
 import TimelinePeriods from "./TimelinePeriods";
 import { scale } from "./utils";
@@ -14,8 +14,12 @@ export default function Timeline() {
     dispatch(fetchTimelineEntries()) // TODO: This is re-triggering the fetch on every render
     dispatch(fetchTimelineRows()) // TODO: This is re-triggering the fetch on every render
 
+
+
     const daysLength = useAppSelector(selectTimeframeLengthDays)
+    const todayDays = useAppSelector(selectTodayTimeframeDays)
     const dayWidthPx = useSelector((state: RootState) => state.timeline.dayWidthPx)
+
 
     const rows = useSelector(selectTimelineRows)
     const cards = useSelector(selectTimelineCardsByRowIds)
@@ -56,6 +60,9 @@ export default function Timeline() {
                         }
                     </div>
                     <TimelinePeriods />
+                    <div className={style.todayMarker} style={{
+                        left: scale(todayDays, dayWidthPx)
+                    }} />
                 </div>
             </div>
             <TimelineControls />
