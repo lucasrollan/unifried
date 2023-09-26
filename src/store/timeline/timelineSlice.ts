@@ -52,18 +52,11 @@ export const timelineSlice = createSlice({
     name: 'timeline',
     initialState,
     reducers: {
-        increment: (state) => {
-            // Redux Toolkit allows us to write "mutating" logic in reducers. It
-            // doesn't actually mutate the state because it uses the Immer library,
-            // which detects changes to a "draft state" and produces a brand new
-            // immutable state based off those changes
-            state.dayWidthPx += 1
+        updateStartDate: (state, action: PayloadAction<string>) => {
+            state.startDate = action.payload
         },
-        decrement: (state) => {
-            state.dayWidthPx -= 1
-        },
-        incrementByAmount: (state, action: PayloadAction<number>) => {
-            state.dayWidthPx += action.payload
+        updateEndDate: (state, action: PayloadAction<string>) => {
+            state.endDate = action.payload
         },
     },
     extraReducers: (builder) => {
@@ -100,6 +93,6 @@ export const timelineSlice = createSlice({
 })
 
 // Action creators are generated for each case reducer function
-export const { increment, decrement, incrementByAmount } = timelineSlice.actions
+export const { updateStartDate, updateEndDate } = timelineSlice.actions
 
 export default timelineSlice.reducer

@@ -14,19 +14,16 @@ export default function Timeline() {
     dispatch(fetchTimelineEntries()) // TODO: This is re-triggering the fetch on every render
     dispatch(fetchTimelineRows()) // TODO: This is re-triggering the fetch on every render
 
-
-
     const daysLength = useAppSelector(selectTimeframeLengthDays)
     const todayDays = useAppSelector(selectTodayTimeframeDays)
     const dayWidthPx = useSelector((state: RootState) => state.timeline.dayWidthPx)
-
 
     const rows = useSelector(selectTimelineRows)
     const cards = useSelector(selectTimelineCardsByRowIds)
 
     return (
         <div className={style.timeline}>
-            <div className={style.viewport} style={{ width: scale(daysLength, dayWidthPx) }}>
+            <div className={style.viewport} style={{ minWidth: scale(daysLength, dayWidthPx) }}>
                 <div className={style.timelineContent}>
                     <div className={style.timelineRows}>
                         {
