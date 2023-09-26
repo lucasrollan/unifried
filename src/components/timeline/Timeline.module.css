@@ -140,8 +140,9 @@
 }
 .todayMarker::after {
     content: " ";
-    position: absolute;
-    left: 0;
+    display: block;
+    position: sticky;
+    left: -50%;
     top: 0;
     width: 0;
     height: 0;
