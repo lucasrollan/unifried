@@ -5,7 +5,7 @@ import type { PayloadAction } from '@reduxjs/toolkit'
 export interface TimelineState {
     startDate: string,
     endDate: string, //not inclusive
-    dayWidthPx: number,
+    daysInView: number,
     rowIds: string[],
     rowsById: Record<string, TimelineRow>,
     entryIds: string[],
@@ -15,7 +15,7 @@ export interface TimelineState {
 const initialState: TimelineState = {
     startDate: '2023-07-15T00:00',
     endDate: '2024-03-01T00:00',
-    dayWidthPx: 80,
+    daysInView: 14,
     rowIds: [],
     rowsById: {},
     entryIds: [],

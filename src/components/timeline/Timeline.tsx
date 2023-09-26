@@ -1,8 +1,7 @@
 import React from "react";
 import style from './Timeline.module.css'
-import { useDispatch, useSelector } from "react-redux";
-import { RootState, useAppDispatch, useAppSelector } from "@/store";
-import { selectTimeframeLengthDays, selectTimelineCardsByRowIds, selectTimelineRows, selectTodayTimeframeDays } from "@/store/timeline/selectors";
+import { useAppDispatch, useAppSelector } from "@/store";
+import { selectNumberOfDaysInView, selectTimeframeLengthDays, selectTimelineCardsByRowIds, selectTimelineRows, selectTodayTimeframeDays } from "@/store/timeline/selectors";
 import TimelineCard from "./TimelineCard";
 import TimelinePeriods from "./TimelinePeriods";
 import { scale } from "./utils";
@@ -16,14 +15,14 @@ export default function Timeline() {
 
     const daysLength = useAppSelector(selectTimeframeLengthDays)
     const todayDays = useAppSelector(selectTodayTimeframeDays)
-    const dayWidthPx = useSelector((state: RootState) => state.timeline.dayWidthPx)
+    const daysInView = useAppSelector(selectNumberOfDaysInView)
 
-    const rows = useSelector(selectTimelineRows)
-    const cards = useSelector(selectTimelineCardsByRowIds)
+    const rows = useAppSelector(selectTimelineRows)
+    const cards = useAppSelector(selectTimelineCardsByRowIds)
 
     return (
         <div className={style.timeline}>
-            <div className={style.viewport} style={{ minWidth: scale(daysLength, dayWidthPx) }}>
+            <div className={style.viewport} style={{ minWidth: scale(daysLength, daysInView) }}>
                 <div className={style.timelineContent}>
                     <div className={style.timelineRows}>
                         {
@@ -42,8 +41,8 @@ export default function Timeline() {
                                                                 key={card.id}
                                                                 card={card}
                                                                 style={{
-                                                                    width: scale(card.timeWindow.daysLength, dayWidthPx),
-                                                                    left: scale(card.timeWindow.daysSinceStart, dayWidthPx),
+                                                                    width: scale(card.timeWindow.daysLength, daysInView),
+                                                                    left: scale(card.timeWindow.daysSinceStart, daysInView),
                                                                 }}
                                                             />
                                                         ))
@@ -58,7 +57,7 @@ export default function Timeline() {
                     </div>
                     <TimelinePeriods />
                     <div className={style.todayMarker} style={{
-                        left: scale(todayDays, dayWidthPx)
+                        left: scale(todayDays, daysInView)
                     }} />
                 </div>
             </div>

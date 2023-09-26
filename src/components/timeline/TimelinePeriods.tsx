@@ -1,12 +1,12 @@
 import React from "react";
 import style from './Timeline.module.css'
 import { RootState, useAppSelector } from "@/store";
-import { selectDayPeriodsFromDates, selectMonthPeriods, selectPregnancyWeekPeriodsFromDates, selectWeekPeriods } from "@/store/timeline/selectors";
+import { selectDayPeriodsFromDates, selectMonthPeriods, selectNumberOfDaysInView, selectPregnancyWeekPeriodsFromDates, selectWeekPeriods } from "@/store/timeline/selectors";
 import { classes, scale } from "./utils";
 
 
 export default function TimelinePeriods() {
-    const dayWidthPx = useAppSelector((state: RootState) => state.timeline.dayWidthPx)
+    const daysInView = useAppSelector(selectNumberOfDaysInView)
     const months = useAppSelector(selectMonthPeriods)
     const weeks = useAppSelector(selectWeekPeriods)
     const burbujaWeeks = useAppSelector(selectPregnancyWeekPeriodsFromDates)
@@ -18,8 +18,8 @@ export default function TimelinePeriods() {
                 {
                     months.map(month => (
                         <div className={style.period} key={month.start.format()} style={{
-                            width: scale(month.timeWindow.daysLength, dayWidthPx),
-                            left: scale(month.timeWindow.daysSinceStart, dayWidthPx),
+                            width: scale(month.timeWindow.daysLength, daysInView),
+                            left: scale(month.timeWindow.daysSinceStart, daysInView),
                         }}><span className={style.periodLabel}>{month.label}</span></div>
                     ))
                 }
@@ -28,8 +28,8 @@ export default function TimelinePeriods() {
                 {
                     days.map(day => (
                         <div className={classes(style.period, style[day.style || ''])} key={day.start.format()} style={{
-                            width: scale(day.timeWindow.daysLength, dayWidthPx),
-                            left: scale(day.timeWindow.daysSinceStart, dayWidthPx),
+                            width: scale(day.timeWindow.daysLength, daysInView),
+                            left: scale(day.timeWindow.daysSinceStart, daysInView),
                         }}><span className={style.periodLabel}>{day.label}</span></div>
                     ))
                 }
@@ -38,8 +38,8 @@ export default function TimelinePeriods() {
                 {
                     weeks.map(week => (
                         <div className={style.period} key={week.start.format()} style={{
-                            width: scale(week.timeWindow.daysLength, dayWidthPx),
-                            left: scale(week.timeWindow.daysSinceStart, dayWidthPx),
+                            width: scale(week.timeWindow.daysLength, daysInView),
+                            left: scale(week.timeWindow.daysSinceStart, daysInView),
                         }}><span className={style.periodLabel}>{week.label}</span></div>
                     ))
                 }
@@ -48,8 +48,8 @@ export default function TimelinePeriods() {
                 {
                     burbujaWeeks.map(week => (
                         <div className={style.period} key={week.start.format()} style={{
-                            width: scale(week.timeWindow.daysLength, dayWidthPx),
-                            left: scale(week.timeWindow.daysSinceStart, dayWidthPx),
+                            width: scale(week.timeWindow.daysLength, daysInView),
+                            left: scale(week.timeWindow.daysSinceStart, daysInView),
                         }}><span className={style.periodLabel}>{week.label}</span></div>
                     ))
                 }

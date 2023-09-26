@@ -22,6 +22,7 @@ export const selectTimelineStart = (state: RootState) => state.timeline.startDat
 export const selectTimelineEnd = (state: RootState) => state.timeline.endDate
 export const selectTodayTimeframeDays = (state: RootState) =>
     moment().diff(state.timeline.startDate, 'day', true)
+export const selectNumberOfDaysInView = (state: RootState) => state.timeline.daysInView
 
 export const selectTimeframeLengthDays = createSelector(
     selectTimelineStart,
