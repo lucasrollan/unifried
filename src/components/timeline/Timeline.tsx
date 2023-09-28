@@ -1,4 +1,5 @@
-import React, { UIEventHandler, useEffect } from "react";
+import React, { UIEventHandler, useCallback, useEffect } from "react";
+import { throttle } from "lodash";
 import style from './Timeline.module.css'
 import { useAppDispatch, useAppSelector } from "@/store";
 import { selectNumberOfDaysInView, selectScrollPos, selectTimeframeLengthDays, selectTimelineCardsByRowIds, selectTimelineRows, selectTodayTimeframeDays } from "@/store/timeline/selectors";
@@ -27,7 +28,13 @@ export default function Timeline() {
     const rows = useAppSelector(selectTimelineRows)
     const cards = useAppSelector(selectTimelineCardsByRowIds)
 
-    const handleScroll = (newPosition: number) => dispatch(updateScrollPos(newPosition))
+    const handleScroll = useCallback(
+        throttle(
+            (newPosition: number) => dispatch(updateScrollPos(newPosition)),
+            500,
+        ),
+        []
+    )
 
     return (
         <div className={style.timeline}>

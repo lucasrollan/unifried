@@ -18,6 +18,7 @@
     "date-fns": "^2.30.0",
     "eslint": "8.49.0",
     "eslint-config-next": "13.4.19",
+    "lodash": "^4.17.21",
     "moment": "^2.29.4",
     "next": "13.4.19",
     "next-auth": "^4.22.1",
@@ -26,5 +27,8 @@
     "react-dom": "18.2.0",
     "react-redux": "^8.1.2",
     "typescript": "5.2.2"
+  },
+  "devDependencies": {
+    "@types/lodash": "^4.14.199"
   }
 }
