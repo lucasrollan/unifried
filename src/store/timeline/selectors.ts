@@ -2,6 +2,7 @@ import { RootState } from "@/store"
 import { createSelector } from "@reduxjs/toolkit"
 import moment, { Moment } from "moment"
 import { TimelineCard } from "./types"
+import { TimelineEntry } from "@/types/timeline"
 
 type timelineCardsByRow = Record<string, Array<TimelineCard[]>>
 
@@ -187,6 +188,11 @@ export const selectTimelineRows = createSelector(
         rowIds.map(rowId => rowsById[rowId])
 )
 
+function isTimelineEntryWithinTimeframe (entry: TimelineEntry, timelineStart: string, timelineEnd: string) {
+    return moment(entry.end).isSameOrAfter(timelineStart)
+        && moment(entry.start).isSameOrBefore(timelineEnd)
+}
+
 export const selectTimelineCardsByRowIds = createSelector(
     selectTimelineStart,
     selectTimelineEnd,
@@ -194,8 +200,11 @@ export const selectTimelineCardsByRowIds = createSelector(
     (state: RootState) => state.timeline.entriesById,
     (timelineStart, timelineEnd, entryIds, entriesById) => {
         const byRowId = entryIds.reduce((acc, entryId) => {
-            // TODO: filter to only entries that are within the timeframe
             const entry = entriesById[entryId]
+
+            if (!isTimelineEntryWithinTimeframe(entry, timelineStart, timelineEnd)) {
+                return acc
+            }
 
             const card: TimelineCard =({
                 id: entry.id,
