@@ -1,6 +1,6 @@
 import React from "react";
 import style from './Timeline.module.css'
-import { RootState, useAppSelector } from "@/store";
+import { useAppSelector } from "@/store";
 import { selectDayPeriodsFromDates, selectMonthPeriods, selectNumberOfDaysInView, selectPregnancyWeekPeriodsFromDates, selectWeekPeriods } from "@/store/timeline/selectors";
 import { classes, scale } from "./utils";
 

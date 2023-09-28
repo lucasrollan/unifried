@@ -1,4 +1,4 @@
-import React, { UIEventHandler, useCallback, useEffect } from "react";
+import React, { useCallback, useEffect } from "react";
 import { throttle } from "lodash";
 import style from './Timeline.module.css'
 import { useAppDispatch, useAppSelector } from "@/store";
@@ -16,9 +16,9 @@ export default function Timeline() {
     const dispatch = useAppDispatch()
 
     useEffect(() => {
-        dispatch(fetchTimelineEntries()) // TODO: This is re-triggering the fetch on every render
-        dispatch(fetchTimelineRows()) // TODO: This is re-triggering the fetch on every render
-    }, [])
+        dispatch(fetchTimelineEntries())
+        dispatch(fetchTimelineRows())
+    }, [dispatch])
 
     const daysLength = useAppSelector(selectTimeframeLengthDays)
     const todayDays = useAppSelector(selectTodayTimeframeDays)
@@ -38,7 +38,6 @@ export default function Timeline() {
 
     return (
         <div className={style.timeline}>
-            {/* <div className={style.viewport} style={{ minWidth: scale(daysLength, daysInView) }}> */}
             <Scrollable
                 className={style.viewport}
                 position={scrollPos}
