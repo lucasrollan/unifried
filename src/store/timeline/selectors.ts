@@ -206,6 +206,7 @@ export const selectTimelineCardsByRowIds = createSelector(
                 return acc
             }
 
+            const useStart = moment.max(moment(entry.start), moment(timelineStart))
             const useEnd = moment.min(moment(entry.end), moment(timelineEnd))
 
             const card: TimelineCard =({
@@ -215,7 +216,7 @@ export const selectTimelineCardsByRowIds = createSelector(
                 end: moment(entry.end),
                 isHighlighted: entry.isHighlighted,
                 timeWindow: { // how this entry relates to the selected time window
-                    daysSinceStart: moment(entry.start).diff(timelineStart, 'day', USE_DECIMAL_DAYS),
+                    daysSinceStart: useStart.diff(timelineStart, 'day', USE_DECIMAL_DAYS),
                     daysLength: useEnd.diff(entry.start, 'day', USE_DECIMAL_DAYS),
                 }
             })
