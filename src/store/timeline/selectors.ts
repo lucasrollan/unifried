@@ -109,6 +109,7 @@ export const selectPregnancyWeekPeriodsFromDates = createSelector(
         const weekIndex = 1
         for (let week = weekIndex; week <= 42 + weekIndex && current.isBefore(endMoment); week += 1) {
             const currentEnd = moment(current).add(1, 'week')
+            const useEnd = moment.min(currentEnd, endMoment)
             if (current.isBefore(endMoment) && currentEnd.isAfter(startMoment)) {
                 periods.push({
                     label: 'Burbuja week ' + week,
@@ -116,7 +117,7 @@ export const selectPregnancyWeekPeriodsFromDates = createSelector(
                     end: moment.min(currentEnd, endMoment),
                     timeWindow: {
                         daysSinceStart: current.diff(startMoment, 'day'),
-                        daysLength: currentEnd.diff(current, 'day'),
+                        daysLength: useEnd.diff(current, 'day'),
                     }
                 })
             }
