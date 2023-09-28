@@ -1,29 +1,45 @@
-import React from "react";
+import React, { UIEventHandler, useEffect } from "react";
 import style from './Timeline.module.css'
 import { useAppDispatch, useAppSelector } from "@/store";
-import { selectNumberOfDaysInView, selectTimeframeLengthDays, selectTimelineCardsByRowIds, selectTimelineRows, selectTodayTimeframeDays } from "@/store/timeline/selectors";
+import { selectNumberOfDaysInView, selectScrollPos, selectTimeframeLengthDays, selectTimelineCardsByRowIds, selectTimelineRows, selectTodayTimeframeDays } from "@/store/timeline/selectors";
 import TimelineCard from "./TimelineCard";
 import TimelinePeriods from "./TimelinePeriods";
 import { scale } from "./utils";
-import { fetchTimelineEntries, fetchTimelineRows } from "@/store/timeline/timelineSlice";
+import { fetchTimelineEntries, fetchTimelineRows, updateScrollPos } from "@/store/timeline/timelineSlice";
 import TimelineControls from "./TimelineControls";
+import createScrollable from "../Scrollable";
+
+const Scrollable = createScrollable()
 
 export default function Timeline() {
     const dispatch = useAppDispatch()
-    dispatch(fetchTimelineEntries()) // TODO: This is re-triggering the fetch on every render
-    dispatch(fetchTimelineRows()) // TODO: This is re-triggering the fetch on every render
+
+    useEffect(() => {
+        dispatch(fetchTimelineEntries()) // TODO: This is re-triggering the fetch on every render
+        dispatch(fetchTimelineRows()) // TODO: This is re-triggering the fetch on every render
+    }, [])
 
     const daysLength = useAppSelector(selectTimeframeLengthDays)
     const todayDays = useAppSelector(selectTodayTimeframeDays)
     const daysInView = useAppSelector(selectNumberOfDaysInView)
+    const scrollPos = useAppSelector(selectScrollPos)
 
     const rows = useAppSelector(selectTimelineRows)
     const cards = useAppSelector(selectTimelineCardsByRowIds)
 
+    const handleScroll = (newPosition: number) => dispatch(updateScrollPos(newPosition))
+
     return (
         <div className={style.timeline}>
-            <div className={style.viewport} style={{ minWidth: scale(daysLength, daysInView) }}>
-                <div className={style.timelineContent}>
+            {/* <div className={style.viewport} style={{ minWidth: scale(daysLength, daysInView) }}> */}
+            <Scrollable
+                className={style.viewport}
+                position={scrollPos}
+                onScroll={handleScroll}
+            >
+                <div className={style.timelineContent}
+                    style={{ width: scale(daysLength, daysInView) }}
+                >
                     <div className={style.timelineRows}>
                         {
                             rows.map(row => (
@@ -60,7 +76,7 @@ export default function Timeline() {
                         left: scale(todayDays, daysInView)
                     }} />
                 </div>
-            </div>
+            </Scrollable>
             <TimelineControls />
         </div>
     );

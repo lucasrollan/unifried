@@ -4,8 +4,8 @@ import { DayPicker } from 'react-day-picker';
 import style from './TimelineControls.module.css'
 import { ButtonGroup, Button, Popover, Slider, Icon } from "@blueprintjs/core";
 import { useAppDispatch, useAppSelector } from "@/store";
-import { selectNumberOfDaysInView, selectTimeframeLengthDays, selectTimelineEnd, selectTimelineStart } from "@/store/timeline/selectors";
-import { updateDaysInView, updateEndDate, updateStartDate } from "@/store/timeline/timelineSlice";
+import { selectNumberOfDaysInView, selectTimeframeLengthDays, selectTimelineEnd, selectTimelineStart, selectTodayTimeframeDays } from "@/store/timeline/selectors";
+import { scrollToNow, updateDaysInView, updateEndDate, updateScrollPos, updateStartDate } from "@/store/timeline/timelineSlice";
 import moment from "moment";
 
 export default function TimelineControls() {
@@ -17,6 +17,8 @@ export default function TimelineControls() {
     const timeframeLengthDays = useAppSelector(selectTimeframeLengthDays)
     const elementsOutsizeOfView = timeframeLengthDays - daysInView
 
+    const todayDays = useAppSelector(selectTodayTimeframeDays)
+
     const startDate = new Date(timelineStart)
     const endDate = new Date(moment(timelineEnd).subtract(1, 'day').format('YYYY-MM-DD'))
 
@@ -27,8 +29,15 @@ export default function TimelineControls() {
         dispatch(updateDaysInView(newElementsInView))
     }
 
+    const goToNow = () => {
+        const todayPosition = todayDays * (window.innerWidth / daysInView)
+        const newScroll = todayPosition - window.innerWidth / 2 //center in view
+        dispatch(updateScrollPos(newScroll))
+    }
+
     return <div className={style.controlPanel}>
         <ButtonGroup>
+            <Button icon="locate" title="Go to now" onClick={goToNow} />
             <div className={style.zoomControl + " bp5-button"}>
                 <Icon icon="zoom-out" />
                 <div className={style.zoomContainer}>

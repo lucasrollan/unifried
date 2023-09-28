@@ -10,6 +10,7 @@ export interface TimelineState {
     rowsById: Record<string, TimelineRow>,
     entryIds: string[],
     entriesById: Record<string, TimelineEntry>,
+    scrollPos: number,
 }
 
 const initialState: TimelineState = {
@@ -20,6 +21,7 @@ const initialState: TimelineState = {
     rowsById: {},
     entryIds: [],
     entriesById: {},
+    scrollPos: 0,
 }
 
 const api_fetchRows = async function (): Promise<TimelineRow[]> {
@@ -61,6 +63,12 @@ export const timelineSlice = createSlice({
         updateDaysInView: (state, action: PayloadAction<number>) => {
             state.daysInView = action.payload
         },
+        updateScrollPos: (state, action: PayloadAction<number>) => {
+            state.scrollPos = action.payload
+        },
+        scrollToNow: (state) => {
+            state.scrollPos = 1000
+        }
     },
     extraReducers: (builder) => {
         // Add reducers for additional action types here, and handle loading state as needed
@@ -96,6 +104,6 @@ export const timelineSlice = createSlice({
 })
 
 // Action creators are generated for each case reducer function
-export const { updateStartDate, updateEndDate, updateDaysInView } = timelineSlice.actions
+export const { updateStartDate, updateEndDate, updateDaysInView, updateScrollPos, scrollToNow } = timelineSlice.actions
 
 export default timelineSlice.reducer
