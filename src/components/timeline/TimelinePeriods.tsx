@@ -1,12 +1,13 @@
 import React from "react";
 import style from './Timeline.module.css'
 import { useAppSelector } from "@/store";
-import { selectDayPeriodsFromDates, selectMonthPeriods, selectNumberOfDaysInView, selectPregnancyWeekPeriodsFromDates, selectWeekPeriods } from "@/store/timeline/selectors";
+import { selectDayPeriodsFromDates, selectMonthPeriods, selectNumberOfDaysInView, selectPregnancyWeekPeriodsFromDates, selectWeekPeriods, selectYearPeriods } from "@/store/timeline/selectors";
 import { classes, scale } from "./utils";
 
 
 export default function TimelinePeriods() {
     const daysInView = useAppSelector(selectNumberOfDaysInView)
+    const years = useAppSelector(selectYearPeriods)
     const months = useAppSelector(selectMonthPeriods)
     const weeks = useAppSelector(selectWeekPeriods)
     const burbujaWeeks = useAppSelector(selectPregnancyWeekPeriodsFromDates)
@@ -14,6 +15,16 @@ export default function TimelinePeriods() {
 
     return (
         <div className={style.periods}>
+            <div className={style.periodLane}>
+                {
+                    years.map(year => (
+                        <div className={style.period} key={year.start.format()} style={{
+                            width: scale(year.timeWindow.daysLength, daysInView),
+                            left: scale(year.timeWindow.daysSinceStart, daysInView),
+                        }}><span className={style.periodLabel}>{year.label}</span></div>
+                    ))
+                }
+            </div>
             <div className={style.periodLane}>
                 {
                     months.map(month => (
