@@ -2,7 +2,7 @@ import React, { useCallback, useEffect } from "react";
 import { throttle } from "lodash";
 import style from './Timeline.module.css'
 import { useAppDispatch, useAppSelector } from "@/store";
-import { selectNumberOfDaysInView, selectScrollPos, selectTimeframeLengthDays, selectTimelineCardsByRowIds, selectTimelineRows, selectTodayTimeframeDays } from "@/store/timeline/selectors";
+import { selectHighlightedCards, selectNumberOfDaysInView, selectScrollPos, selectTimeframeLengthDays, selectTimelineCardsByRowIds, selectTimelineRows, selectTodayTimeframeDays } from "@/store/timeline/selectors";
 import TimelineCard from "./TimelineCard";
 import TimelinePeriods from "./TimelinePeriods";
 import { scale } from "./utils";
@@ -27,6 +27,7 @@ export default function Timeline() {
 
     const rows = useAppSelector(selectTimelineRows)
     const cards = useAppSelector(selectTimelineCardsByRowIds)
+    const highlightedCards = useAppSelector(selectHighlightedCards)
 
     const handleScroll = useCallback(
         throttle(
@@ -46,6 +47,17 @@ export default function Timeline() {
                 <div className={style.timelineContent}
                     style={{ width: scale(daysLength, daysInView) }}
                 >
+                    {
+                        highlightedCards.map(card => <div
+                            className={style.timelineHighlight}
+                            style={{
+                                width: scale(card.timeWindow.daysLength, daysInView),
+                                left: scale(card.timeWindow.daysSinceStart, daysInView),
+                            }}
+                        >
+
+                        </div>)
+                    }
                     <div className={style.timelineRows}>
                         {
                             rows.map(row => (

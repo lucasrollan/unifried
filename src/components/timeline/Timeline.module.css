@@ -6,7 +6,6 @@
 }
 
 .viewport {
-    overflow-y: scroll;
     flex: 1;
 }
 
@@ -14,7 +13,6 @@
     position: relative;
     display: flex;
     flex-direction: column-reverse;
-    justify-content: flex-end;
     height: 100%;
 }
 
@@ -71,11 +69,11 @@
 }
 
 .timelineRows {
+    flex: 1;
 }
 .timelineRow {
     padding-top: 4px;
     position: relative;
-    background-color: white;
     border-bottom: 1px solid lightgray;
 }
 .timelineRowTitle {
@@ -111,13 +109,27 @@
     left: 2px;
 }
 
+.timelineHighlights {
+    position: sticky;
+    top: 0;
+    height: 100%;
+}
+.timelineHighlight {
+    position: absolute;
+    background-color: rgba(255, 0, 0, 0.05);
+    border: 1.5px dashed rgba(255, 0, 0, 0.2);
+    border-top: none;
+    border-bottom: none;
+    height: 100%;
+}
+/*
 .highlightedCard::after,
 .highlightedCard::before {
     content: " ";
     position: absolute;
-    width: calc(100% + 2px); /* left border + right border */
+    width: calc(100% + 2px);
     height: 100vh;
-    left: -1px; /* left border */
+    left: -1px;
     background-color: rgba(255, 0, 0, 0.1);
     border: 1.5px dashed rgba(255, 0, 0, 0.25);
     border-top: none;
@@ -129,7 +141,7 @@
 }
 .highlightedCard::before {
     bottom: 100%;
-}
+} */
 
 .timelineCardDetails {
     padding: 4px 8px;

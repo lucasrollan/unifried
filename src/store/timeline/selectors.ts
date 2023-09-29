@@ -193,6 +193,41 @@ function isTimelineEntryWithinTimeframe (entry: TimelineEntry, timelineStart: st
         && moment(entry.start).isSameOrBefore(timelineEnd)
 }
 
+
+export const selectHighlightedCards = createSelector(
+    selectTimelineStart,
+    selectTimelineEnd,
+    (state: RootState) => state.timeline.entryIds,
+    (state: RootState) => state.timeline.entriesById,
+    (timelineStart, timelineEnd, entryIds, entriesById) => {
+        const highlightedCards: TimelineCard[] = []
+        for (let entryId of entryIds) {
+            const entry = entriesById[entryId]
+
+            if (entry.isHighlighted && isTimelineEntryWithinTimeframe(entry, timelineStart, timelineEnd)) {
+                const useStart = moment.max(moment(entry.start), moment(timelineStart))
+                const useEnd = moment.min(moment(entry.end), moment(timelineEnd))
+
+                const card: TimelineCard =({
+                    id: entry.id,
+                    label: entry.label,
+                    start: moment(entry.start),
+                    end: moment(entry.end),
+                    isHighlighted: entry.isHighlighted,
+                    timeWindow: { // how this entry relates to the selected time window
+                        daysSinceStart: useStart.diff(timelineStart, 'day', USE_DECIMAL_DAYS),
+                        daysLength: useEnd.diff(entry.start, 'day', USE_DECIMAL_DAYS),
+                    }
+                })
+
+                highlightedCards.push(card)
+            }
+        }
+
+        return highlightedCards
+    }
+)
+
 export const selectTimelineCardsByRowIds = createSelector(
     selectTimelineStart,
     selectTimelineEnd,
