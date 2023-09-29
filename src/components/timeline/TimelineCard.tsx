@@ -18,7 +18,8 @@ export default function TimelineCard({ card, style }: TimelineCardProps) {
             className={
                 classes(
                     timelineStyle.timelineCard,
-                    card.isHighlighted ? timelineStyle.highlightedCard : ''
+                    card.isHighlighted ? timelineStyle.highlightedCard : '',
+                    styles[card.color || ''],
                 )
             }
         >

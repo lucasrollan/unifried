@@ -5,7 +5,7 @@ import { useAppDispatch, useAppSelector } from "@/store";
 import { selectHighlightedCards, selectNumberOfDaysInView, selectScrollPos, selectTimeframeLengthDays, selectTimelineCardsByRowIds, selectTimelineRows, selectTodayTimeframeDays } from "@/store/timeline/selectors";
 import TimelineCard from "./TimelineCard";
 import TimelinePeriods from "./TimelinePeriods";
-import { scale } from "./utils";
+import { classes, scale } from "./utils";
 import { fetchTimelineEntries, fetchTimelineRows, updateScrollPos } from "@/store/timeline/timelineSlice";
 import TimelineControls from "./TimelineControls";
 import createScrollable from "../Scrollable";
@@ -49,14 +49,12 @@ export default function Timeline() {
                 >
                     {
                         highlightedCards.map(card => <div
-                            className={style.timelineHighlight}
+                            className={classes(style.timelineHighlight, style[card.color || ''])}
                             style={{
                                 width: scale(card.timeWindow.daysLength, daysInView),
                                 left: scale(card.timeWindow.daysSinceStart, daysInView),
                             }}
-                        >
-
-                        </div>)
+                        />)
                     }
                     <div className={style.timelineRows}>
                         {

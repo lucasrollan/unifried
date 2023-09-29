@@ -214,6 +214,7 @@ export const selectHighlightedCards = createSelector(
                     start: moment(entry.start),
                     end: moment(entry.end),
                     isHighlighted: entry.isHighlighted,
+                    color: entry.color,
                     timeWindow: { // how this entry relates to the selected time window
                         daysSinceStart: useStart.diff(timelineStart, 'day', USE_DECIMAL_DAYS),
                         daysLength: useEnd.diff(entry.start, 'day', USE_DECIMAL_DAYS),
@@ -250,6 +251,7 @@ export const selectTimelineCardsByRowIds = createSelector(
                 start: moment(entry.start),
                 end: moment(entry.end),
                 isHighlighted: entry.isHighlighted,
+                color: entry.color,
                 timeWindow: { // how this entry relates to the selected time window
                     daysSinceStart: useStart.diff(timelineStart, 'day', USE_DECIMAL_DAYS),
                     daysLength: useEnd.diff(entry.start, 'day', USE_DECIMAL_DAYS),

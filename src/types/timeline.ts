@@ -10,4 +10,5 @@ export type TimelineEntry = {
     end: string,
     rowId: string,
     isHighlighted?: boolean,
+    color?: 'orange' | 'red' | 'green',
 }

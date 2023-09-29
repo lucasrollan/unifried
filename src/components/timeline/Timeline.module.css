@@ -109,6 +109,20 @@
     left: 2px;
 }
 
+.timelineCard,
+.timelineCard.green {
+    background-color: rgb(145, 239, 189);
+    border: 1px solid rgb(54, 144, 24);
+}
+.timelineCard.orange {
+    background-color: rgb(239, 195, 145);
+    border: 1px solid rgb(144, 96, 24);
+}
+.timelineCard.red {
+    background-color: rgb(239, 156, 145);
+    border: 1px solid rgb(144, 58, 24);
+}
+
 .timelineHighlights {
     position: sticky;
     top: 0;
@@ -116,11 +130,23 @@
 }
 .timelineHighlight {
     position: absolute;
-    background-color: rgba(255, 0, 0, 0.05);
-    border: 1.5px dashed rgba(255, 0, 0, 0.2);
     border-top: none;
     border-bottom: none;
     height: 100%;
+}
+
+.timelineHighlight,
+.timelineHighlight.green {
+    background-color: rgba(54, 144, 24, 0.05);
+    border: 1px dashed rgba(54, 144, 24, 0.2);
+}
+.timelineHighlight.orange {
+    background-color: rgba(181, 157, 21, 0.05);
+    border: 1px dashed rgba(144, 126, 24, 0.2);
+}
+.timelineHighlight.red {
+    background-color: rgba(144, 24, 24, 0.05);
+    border: 1px dashed rgba(144, 24, 24, 0.2);
 }
 
 .timelineCardDetails {

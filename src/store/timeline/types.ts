@@ -6,6 +6,7 @@ export type TimelineCard = {
     start: Moment,
     end: Moment,
     isHighlighted?: boolean,
+    color?: 'orange' | 'red' | 'green',
     timeWindow: { // how this period relates to the selected time window
         daysSinceStart: number,
         daysLength: number,
