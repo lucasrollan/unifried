@@ -38,7 +38,7 @@ export default function TimelinePeriods() {
             <div className={style.periodLane}>
                 {
                     days.map(day => (
-                        <div className={classes(style.period, style[day.style || ''])} key={day.start.format()} style={{
+                        <div className={classes(style.period, style.mainUnit, style[day.style || ''])} key={day.start.format()} style={{
                             width: scale(day.timeWindow.daysLength, daysInView),
                             left: scale(day.timeWindow.daysSinceStart, daysInView),
                         }}><span className={style.periodLabel}>{day.label}</span></div>
