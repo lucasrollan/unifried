@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { DayPicker } from 'react-day-picker';
 
 import style from './TimelineControls.module.css'
@@ -31,9 +31,13 @@ export default function TimelineControls() {
 
     const goToNow = () => {
         const todayPosition = todayDays * (window.innerWidth / daysInView)
-        const newScroll = todayPosition - window.innerWidth / 2 //center in view
+        const newScroll = todayPosition - window.innerWidth / 4 // place line at 1/4 of the screen
         dispatch(updateScrollPos(newScroll))
     }
+
+    useEffect(() => {
+        goToNow()
+    }, [])
 
     return <div className={style.controlPanel}>
         <ButtonGroup>
