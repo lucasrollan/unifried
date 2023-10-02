@@ -1,12 +1,11 @@
 import React, { useCallback, useEffect } from "react";
-import { throttle } from "lodash";
 import style from './Timeline.module.css'
 import { useAppDispatch, useAppSelector } from "@/store";
-import { selectHighlightedCards, selectNumberOfDaysInView, selectScrollPos, selectTimeframeLengthDays, selectTimelineCardsByRowIds, selectTimelineRows, selectTodayTimeframeDays } from "@/store/timeline/selectors";
+import { selectHighlightedCards, selectNumberOfDaysInView, selectScrollDays, selectTimeframeLengthDays, selectTimelineCardsByRowIds, selectTimelineRows, selectTodayTimeframeDays } from "@/store/timeline/selectors";
 import TimelineCard from "./TimelineCard";
 import TimelinePeriods from "./TimelinePeriods";
 import { classes, scale } from "./utils";
-import { fetchTimelineEntries, fetchTimelineRows, updateScrollPos } from "@/store/timeline/timelineSlice";
+import { fetchTimelineEntries, fetchTimelineRows, updateViewportScrollDays } from "@/store/timeline/timelineSlice";
 import TimelineControls from "./TimelineControls";
 import createScrollable from "../Scrollable";
 
@@ -23,25 +22,30 @@ export default function Timeline() {
     const daysLength = useAppSelector(selectTimeframeLengthDays)
     const todayDays = useAppSelector(selectTodayTimeframeDays)
     const daysInView = useAppSelector(selectNumberOfDaysInView)
-    const scrollPos = useAppSelector(selectScrollPos)
+    const scrollDays = useAppSelector(selectScrollDays)
 
     const rows = useAppSelector(selectTimelineRows)
     const cards = useAppSelector(selectTimelineCardsByRowIds)
     const highlightedCards = useAppSelector(selectHighlightedCards)
 
+    const dayWidthPx = window.innerWidth / daysInView
+    const maxScroll = (daysLength - daysInView) * dayWidthPx
+
     const handleScroll = useCallback(
-        throttle(
-            (newPosition: number) => dispatch(updateScrollPos(newPosition)),
-            500,
-        ),
-        []
+        (newPos: number) => {
+            const scrollDays = newPos / dayWidthPx
+            console.log('handleScroll', newPos, scrollDays)
+            dispatch(updateViewportScrollDays(scrollDays))
+        },
+        [daysInView, dayWidthPx]
     )
 
     return (
         <div className={style.timeline}>
             <Scrollable
                 className={style.viewport}
-                position={scrollPos}
+                position={scrollDays * daysLength}
+                maxPosition={maxScroll}
                 onScroll={handleScroll}
             >
                 <div className={style.timelineContent}

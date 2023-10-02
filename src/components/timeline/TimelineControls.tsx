@@ -1,11 +1,11 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { DayPicker } from 'react-day-picker';
 
 import style from './TimelineControls.module.css'
 import { ButtonGroup, Button, Popover, Slider, Icon } from "@blueprintjs/core";
 import { useAppDispatch, useAppSelector } from "@/store";
 import { selectNumberOfDaysInView, selectTimeframeLengthDays, selectTimelineEnd, selectTimelineStart, selectTodayTimeframeDays } from "@/store/timeline/selectors";
-import { scrollToNow, updateDaysInView, updateEndDate, updateScrollPos, updateStartDate } from "@/store/timeline/timelineSlice";
+import { updateDaysInView, updateEndDate, updateStartDate, updateViewportScrollDays } from "@/store/timeline/timelineSlice";
 import moment from "moment";
 
 export default function TimelineControls() {
@@ -30,10 +30,13 @@ export default function TimelineControls() {
     }
 
     const goToNow = () => {
-        const todayPosition = todayDays * (window.innerWidth / daysInView)
-        const newScroll = todayPosition - window.innerWidth / 2 //center in view
-        dispatch(updateScrollPos(newScroll))
+        const newScroll = todayDays - daysInView/3
+        dispatch(updateViewportScrollDays(newScroll))
     }
+
+    useEffect(() => {
+        goToNow()
+    }, [])
 
     return <div className={style.controlPanel}>
         <ButtonGroup>

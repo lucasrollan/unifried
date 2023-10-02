@@ -23,8 +23,28 @@ export const selectTimelineStart = (state: RootState) => state.timeline.startDat
 export const selectTimelineEnd = (state: RootState) => state.timeline.endDate
 export const selectTodayTimeframeDays = (state: RootState) =>
     moment().diff(state.timeline.startDate, 'day', true)
-export const selectNumberOfDaysInView = (state: RootState) => state.timeline.daysInView
-export const selectScrollPos = (state: RootState) => state.timeline.scrollPos
+
+export const selectNumberOfDaysInView = createSelector(
+    (state: RootState) => state.timeline.viewport,
+    viewport =>
+        moment(viewport.to).diff(viewport.from, 'day')
+)
+export const selectScrollDays = createSelector(
+    selectTimelineStart,
+    (state: RootState) => state.timeline.viewport,
+    (start, viewport) =>
+        moment(viewport.from).diff(start, 'day')
+)
+export const selectViewportDays = createSelector(
+    selectTimelineStart,
+    (state: RootState) => state.timeline.viewport,
+    (start, viewport) => ({
+        left: moment(viewport.from).diff(start, 'day'),
+        width: moment(viewport.to).diff(viewport.from, 'day'),
+    })
+)
+
+
 
 export const selectTimeframeLengthDays = createSelector(
     selectTimelineStart,

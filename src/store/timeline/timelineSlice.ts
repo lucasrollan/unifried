@@ -1,27 +1,37 @@
 import { TimelineEntry, TimelineRow } from '@/types/timeline'
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import type { PayloadAction } from '@reduxjs/toolkit'
+import moment, { MomentInput } from 'moment'
 
+export interface TimelineViewport {
+    from: string, //first date visible on the viewport
+    to: string, //first date not visible on the viewport
+}
 export interface TimelineState {
     startDate: string,
     endDate: string, //not inclusive
+    viewport: TimelineViewport,
     daysInView: number,
     rowIds: string[],
     rowsById: Record<string, TimelineRow>,
     entryIds: string[],
     entriesById: Record<string, TimelineEntry>,
-    scrollPos: number,
 }
 
+const defaultDaysInView = 14
 const initialState: TimelineState = {
     startDate: '2023-07-15T00:00',
     endDate: '2024-03-01T00:00',
-    daysInView: 14,
+    // replace these 2 with viewport
+    daysInView: defaultDaysInView,
+    viewport: {
+        from: moment().subtract(defaultDaysInView/2, 'days').format('YYYY-MM-DD'),
+        to: moment().add(defaultDaysInView/2, 'days').format('YYYY-MM-DD'),
+    },
     rowIds: [],
     rowsById: {},
     entryIds: [],
     entriesById: {},
-    scrollPos: 0,
 }
 
 const api_fetchRows = async function (): Promise<TimelineRow[]> {
@@ -60,15 +70,32 @@ export const timelineSlice = createSlice({
         updateEndDate: (state, action: PayloadAction<string>) => {
             state.endDate = action.payload
         },
+        updateViewportScrollDays: (state, action: PayloadAction<number>) => {
+            const currentDaysInView = moment(state.viewport.to).diff(state.viewport.from, 'day', true)
+            const minFromDate = moment(state.startDate)
+            const maxFromDate = moment(state.endDate).subtract(currentDaysInView, 'day')
+
+            const fromDate = clampMoment(
+                moment(state.startDate).add(action.payload, 'day'),
+                minFromDate,
+                maxFromDate
+            )
+            const toDate = moment(fromDate).add(currentDaysInView, 'day')
+
+            state.viewport.from = fromDate.format('YYYY-MM-DD')
+            state.viewport.to = toDate.format('YYYY-MM-DD')
+        },
         updateDaysInView: (state, action: PayloadAction<number>) => {
-            state.daysInView = action.payload
+            //state.daysInView = action.payload
+            const viewport = state.viewport
+            const currentDaysInView = moment(viewport.to).diff(viewport.from, 'day', true)
+            const currentMiddle = moment(viewport.from).add(currentDaysInView/2, 'day')
+            const newHalfSize = action.payload/2
+            const from = moment(currentMiddle).subtract(newHalfSize, 'day').format('YYYY-MM-DD')
+            const to = moment(currentMiddle).add(newHalfSize, 'day').format('YYYY-MM-DD')
+
+            state.viewport = { from, to }
         },
-        updateScrollPos: (state, action: PayloadAction<number>) => {
-            state.scrollPos = action.payload
-        },
-        scrollToNow: (state) => {
-            state.scrollPos = 1000
-        }
     },
     extraReducers: (builder) => {
         // Add reducers for additional action types here, and handle loading state as needed
@@ -103,7 +130,18 @@ export const timelineSlice = createSlice({
     },
 })
 
+function clampMoment(input: MomentInput, min: MomentInput, max: MomentInput) {
+    const values = [
+        moment(input),
+        moment(min),
+        moment(max)
+    ].sort((a, b) => a.valueOf() - b.valueOf())
+    const lowerBound = moment.max(values[0], values[1])
+
+    return moment.min(lowerBound, values[2])
+}
+
 // Action creators are generated for each case reducer function
-export const { updateStartDate, updateEndDate, updateDaysInView, updateScrollPos, scrollToNow } = timelineSlice.actions
+export const { updateStartDate, updateEndDate, updateDaysInView, updateViewportScrollDays } = timelineSlice.actions
 
 export default timelineSlice.reducer
