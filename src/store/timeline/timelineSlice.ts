@@ -1,6 +1,7 @@
 import { TimelineEntry, TimelineRow } from '@/types/timeline'
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import type { PayloadAction } from '@reduxjs/toolkit'
+import moment from 'moment'
 
 export interface TimelineState {
     startDate: string,
@@ -14,8 +15,8 @@ export interface TimelineState {
 }
 
 const initialState: TimelineState = {
-    startDate: '2023-07-15T00:00',
-    endDate: '2024-03-01T00:00',
+    startDate: moment().subtract(1, 'week').format('YYYY-MM-DD'),
+    endDate: '2024-02-11T00:00',
     daysInView: 14,
     rowIds: [],
     rowsById: {},
