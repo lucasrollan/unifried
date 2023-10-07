@@ -49,6 +49,7 @@ export default function Timeline() {
                 >
                     {
                         highlightedCards.map(card => <div
+                            key={card.id}
                             className={classes(style.timelineHighlight, style[card.color || ''])}
                             style={{
                                 width: scale(card.timeWindow.daysLength, daysInView),
