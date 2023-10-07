@@ -1,5 +1,5 @@
 import { getServerSession } from 'next-auth/next'
-import { authOptions } from "./auth/[...nextauth]"gs
+import { authOptions } from "./auth/[...nextauth]"g
 import { google } from 'googleapis'
 
 import type { NextApiRequest, NextApiResponse } from 'next'
