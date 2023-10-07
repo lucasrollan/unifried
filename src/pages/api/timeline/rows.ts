@@ -2,14 +2,46 @@ import { TimelineRow } from '@/types/timeline'
 import { getServerSession } from 'next-auth/next'
 import { authOptions } from "../auth/[...nextauth]"
 import Airtable from 'airtable';
+import { google } from 'googleapis'
 
 import type { NextApiRequest, NextApiResponse } from 'next'
+import getGoogleAuth from '../getGoogleAuth';
 var base = new Airtable().base('applyggDoSgqTOMEs');
+
+const googleAuth = getGoogleAuth()
+
+async function listEvents() {
+  const calendar = google.calendar({version: 'v3', auth: googleAuth});
+  const res = await calendar.events.list({
+    calendarId: 'primary',
+    timeMin: new Date().toISOString(),
+    maxResults: 10,
+    singleEvents: true,
+    orderBy: 'startTime',
+  });
+  const events = res.data.items;
+  if (!events || events.length === 0) {
+    console.log('No upcoming events found.');
+    return;
+  }
+  console.log('Upcoming 10 events:');
+  events.map((event, i) => {
+    const start = event.start?.dateTime || event.start?.date;
+    console.log(`${start} - ${event.summary}`);
+  });
+}
+
 
 export default async function handler(
     req: NextApiRequest,
     res: NextApiResponse<TimelineRow[]>
 ) {
+    // const googleStuff = await getGoogleAccessToken()
+    // console.log('googleStuff', googleStuff)
+    // console.log('googleStuff <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<')
+
+    await listEvents()
+
     const session = await getServerSession(req, res, authOptions)
     if (session) {
         const dbEntries = await fetchRowsFromAirtable()
@@ -58,7 +90,6 @@ async function fetchRowsFromAirtable(): Promise<TimelineRow[]> {
   }
 
   function projectRow(dbEntry: any): TimelineRow {
-    console.log('MAPPING', dbEntry)
     return {
       ...dbEntry.fields,
       id: dbEntry.id,
