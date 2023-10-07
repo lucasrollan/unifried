@@ -4,7 +4,7 @@ import moment, { Moment } from "moment"
 import { TimelineCard } from "./types"
 import { TimelineEntry } from "@/types/timeline"
 
-type timelineCardsByRow = Record<string, Array<TimelineCard[]>>
+export type timelineCardsByRow = Record<string, Array<TimelineCard[]>>
 
 type Period = {
     label: string,

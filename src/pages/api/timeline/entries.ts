@@ -37,10 +37,6 @@ async function fetchEntriesFromAirtable(): Promise<TimelineEntry[]> {
 
       results.push(...records.map(projectEntry)) //Unwrap from Airtable response
 
-      records.forEach(function (record) {
-        console.log('Retrieved ENTRIES', record.get('id'));
-      });
-
       // To fetch the next page of records, call `fetchNextPage`.
       // If there are more records, `page` will get called again.
       // If there are no more records, `done` will get called.

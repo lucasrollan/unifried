@@ -2,13 +2,16 @@ import React, { useCallback, useEffect } from "react";
 import { throttle } from "lodash";
 import style from './Timeline.module.css'
 import { useAppDispatch, useAppSelector } from "@/store";
-import { selectHighlightedCards, selectNumberOfDaysInView, selectScrollPos, selectTimeframeLengthDays, selectTimelineCardsByRowIds, selectTimelineRows, selectTodayTimeframeDays } from "@/store/timeline/selectors";
+import { selectHighlightedCards, selectNumberOfDaysInView, selectScrollPos, selectTimeframeLengthDays, selectTimelineCardsByRowIds, selectTimelineRows, selectTodayTimeframeDays, timelineCardsByRow } from "@/store/timeline/selectors";
 import TimelineCard from "./TimelineCard";
 import TimelinePeriods from "./TimelinePeriods";
 import { classes, scale } from "./utils";
 import { fetchTimelineEntries, fetchTimelineRows, updateScrollPos } from "@/store/timeline/timelineSlice";
 import TimelineControls from "./TimelineControls";
 import createScrollable from "../Scrollable";
+import { fetchCalendarEvents } from "@/store/gcal/gcalSlice";
+import { selectCalendarEvents } from "@/store/gcal/selectors";
+import { TimelineRow } from "@/types/timeline";
 
 const Scrollable = createScrollable()
 
@@ -18,6 +21,7 @@ export default function Timeline() {
     useEffect(() => {
         dispatch(fetchTimelineEntries())
         dispatch(fetchTimelineRows())
+        dispatch(fetchCalendarEvents())
     }, [dispatch])
 
     const daysLength = useAppSelector(selectTimeframeLengthDays)
@@ -28,6 +32,21 @@ export default function Timeline() {
     const rows = useAppSelector(selectTimelineRows)
     const cards = useAppSelector(selectTimelineCardsByRowIds)
     const highlightedCards = useAppSelector(selectHighlightedCards)
+    const calendarEvents = useAppSelector(selectCalendarEvents)
+
+    const allRows: TimelineRow[] = [
+        ...rows,
+        {
+            id: 'gcal',
+            label: 'Lucas\' calendar'
+        }
+    ]
+    const allCardsByRow: timelineCardsByRow = {
+        ...cards,
+        'gcal': [
+            calendarEvents,
+        ]
+    }
 
     const handleScroll = useCallback(
         throttle(
@@ -59,14 +78,14 @@ export default function Timeline() {
                     }
                     <div className={style.timelineRows}>
                         {
-                            rows.map(row => (
+                            allRows.map(row => (
                                 <div className={style.timelineRow} key={row.id}>
                                     <h4>
                                         <span className={style.timelineRowTitle}>{row.label}</span>
                                     </h4>
                                     <div className={style.timelineRowLanes}>
                                         {
-                                            (cards[row.id] || []).map((lane, laneIndex) => (
+                                            (allCardsByRow[row.id] || []).map((lane, laneIndex) => (
                                                 <div className={style.timelineRowLane} key={`${row.id}-${laneIndex}`}>
                                                     {
                                                         lane.map(card => (

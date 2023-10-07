@@ -35,10 +35,6 @@ async function fetchRowsFromAirtable(): Promise<TimelineRow[]> {
 
         results.push(...records.map(projectRow)) //Unwrap from Airtable response
 
-        records.forEach(function (record) {
-          console.log('Retrieved ROW', record.get('id'));
-        });
-
         // To fetch the next page of records, call `fetchNextPage`.
         // If there are more records, `page` will get called again.
         // If there are no more records, `done` will get called.

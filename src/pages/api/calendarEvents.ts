@@ -9,16 +9,16 @@ export default async function handler(
     req: NextApiRequest,
     res: NextApiResponse
 ) {
-    const start = req.query.start as string || ''
-    const end = req.query.end as string || ''
+    const startDate = req.query.startDate as string || ''
+    const endDate = req.query.endDate as string || ''
 
     const session = await getServerSession(req, res, authOptions)
     if (session) {
-        const events = await fetchEventsFromGoogleCalendar(new Date(start), new Date(end))
+        const events = await fetchEventsFromGoogleCalendar(startDate, endDate)
 
         // Signed in
         res.status(200).json([
-            ...events,
+            ...events!,
         ])
     } else {
         // Not Signed in
@@ -28,18 +28,25 @@ export default async function handler(
 
 const googleAuth = getGoogleAuth()
 
-async function fetchEventsFromGoogleCalendar(start: Date, end: Date) {
-  const calendar = google.calendar({version: 'v3', auth: googleAuth});
-  const response = await calendar.events.list({
-    calendarId: 'primary',
-    timeMin: start.toISOString(),
-    timeMax: end.toISOString(),
-    maxResults: 10,
-    singleEvents: true,
-    orderBy: 'startTime',
-  });
+async function fetchEventsFromGoogleCalendar(startDate: string, endDate: string) {
+    const calendar = google.calendar({ version: 'v3', auth: googleAuth });
 
-  const events = response.data.items || [];
+    console.log('startDate,endDate: ', startDate, endDate)
+    let response
+    try {
+        response = await calendar.events.list({
+            calendarId: 'primary',
+            timeMin: (new Date(startDate)).toISOString(),
+            timeMax: (new Date(endDate)).toISOString(),
+            singleEvents: true,
+            orderBy: 'startTime',
+        });
 
-  return events
+        const events = response.data.items || [];
+        return events
+    } catch (e: any) {
+        const err = e.response.data.error
+        console.error('Something bad happened', err, e)
+
+    }
 }
