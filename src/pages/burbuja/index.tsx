@@ -1,10 +1,9 @@
-import Page1 from './blog/2023-10-07.mdx'
+import Blog from './blog.mdx'
+import style from './blog.module.css'
 
-export default function() {
+export default function BurbujaBlog () {
     return <div>
-        <h1>Bitacora de una Burbuja</h1>
-        <div>
-            <Page1 />
-        </div>
+        <h1 className={style.hero}>Bitacora de una Burbuja</h1>
+        <Blog />
     </div>
 }
