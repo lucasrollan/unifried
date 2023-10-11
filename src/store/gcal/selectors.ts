@@ -3,20 +3,41 @@ import { GcalEvent } from "@/types/gcal"
 import { createSelector } from "@reduxjs/toolkit"
 import moment from "moment"
 import { TimelineCard } from "../timeline/types"
+import { mapValues } from "lodash"
+import { TimelineRow } from "@/types/timeline"
 
 const USE_DECIMAL_DAYS = true
 
-export const selectCalendarEvents = createSelector(
+export const selectCalendarRows = createSelector(
+    (state: RootState) => state.calendar.calendarIds,
+    (state: RootState) => state.calendar.calendarsById,
+    (calendarIds, calendarsById) =>
+        calendarIds.map(calendarId => {
+            const calendar = calendarsById[calendarId]
+            const row: TimelineRow = {
+                id: calendarId,
+                label: calendar.summary || '',
+            }
+            return row
+        })
+)
+
+export const selectCalendarEventsByCalendarId = createSelector(
     (state: RootState) => state.timeline.startDate,
     (state: RootState) => state.timeline.endDate,
-    (state: RootState) => state.calendar.eventIds,
+    (state: RootState) => state.calendar.eventsIdsByCalendarId,
     (state: RootState) => state.calendar.eventsById,
-    (timelineStart, timelineEnd, eventIds, eventsById) =>
-        filterMap(
-            eventIds,
-            (eventId) => eventsById[eventId],
-            (event) => isEventWithinTimeframe(event, timelineStart, timelineEnd),
-        ).map((event => projectCalendarEventToCard(event, timelineStart, timelineEnd)))
+    (timelineStart, timelineEnd, eventsIdsByCalendarId, eventsById) =>
+        mapValues(
+            eventsIdsByCalendarId,
+            eventIds => [
+                filterMap(
+                    eventIds,
+                    (eventId) => projectCalendarEventToCard(eventsById[eventId], timelineStart, timelineEnd),
+                    (card) => isCardWithinTimeframe(card, timelineStart, timelineEnd),
+                )
+            ]
+        )
 )
 
 function projectCalendarEventToCard(event: GcalEvent, timelineStart: string, timelineEnd: string): TimelineCard {
@@ -35,6 +56,11 @@ function projectCalendarEventToCard(event: GcalEvent, timelineStart: string, tim
             daysLength: useEnd.diff(start, 'day', USE_DECIMAL_DAYS),
         }
     })
+}
+
+function isCardWithinTimeframe (card: TimelineCard, timelineStart: string, timelineEnd: string) {
+    return card.end.isSameOrAfter(timelineStart)
+        && card.start.isSameOrBefore(timelineEnd)
 }
 
 function isEventWithinTimeframe (event: GcalEvent, timelineStart: string, timelineEnd: string) {

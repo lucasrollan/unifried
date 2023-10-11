@@ -3,6 +3,7 @@ import { createSelector } from "@reduxjs/toolkit"
 import moment, { Moment } from "moment"
 import { TimelineCard } from "./types"
 import { TimelineEntry } from "@/types/timeline"
+import { mapValues } from "lodash"
 
 export type timelineCardsByRow = Record<string, Array<TimelineCard[]>>
 
@@ -330,6 +331,17 @@ const groupCardsIntoLanes = (cards: TimelineCard[]): Array<TimelineCard[]> => {
 
     return lanes
 }
+
+
+export const selectAllTimelineCardsByRowIds = createSelector(
+    selectTimelineStart,
+    selectTimelineEnd,
+    (state: RootState) => state.timeline.entryIds,
+    (state: RootState) => state.timeline.entriesById,
+    selectTimelineCardsByRowIds,
+    (timelineStart, timelineEnd, entryIds, entriesById, airtableCardsByRowId) => {
+
+    })
 
 function overlapsWithCardInLane(card: TimelineCard, lane: TimelineCard[]) {
     return lane.some(current => cardsOverlap(current, card))

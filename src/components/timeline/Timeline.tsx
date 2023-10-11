@@ -10,7 +10,7 @@ import { fetchTimelineEntries, fetchTimelineRows, updateScrollPos } from "@/stor
 import TimelineControls from "./TimelineControls";
 import createScrollable from "../Scrollable";
 import { fetchCalendarsAndEvents } from "@/store/gcal/gcalSlice";
-import { selectCalendarEvents } from "@/store/gcal/selectors";
+import { selectCalendarEventsByCalendarId, selectCalendarRows } from "@/store/gcal/selectors";
 import { TimelineRow } from "@/types/timeline";
 
 const Scrollable = createScrollable()
@@ -32,20 +32,17 @@ export default function Timeline() {
     const rows = useAppSelector(selectTimelineRows)
     const cards = useAppSelector(selectTimelineCardsByRowIds)
     const highlightedCards = useAppSelector(selectHighlightedCards)
-    const calendarEvents = useAppSelector(selectCalendarEvents)
+
+    const calendarRows = useAppSelector(selectCalendarRows)
+    const calendarEventsByCalendarId = useAppSelector(selectCalendarEventsByCalendarId)
 
     const allRows: TimelineRow[] = [
         ...rows,
-        {
-            id: 'gcal',
-            label: 'Lucas\' calendar'
-        }
+        ...calendarRows,
     ]
     const allCardsByRow: timelineCardsByRow = {
         ...cards,
-        'gcal': [
-            calendarEvents,
-        ]
+        ...calendarEventsByCalendarId,
     }
 
     const handleScroll = useCallback(
