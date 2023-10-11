@@ -9,7 +9,7 @@ import { classes, scale } from "./utils";
 import { fetchTimelineEntries, fetchTimelineRows, updateScrollPos } from "@/store/timeline/timelineSlice";
 import TimelineControls from "./TimelineControls";
 import createScrollable from "../Scrollable";
-import { fetchCalendarEvents } from "@/store/gcal/gcalSlice";
+import { fetchCalendarsAndEvents } from "@/store/gcal/gcalSlice";
 import { selectCalendarEvents } from "@/store/gcal/selectors";
 import { TimelineRow } from "@/types/timeline";
 
@@ -21,7 +21,7 @@ export default function Timeline() {
     useEffect(() => {
         dispatch(fetchTimelineEntries())
         dispatch(fetchTimelineRows())
-        dispatch(fetchCalendarEvents())
+        dispatch(fetchCalendarsAndEvents())
     }, [dispatch])
 
     const daysLength = useAppSelector(selectTimeframeLengthDays)

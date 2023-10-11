@@ -1,36 +1,68 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import { RootState } from '..'
-import { GcalEvent } from '@/types/gcal'
+import { GcalCalendar, GcalEvent } from '@/types/gcal'
 
 export interface GcalState {
     loading: boolean,
+    eventsIdsByCalendarId: Record<string, string[]>,
     eventIds: string[],
     eventsById: Record<string, GcalEvent>,
+    calendarIds: string[],
+    calendarsById: Record<string, GcalCalendar>,
 }
 
 const initialState: GcalState = {
     loading: false,
+    eventsIdsByCalendarId: {},
     eventIds: [],
     eventsById: {},
+    calendarIds: [],
+    calendarsById: {},
 }
 
-const api_fetchCalendarEvents = async function (startDate: string, endDate: string): Promise<any[]> {
+const api_fetchCalendars = async function (): Promise<GcalCalendar[]> {
+    const result = await fetch('/api/calendars')
+    return result.json()
+}
+
+const api_fetchCalendarEvents = async function (calendarIds: string[], startDate: string, endDate: string): Promise<Record<string, GcalEvent[]>> {
     const params = new URLSearchParams({
+        calendarIds: calendarIds.join(','),
         startDate,
         endDate,
     })
     const result = await fetch('/api/calendarEvents?' + params)
-    return result.json()
+    return await result.json()
 }
+
+export const fetchCalendarsAndEvents = createAsyncThunk(
+    'gcal/fetchCalendarsAndEvents',
+    async (args, thunkAPI) => {
+        const action = await thunkAPI.dispatch(fetchCalendars())
+        console.log('calendars action payload', action.payload)
+        await thunkAPI.dispatch(fetchCalendarEvents())
+    }
+)
+
+export const fetchCalendars = createAsyncThunk(
+    'gcal/fetchCalendars',
+    async () => {
+        const calendars = await api_fetchCalendars()
+
+        return calendars
+    }
+)
 
 export const fetchCalendarEvents = createAsyncThunk(
     'gcal/fetchCalendarEvents',
-    async (args: void, thunkAPI) => {
+    async (args, thunkAPI) => {
         const state = thunkAPI.getState() as RootState
+        console.log('state.calendar.calendarIds', state.calendar.calendarIds)
+        const calendarIds = state.calendar.calendarIds
         const startDate = state.timeline.startDate
         const endDate = state.timeline.endDate
 
-        const response = await api_fetchCalendarEvents(startDate, endDate)
+        const response = await api_fetchCalendarEvents(calendarIds, startDate, endDate)
         return response
     }
 )
@@ -43,14 +75,34 @@ export const gcalSlice = createSlice({
     extraReducers: (builder) => {
         // Add reducers for additional action types here, and handle loading state as needed
         builder.addCase(fetchCalendarEvents.fulfilled, (state, action) => {
-            const events = action.payload
-            console.log('calendar events', events)
+            const eventsByCalendarId = action.payload
+            console.log('eventsByCalendarId', eventsByCalendarId)
 
-            events.forEach(event => {
-                state.eventsById[event.id] = event
+            Object.keys(eventsByCalendarId).forEach(calendarId => {
+                const events = eventsByCalendarId[calendarId]
 
-                if (!state.eventIds.includes(event.id)) {
-                    state.eventIds.push(event.id)
+                state.eventsIdsByCalendarId[calendarId] = events.map(event => event.id!)
+
+                events.forEach(event => {
+                    const eventId: string = event.id!
+                    state.eventsById[eventId] = event
+
+                    if (!state.eventIds.includes(eventId)) {
+                        state.eventIds.push(eventId)
+                    }
+                })
+            })
+        })
+        builder.addCase(fetchCalendars.fulfilled, (state, action) => {
+            const calendars = action.payload
+            console.log('calendars', calendars)
+
+            calendars.forEach(calendar => {
+                const calendarId: string = calendar.id!
+                state.calendarsById[calendarId] = calendar
+
+                if (!state.calendarIds.includes(calendarId)) {
+                    state.calendarIds.push(calendarId)
                 }
             })
         })

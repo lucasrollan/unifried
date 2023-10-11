@@ -4,22 +4,24 @@ import { google } from 'googleapis'
 
 import type { NextApiRequest, NextApiResponse } from 'next'
 import getGoogleAuth from './getGoogleAuth';
+import { GcalEvent } from '@/types/gcal';
 
 export default async function handler(
     req: NextApiRequest,
     res: NextApiResponse
 ) {
+    const calendarIdsCsl = req.query.calendarIds as string || ''
     const startDate = req.query.startDate as string || ''
     const endDate = req.query.endDate as string || ''
 
     const session = await getServerSession(req, res, authOptions)
     if (session) {
-        const events = await fetchEventsFromGoogleCalendar(startDate, endDate)
+        const calendarIds = calendarIdsCsl.split(',')
+        console.log('REquest for calendar IDs', calendarIds)
+        const eventsByCalendar = await fetchEventsFromGoogleCalendar(calendarIds, startDate, endDate)
 
         // Signed in
-        res.status(200).json([
-            ...events!,
-        ])
+        res.status(200).json(eventsByCalendar)
     } else {
         // Not Signed in
         res.status(401).json([])
@@ -28,25 +30,35 @@ export default async function handler(
 
 const googleAuth = getGoogleAuth()
 
-async function fetchEventsFromGoogleCalendar(startDate: string, endDate: string) {
-    const calendar = google.calendar({ version: 'v3', auth: googleAuth });
+async function fetchEventsFromGoogleCalendar(calendarIds: string[], startDate: string, endDate: string) {
+    const calendarApi = google.calendar({ version: 'v3', auth: googleAuth })
+    const timeMin = (new Date(startDate)).toISOString()
+    const timeMax = (new Date(endDate)).toISOString()
 
     console.log('startDate,endDate: ', startDate, endDate)
-    let response
-    try {
-        response = await calendar.events.list({
-            calendarId: 'primary',
-            timeMin: (new Date(startDate)).toISOString(),
-            timeMax: (new Date(endDate)).toISOString(),
-            singleEvents: true,
-            orderBy: 'startTime',
-        });
 
-        const events = response.data.items || [];
-        return events
-    } catch (e: any) {
-        const err = e.response.data.error
-        console.error('Something bad happened', err, e)
 
-    }
+    const pairs = await Promise.all(
+        calendarIds.map(async (calendarId) => {
+            const response = await calendarApi.events.list({
+                calendarId,
+                timeMin,
+                timeMax,
+                singleEvents: true,
+                orderBy: 'startTime',
+            })
+            return {
+                [calendarId]: response.data.items || []
+            }
+        })
+    )
+
+
+    const eventsByCalendar: Record<string, GcalEvent[]> =
+        pairs.reduce((acc, pair) => ({
+            ...acc,
+            ...pair
+        }), {})
+
+    return eventsByCalendar
 }
