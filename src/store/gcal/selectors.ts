@@ -66,11 +66,6 @@ function isCardWithinTimeframe (card: TimelineCard, timelineStart: string, timel
         && card.start.isBefore(timelineEnd)
 }
 
-function isEventWithinTimeframe (event: GcalEvent, timelineStart: string, timelineEnd: string) {
-    return moment(event.end!.dateTime).isSameOrAfter(timelineStart)
-        && moment(event.start!.dateTime).isSameOrBefore(timelineEnd)
-}
-
 function filterMap<T, U>(list: T[], project: (element: T) => U, predicate: (element: U) => boolean): U[] {
     return list.reduce((acc, el) => {
         const projected = project(el)
