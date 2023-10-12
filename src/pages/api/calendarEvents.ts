@@ -5,6 +5,7 @@ import { google } from 'googleapis'
 import type { NextApiRequest, NextApiResponse } from 'next'
 import getGoogleAuth from './getGoogleAuth';
 import { GcalEvent } from '@/models/gcal';
+import Event from '@/models/Event';
 
 export default async function handler(
     req: NextApiRequest,
@@ -47,17 +48,26 @@ async function fetchEventsFromGoogleCalendar(calendarIds: string[], startDate: s
                 orderBy: 'startTime',
             })
             return {
-                [calendarId]: response.data.items || []
+                [calendarId]: (response.data.items || []).map(projectGcalEventToApp)
             }
         })
     )
 
 
-    const eventsByCalendar: Record<string, GcalEvent[]> =
+    const eventsByCalendar: Record<string, Event[]> =
         pairs.reduce((acc, pair) => ({
             ...acc,
             ...pair
         }), {})
 
     return eventsByCalendar
+}
+
+function projectGcalEventToApp (gcalEvent: GcalEvent): Event {
+    return ({
+        id: gcalEvent.id || '',
+        label: gcalEvent.summary || '',
+        start: gcalEvent.start?.dateTime || gcalEvent.start?.date || '',
+        end: gcalEvent.end?.dateTime || gcalEvent.end?.date || '',
+    })
 }

@@ -9,8 +9,8 @@ import { classes, scale } from "./utils";
 import { fetchTimelineEntries, fetchTimelineRows, updateScrollPos } from "@/store/timeline/timelineSlice";
 import TimelineControls from "./TimelineControls";
 import createScrollable from "../Scrollable";
-import { fetchCalendarsAndEvents } from "@/store/gcal/gcalSlice";
-import { selectCalendarEventsByCalendarId, selectCalendarRows } from "@/store/gcal/selectors";
+import { fetchCalendarsAndEvents } from "@/store/calendar/calendarSlice";
+import { selectCalendarEventsByCalendarId, selectCalendarRows } from "@/store/calendar/selectors";
 import { TimelineRow } from "@/models/timeline";
 
 const Scrollable = createScrollable()

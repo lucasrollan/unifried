@@ -1,18 +1,19 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import { RootState } from '..'
-import { GcalCalendar, GcalEvent } from '@/models/gcal'
+import Calendar from '@/models/Calendar'
+import Event from '@/models/Event'
 
-export interface GcalState {
+export interface CalendarState {
     loading: boolean,
     eventsIdsByCalendarId: Record<string, string[]>,
     eventIds: string[],
-    eventsById: Record<string, GcalEvent>,
+    eventsById: Record<string, Event>,
     calendarIds: string[],
-    calendarsById: Record<string, GcalCalendar>,
+    calendarsById: Record<string, Calendar>,
     ignoredCalendarIds: string[],
 }
 
-const initialState: GcalState = {
+const initialState: CalendarState = {
     loading: false,
     eventsIdsByCalendarId: {},
     eventIds: [],
@@ -24,12 +25,12 @@ const initialState: GcalState = {
     ],
 }
 
-const api_fetchCalendars = async function (): Promise<GcalCalendar[]> {
+const api_fetchCalendars = async function (): Promise<Calendar[]> {
     const result = await fetch('/api/calendars')
     return result.json()
 }
 
-const api_fetchCalendarEvents = async function (calendarIds: string[]): Promise<Record<string, GcalEvent[]>> {
+const api_fetchCalendarEvents = async function (calendarIds: string[]): Promise<Record<string, Event[]>> {
     const startDate = '2023-01-01'
     const params = new URLSearchParams({
         calendarIds: calendarIds.join(','),
@@ -63,6 +64,8 @@ export const fetchCalendarEvents = createAsyncThunk(
         const state = thunkAPI.getState() as RootState
         console.log('state.calendar.calendarIds', state.calendar.calendarIds)
         const calendarIds = state.calendar.calendarIds
+            .filter(calendarId =>
+                !state.calendar.ignoredCalendarIds.includes(calendarId))
 
         const response = await api_fetchCalendarEvents(calendarIds)
         return response

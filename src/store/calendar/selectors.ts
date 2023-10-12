@@ -1,5 +1,5 @@
 import { RootState } from "@/store"
-import { GcalEvent } from "@/models/gcal"
+import Event from "@/models/Event"
 import { createSelector } from "@reduxjs/toolkit"
 import moment from "moment"
 import { TimelineCard } from "../timeline/types"
@@ -19,7 +19,7 @@ export const selectCalendarRows = createSelector(
                 const calendar = calendarsById[calendarId]
                 const row: TimelineRow = {
                     id: calendarId,
-                    label: calendar.summary || '',
+                    label: calendar.label,
                 }
                 return row
             })
@@ -43,15 +43,15 @@ export const selectCalendarEventsByCalendarId = createSelector(
         )
 )
 
-function projectCalendarEventToCard(event: GcalEvent, timelineStart: string, timelineEnd: string): TimelineCard {
-    const start = event.start!.dateTime || event.start!.date
-    const end = event.end!.dateTime || event.end!.date
+function projectCalendarEventToCard(event: Event, timelineStart: string, timelineEnd: string): TimelineCard {
+    const start = event.start
+    const end = event.end
     const useStart = moment.max(moment(start), moment(timelineStart))
     const useEnd = moment.min(moment(end), moment(timelineEnd))
 
     return ({
         id: event.id!,
-        label: event.summary || '<No summary>',
+        label: event.label,
         start: moment(start),
         end: moment(end),
         timeWindow: {

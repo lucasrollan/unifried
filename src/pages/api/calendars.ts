@@ -4,6 +4,7 @@ import { google } from 'googleapis'
 
 import type { NextApiRequest, NextApiResponse } from 'next'
 import getGoogleAuth from './getGoogleAuth';
+import Calendar from '@/models/Calendar';
 import { GcalCalendar } from '@/models/gcal';
 
 export default async function handler(
@@ -35,12 +36,12 @@ async function fetchCalendarsFromGoogleCalendar() {
             showHidden: false,
         })
 
-        const calendars: GcalCalendar[] = await Promise.all(
+        const calendars: Calendar[] = await Promise.all(
             calendarList.data.items?.map(async calendarListItem => {
                 const response = await calendar.calendars.get({
                     calendarId: calendarListItem.id || 'primary',
                 })
-                return response.data
+                return projectGcalCalendarToApp(response.data)
             }) || []
         )
 
@@ -50,4 +51,12 @@ async function fetchCalendarsFromGoogleCalendar() {
         console.error('Something bad happened', err, e)
         return []
     }
+}
+
+function projectGcalCalendarToApp (gcalCalendar: GcalCalendar): Calendar {
+    return ({
+        id: gcalCalendar.id!,
+        isVisible: true,
+        label: gcalCalendar.summary!,
+    })
 }
