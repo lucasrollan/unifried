@@ -16,12 +16,12 @@ export default function TimelineCardDetails({ card }: TimelineCardDetailsProps) 
     if (isOneDay) {
         dateText = <div><b>{card.start.format('D MMM YYYY')}</b></div>
     } else if (isFullDay) {
-        dateText = <div><b>{card.start.format('D MMM YYYY')}</b> - <b>{card.end.format('Do MMM YYYY')}</b></div>
+        dateText = <div><b>{card.start.format('D MMM YYYY')}</b> - <b>{card.end.format('D MMM YYYY')}</b></div>
     } else {
         if (card.start.isSame(card.end, 'day')) {
-            dateText = <div><b>{card.start.format('D MMM YYYY, HH:MM')}</b> - <b>{card.end.format('HH:MM')}</b></div>
+            dateText = <div><b>{card.start.format('D MMM YYYY, HH:mm')}</b> - <b>{card.end.format('HH:mm')}</b></div>
         } else {
-            dateText = <div><b>{card.start.format('D MMM YYYY, HH:MM')}</b> - <b>{card.end.format('Do MMM YYYY, HH:MM')}</b></div>
+            dateText = <div><b>{card.start.format('D MMM YYYY, HH:mm')}</b> - <b>{card.end.format('D MMM YYYY, HH:mm')}</b></div>
         }
     }
 
