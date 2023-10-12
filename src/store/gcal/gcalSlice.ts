@@ -29,11 +29,11 @@ const api_fetchCalendars = async function (): Promise<GcalCalendar[]> {
     return result.json()
 }
 
-const api_fetchCalendarEvents = async function (calendarIds: string[], startDate: string, endDate: string): Promise<Record<string, GcalEvent[]>> {
+const api_fetchCalendarEvents = async function (calendarIds: string[]): Promise<Record<string, GcalEvent[]>> {
+    const startDate = '2023-01-01'
     const params = new URLSearchParams({
         calendarIds: calendarIds.join(','),
         startDate,
-        endDate,
     })
     const result = await fetch('/api/calendarEvents?' + params)
     return await result.json()
@@ -63,10 +63,8 @@ export const fetchCalendarEvents = createAsyncThunk(
         const state = thunkAPI.getState() as RootState
         console.log('state.calendar.calendarIds', state.calendar.calendarIds)
         const calendarIds = state.calendar.calendarIds
-        const startDate = state.timeline.startDate
-        const endDate = state.timeline.endDate
 
-        const response = await api_fetchCalendarEvents(calendarIds, startDate, endDate)
+        const response = await api_fetchCalendarEvents(calendarIds)
         return response
     }
 )

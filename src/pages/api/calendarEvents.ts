@@ -32,11 +32,10 @@ const googleAuth = getGoogleAuth()
 
 async function fetchEventsFromGoogleCalendar(calendarIds: string[], startDate: string, endDate: string) {
     const calendarApi = google.calendar({ version: 'v3', auth: googleAuth })
-    const timeMin = (new Date(startDate)).toISOString()
-    const timeMax = (new Date(endDate)).toISOString()
+    const timeMin = startDate ? (new Date(startDate)).toISOString() : undefined
+    const timeMax = endDate ? (new Date(endDate)).toISOString() : undefined
 
     console.log('startDate,endDate: ', startDate, endDate)
-
 
     const pairs = await Promise.all(
         calendarIds.map(async (calendarId) => {
