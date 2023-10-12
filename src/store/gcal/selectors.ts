@@ -52,8 +52,8 @@ function projectCalendarEventToCard(event: GcalEvent, timelineStart: string, tim
     return ({
         id: event.id!,
         label: event.summary || '<No summary>',
-        start: moment(event.start!.date),
-        end: moment(event.end!.date),
+        start: moment(start),
+        end: moment(end),
         timeWindow: {
             daysSinceStart: useStart.diff(timelineStart, 'day', USE_DECIMAL_DAYS),
             daysLength: useEnd.diff(start, 'day', USE_DECIMAL_DAYS),
@@ -62,8 +62,8 @@ function projectCalendarEventToCard(event: GcalEvent, timelineStart: string, tim
 }
 
 function isCardWithinTimeframe (card: TimelineCard, timelineStart: string, timelineEnd: string) {
-    return card.end.isSameOrAfter(timelineStart)
-        && card.start.isSameOrBefore(timelineEnd)
+    return card.end.isAfter(timelineStart)
+        && card.start.isBefore(timelineEnd)
 }
 
 function isEventWithinTimeframe (event: GcalEvent, timelineStart: string, timelineEnd: string) {
