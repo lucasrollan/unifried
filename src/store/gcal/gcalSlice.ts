@@ -9,6 +9,7 @@ export interface GcalState {
     eventsById: Record<string, GcalEvent>,
     calendarIds: string[],
     calendarsById: Record<string, GcalCalendar>,
+    ignoredCalendarIds: string[],
 }
 
 const initialState: GcalState = {
@@ -18,6 +19,9 @@ const initialState: GcalState = {
     eventsById: {},
     calendarIds: [],
     calendarsById: {},
+    ignoredCalendarIds: [
+        'p#weather@group.v.calendar.google.com',
+    ],
 }
 
 const api_fetchCalendars = async function (): Promise<GcalCalendar[]> {

@@ -11,15 +11,18 @@ const USE_DECIMAL_DAYS = true
 export const selectCalendarRows = createSelector(
     (state: RootState) => state.calendar.calendarIds,
     (state: RootState) => state.calendar.calendarsById,
-    (calendarIds, calendarsById) =>
-        calendarIds.map(calendarId => {
-            const calendar = calendarsById[calendarId]
-            const row: TimelineRow = {
-                id: calendarId,
-                label: calendar.summary || '',
-            }
-            return row
-        })
+    (state: RootState) => state.calendar.ignoredCalendarIds,
+    (calendarIds, calendarsById, ignoredCalendarIds) =>
+        calendarIds
+            .filter(calendarId => !ignoredCalendarIds.includes(calendarId))
+            .map(calendarId => {
+                const calendar = calendarsById[calendarId]
+                const row: TimelineRow = {
+                    id: calendarId,
+                    label: calendar.summary || '',
+                }
+                return row
+            })
 )
 
 export const selectCalendarEventsByCalendarId = createSelector(
