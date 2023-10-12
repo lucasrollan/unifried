@@ -7,6 +7,10 @@ import getGoogleAuth from './getGoogleAuth';
 import Calendar from '@/models/Calendar';
 import { GcalCalendar } from '@/models/gcal';
 
+const HIGHLIGHTED_CALENDARS_IDS = [
+    '4ef5086e1cd0b60a8fc47e3e530b1144244b93b6b119e71f455f46a7f647286a@group.calendar.google.com', // PTOs
+]
+
 export default async function handler(
     req: NextApiRequest,
     res: NextApiResponse
@@ -54,9 +58,12 @@ async function fetchCalendarsFromGoogleCalendar() {
 }
 
 function projectGcalCalendarToApp (gcalCalendar: GcalCalendar): Calendar {
+    const isHighlighted = HIGHLIGHTED_CALENDARS_IDS.includes(gcalCalendar.id!)
+
     return ({
         id: gcalCalendar.id!,
         isVisible: true,
         label: gcalCalendar.summary!,
+        isHighlighted,
     })
 }

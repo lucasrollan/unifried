@@ -5,6 +5,7 @@ import moment from "moment"
 import { TimelineCard } from "../timeline/types"
 import { mapValues } from "lodash"
 import { TimelineRow } from "@/models/timeline"
+import Calendar from "@/models/Calendar"
 
 const USE_DECIMAL_DAYS = true
 
@@ -30,20 +31,48 @@ export const selectCalendarEventsByCalendarId = createSelector(
     (state: RootState) => state.timeline.endDate,
     (state: RootState) => state.calendar.eventsIdsByCalendarId,
     (state: RootState) => state.calendar.eventsById,
-    (timelineStart, timelineEnd, eventsIdsByCalendarId, eventsById) =>
+    (state: RootState) => state.calendar.calendarsById,
+    (timelineStart, timelineEnd, eventsIdsByCalendarId, eventsById, calendarsById) =>
         mapValues(
             eventsIdsByCalendarId,
-            eventIds => [
+            (eventIds, calendarId) => [
                 filterMap(
                     eventIds,
-                    (eventId) => projectCalendarEventToCard(eventsById[eventId], timelineStart, timelineEnd),
+                    (eventId) => projectCalendarEventToCard(
+                        eventsById[eventId],
+                        calendarsById[calendarId],
+                        timelineStart,
+                        timelineEnd),
                     (card) => isCardWithinTimeframe(card, timelineStart, timelineEnd),
                 )
             ]
         )
 )
 
-function projectCalendarEventToCard(event: Event, timelineStart: string, timelineEnd: string): TimelineCard {
+export const selectHighlightedCalendarEvents = createSelector(
+    (state: RootState) => state.timeline.startDate,
+    (state: RootState) => state.timeline.endDate,
+    (state: RootState) => state.calendar.eventsIdsByCalendarId,
+    (state: RootState) => state.calendar.eventsById,
+    (state: RootState) => state.calendar.calendarsById,
+    (timelineStart, timelineEnd, eventsIdsByCalendarId, eventsById, calendarsById) =>
+        Object.keys(eventsIdsByCalendarId)
+            .filter(calendarId => calendarsById[calendarId].isHighlighted)
+            .map(calendarId =>
+                filterMap(
+                    eventsIdsByCalendarId[calendarId],
+                    (eventId) => projectCalendarEventToCard(
+                        eventsById[eventId],
+                        calendarsById[calendarId],
+                        timelineStart,
+                        timelineEnd),
+                    (card) => isCardWithinTimeframe(card, timelineStart, timelineEnd),
+                )
+            )
+        .flat()
+)
+
+function projectCalendarEventToCard(event: Event, calendar: Calendar, timelineStart: string, timelineEnd: string): TimelineCard {
     const start = event.start
     const end = event.end
     const useStart = moment.max(moment(start), moment(timelineStart))
@@ -54,6 +83,7 @@ function projectCalendarEventToCard(event: Event, timelineStart: string, timelin
         label: event.label,
         start: moment(start),
         end: moment(end),
+        isHighlighted: calendar.isHighlighted,
         timeWindow: {
             daysSinceStart: useStart.diff(timelineStart, 'day', USE_DECIMAL_DAYS),
             daysLength: useEnd.diff(start, 'day', USE_DECIMAL_DAYS),

@@ -2,7 +2,7 @@ import React, { useCallback, useEffect } from "react";
 import { throttle } from "lodash";
 import style from './Timeline.module.css'
 import { useAppDispatch, useAppSelector } from "@/store";
-import { selectHighlightedCards, selectNumberOfDaysInView, selectScrollPos, selectTimeframeLengthDays, selectTimelineCardsByRowIds, selectTimelineRows, selectTodayTimeframeDays, timelineCardsByRow } from "@/store/timeline/selectors";
+import { selectNumberOfDaysInView, selectScrollPos, selectTimeframeLengthDays, selectTimelineCardsByRowIds, selectTimelineRows, selectTodayTimeframeDays, timelineCardsByRow } from "@/store/timeline/selectors";
 import TimelineCard from "./TimelineCard";
 import TimelinePeriods from "./TimelinePeriods";
 import { classes, scale } from "./utils";
@@ -10,7 +10,7 @@ import { fetchTimelineEntries, fetchTimelineRows, updateScrollPos } from "@/stor
 import TimelineControls from "./TimelineControls";
 import createScrollable from "../Scrollable";
 import { fetchCalendarsAndEvents } from "@/store/calendar/calendarSlice";
-import { selectCalendarEventsByCalendarId, selectCalendarRows } from "@/store/calendar/selectors";
+import { selectCalendarEventsByCalendarId, selectCalendarRows, selectHighlightedCalendarEvents } from "@/store/calendar/selectors";
 import { TimelineRow } from "@/models/timeline";
 
 const Scrollable = createScrollable()
@@ -31,10 +31,10 @@ export default function Timeline() {
 
     const rows = useAppSelector(selectTimelineRows)
     const cards = useAppSelector(selectTimelineCardsByRowIds)
-    const highlightedCards = useAppSelector(selectHighlightedCards)
 
     const calendarRows = useAppSelector(selectCalendarRows)
     const calendarEventsByCalendarId = useAppSelector(selectCalendarEventsByCalendarId)
+    const highlightedEvents = useAppSelector(selectHighlightedCalendarEvents)
 
     const allRows: TimelineRow[] = [
         ...rows,
@@ -64,7 +64,7 @@ export default function Timeline() {
                     style={{ width: scale(daysLength, daysInView) }}
                 >
                     {
-                        highlightedCards.map(card => <div
+                        highlightedEvents.map(card => <div
                             key={card.id}
                             className={classes(style.timelineHighlight, style[card.color || ''])}
                             style={{
