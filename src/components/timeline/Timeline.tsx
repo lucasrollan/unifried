@@ -11,7 +11,7 @@ import TimelineControls from "./TimelineControls";
 import createScrollable from "../Scrollable";
 import { fetchCalendarsAndEvents } from "@/store/gcal/gcalSlice";
 import { selectCalendarEventsByCalendarId, selectCalendarRows } from "@/store/gcal/selectors";
-import { TimelineRow } from "@/types/timeline";
+import { TimelineRow } from "@/models/timeline";
 
 const Scrollable = createScrollable()
 

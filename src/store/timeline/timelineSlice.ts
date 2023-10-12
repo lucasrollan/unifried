@@ -1,4 +1,4 @@
-import { TimelineEntry, TimelineRow } from '@/types/timeline'
+import { TimelineEntry, TimelineRow } from '@/models/timeline'
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import type { PayloadAction } from '@reduxjs/toolkit'
 import moment from 'moment'

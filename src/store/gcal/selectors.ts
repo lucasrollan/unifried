@@ -1,10 +1,10 @@
 import { RootState } from "@/store"
-import { GcalEvent } from "@/types/gcal"
+import { GcalEvent } from "@/models/gcal"
 import { createSelector } from "@reduxjs/toolkit"
 import moment from "moment"
 import { TimelineCard } from "../timeline/types"
 import { mapValues } from "lodash"
-import { TimelineRow } from "@/types/timeline"
+import { TimelineRow } from "@/models/timeline"
 
 const USE_DECIMAL_DAYS = true
 
@@ -79,3 +79,12 @@ function filterMap<T, U>(list: T[], project: (element: T) => U, predicate: (elem
         }
     }, [] as U[])
 }
+
+/*
+we have:
+- reducers
+- selectors
+- BE models
+- FE models
+- changes to FE model -> changes to BE model
+*/

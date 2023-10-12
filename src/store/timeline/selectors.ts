@@ -2,7 +2,7 @@ import { RootState } from "@/store"
 import { createSelector } from "@reduxjs/toolkit"
 import moment, { Moment } from "moment"
 import { TimelineCard } from "./types"
-import { TimelineEntry } from "@/types/timeline"
+import { TimelineEntry } from "@/models/timeline"
 import { mapValues } from "lodash"
 
 export type timelineCardsByRow = Record<string, Array<TimelineCard[]>>

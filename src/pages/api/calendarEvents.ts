@@ -4,7 +4,7 @@ import { google } from 'googleapis'
 
 import type { NextApiRequest, NextApiResponse } from 'next'
 import getGoogleAuth from './getGoogleAuth';
-import { GcalEvent } from '@/types/gcal';
+import { GcalEvent } from '@/models/gcal';
 
 export default async function handler(
     req: NextApiRequest,

@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import { RootState } from '..'
-import { GcalCalendar, GcalEvent } from '@/types/gcal'
+import { GcalCalendar, GcalEvent } from '@/models/gcal'
 
 export interface GcalState {
     loading: boolean,

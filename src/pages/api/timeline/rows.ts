@@ -1,4 +1,4 @@
-import { TimelineRow } from '@/types/timeline'
+import { TimelineRow } from '@/models/timeline'
 import { getServerSession } from 'next-auth/next'
 import { authOptions } from "../auth/[...nextauth]"
 import Airtable from 'airtable';
