@@ -17,7 +17,7 @@ export interface TimelineState {
 const initialState: TimelineState = {
     startDate: moment().subtract(1, 'week').format('YYYY-MM-DD'),
     endDate: '2024-02-11T00:00',
-    daysInView: 14,
+    daysInView: 10,
     rowIds: [],
     rowsById: {},
     entryIds: [],
