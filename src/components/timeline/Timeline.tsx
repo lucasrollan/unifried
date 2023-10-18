@@ -2,7 +2,7 @@ import React, { useCallback, useEffect } from "react";
 import { throttle } from "lodash";
 import style from './Timeline.module.css'
 import { useAppDispatch, useAppSelector } from "@/store";
-import { groupCardsIntoLanes, selectNumberOfDaysInView, selectScrollPos, selectTimeframeLengthDays, selectTodayTimeframeDays, timelineCardsByRow } from "@/store/timeline/selectors";
+import { groupCardsIntoLanes, selectNumberOfDaysInView, selectScrollPos, selectTimeframeLengthDays, selectTimelineRows, selectTodayTimeframeDays, timelineCardsByRow } from "@/store/timeline/selectors";
 import TimelineCard from "./TimelineCard";
 import TimelinePeriods from "./TimelinePeriods";
 import { classes, scale } from "./utils";
@@ -29,7 +29,7 @@ export default function Timeline() {
     const scrollPos = useAppSelector(selectScrollPos)
 
     const ephemeridesEvents = useAppSelector(selectEphemeridesEvents)
-    const calendarRows = useAppSelector(selectCalendarRows)
+    const calendarRows = useAppSelector(selectTimelineRows)
     const calendarEventsByCalendarId = useAppSelector(selectCalendarEventsByCalendarId)
     const highlightedEvents = useAppSelector(selectHighlightedCalendarEvents)
 

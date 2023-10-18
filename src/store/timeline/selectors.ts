@@ -4,6 +4,7 @@ import moment, { Moment } from "moment"
 import { TimelineCard } from "./types"
 import { TimelineEntry } from "@/models/timeline"
 import { mapValues } from "lodash"
+import { selectCalendarRows } from "../calendar/selectors"
 
 export type timelineCardsByRow = Record<string, Array<TimelineCard[]>>
 
@@ -257,3 +258,31 @@ function segmentsOverlap (seg1: number[], seg2: number[]) {
     return seg2[0] >= seg1[0] && seg2[0] < seg1[1]
         || seg2[1] > seg1[0] && seg2[1] <= seg1[1]
 }
+
+const MANUAL_ROW_ORDER = [
+    '4ef5086e1cd0b60a8fc47e3e530b1144244b93b6b119e71f455f46a7f647286a@group.calendar.google.com', // PTO
+    'lucas.rollan@gmail.com',
+    '0846c2e2d901b793e62a3edff54e49609e8e97aa0b482b80dbc3b0efe59484ab@group.calendar.google.com', // Burbuja
+    's1e7ne3qhdo27pim2e84duk4pc@group.calendar.google.com', // calendario de planes
+]
+
+export const selectTimelineRows =
+    (state: RootState) => {
+        const calendarRows = selectCalendarRows(state)
+        calendarRows.sort((a, b) => {
+            //<0 -> a first, >0 -> b first
+            const aIndex = MANUAL_ROW_ORDER.indexOf(a.id)
+            const bIndex = MANUAL_ROW_ORDER.indexOf(b.id)
+
+            if (aIndex >= 0 && bIndex >=0) {
+                return aIndex - bIndex
+            } else if (aIndex < 0 && bIndex < 0) {
+                return aIndex <= bIndex
+                    ? 1
+                    : -1
+            } else {
+                return aIndex <= 0 ? 1 : -1
+            }
+        })
+        return calendarRows
+    }
