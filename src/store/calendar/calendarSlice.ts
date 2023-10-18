@@ -11,6 +11,7 @@ export interface CalendarState {
     calendarIds: string[],
     calendarsById: Record<string, Calendar>,
     ignoredCalendarIds: string[],
+    ephemeridesCalendarIds: string[], // calendars that mark things about the days (like holidays) but don't contain events
 }
 
 const initialState: CalendarState = {
@@ -23,6 +24,11 @@ const initialState: CalendarState = {
     ignoredCalendarIds: [
         'p#weather@group.v.calendar.google.com',
     ],
+    ephemeridesCalendarIds: [
+        'a81586a68abd6c28b30d7623206f888676fbd7789aea0edc7b549f9759ec9c63@group.calendar.google.com', // birthdays
+        'es.ar#holiday@group.v.calendar.google.com',
+        'es.dutch#holiday@group.v.calendar.google.com',
+    ]
 }
 
 const api_fetchCalendars = async function (): Promise<Calendar[]> {

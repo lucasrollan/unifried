@@ -13,17 +13,43 @@ export const selectCalendarRows = createSelector(
     (state: RootState) => state.calendar.calendarIds,
     (state: RootState) => state.calendar.calendarsById,
     (state: RootState) => state.calendar.ignoredCalendarIds,
-    (calendarIds, calendarsById, ignoredCalendarIds) =>
+    (state: RootState) => state.calendar.ephemeridesCalendarIds,
+    (calendarIds, calendarsById, ignoredCalendarIds, ephemeridesCalendarIds) =>
         calendarIds
-            .filter(calendarId => !ignoredCalendarIds.includes(calendarId))
+            .filter(calendarId =>
+                !ignoredCalendarIds.includes(calendarId)
+                && !ephemeridesCalendarIds.includes(calendarId))
             .map(calendarId => {
                 const calendar = calendarsById[calendarId]
                 const row: TimelineRow = {
                     id: calendarId,
-                    label: calendar.label,
+                    label: calendar.label
                 }
                 return row
             })
+)
+
+// return a single list of all the events that belong to an ephemerides calendar
+export const selectEphemeridesEvents = createSelector(
+    (state: RootState) => state.timeline,
+    (state: RootState) => state.calendar,
+    (timeline, calendar) =>
+        calendar.calendarIds
+            .filter(calendarId =>
+                !calendar.ignoredCalendarIds.includes(calendarId)
+                && calendar.ephemeridesCalendarIds.includes(calendarId))
+            .map(calendarId =>
+                filterMap(
+                    calendar.eventsIdsByCalendarId[calendarId] || [],
+                    (eventId) => projectCalendarEventToCard(
+                        calendar.eventsById[eventId],
+                        calendar.calendarsById[calendarId],
+                        timeline.startDate,
+                        timeline.endDate),
+                    (card) => isCardWithinTimeframe(card, timeline.startDate,  timeline.endDate),
+                )
+            )
+            .flat()
 )
 
 export const selectCalendarEventsByCalendarId = createSelector(

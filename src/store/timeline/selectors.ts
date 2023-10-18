@@ -220,7 +220,7 @@ function isTimelineEntryWithinTimeframe (entry: TimelineEntry, timelineStart: st
         && moment(entry.start).isSameOrBefore(timelineEnd)
 }
 
-const groupCardsIntoLanes = (cards: TimelineCard[]): Array<TimelineCard[]> => {
+export const groupCardsIntoLanes = (cards: TimelineCard[]): Array<TimelineCard[]> => {
     let lanes: Array<TimelineCard[]> = []
 
     for (let card of cards) {

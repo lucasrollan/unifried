@@ -2,7 +2,7 @@ import React, { useCallback, useEffect } from "react";
 import { throttle } from "lodash";
 import style from './Timeline.module.css'
 import { useAppDispatch, useAppSelector } from "@/store";
-import { selectNumberOfDaysInView, selectScrollPos, selectTimeframeLengthDays, selectTodayTimeframeDays, timelineCardsByRow } from "@/store/timeline/selectors";
+import { groupCardsIntoLanes, selectNumberOfDaysInView, selectScrollPos, selectTimeframeLengthDays, selectTodayTimeframeDays, timelineCardsByRow } from "@/store/timeline/selectors";
 import TimelineCard from "./TimelineCard";
 import TimelinePeriods from "./TimelinePeriods";
 import { classes, scale } from "./utils";
@@ -10,8 +10,9 @@ import { updateScrollPos } from "@/store/timeline/timelineSlice";
 import TimelineControls from "./TimelineControls";
 import createScrollable from "../Scrollable";
 import { fetchCalendarsAndEvents } from "@/store/calendar/calendarSlice";
-import { selectCalendarEventsByCalendarId, selectCalendarRows, selectHighlightedCalendarEvents } from "@/store/calendar/selectors";
+import { selectCalendarEventsByCalendarId, selectCalendarRows, selectEphemeridesEvents, selectHighlightedCalendarEvents } from "@/store/calendar/selectors";
 import { TimelineRow } from "@/models/timeline";
+import TimelineEphemerisCard from "./TimelineEphemerisCard";
 
 const Scrollable = createScrollable()
 
@@ -27,10 +28,12 @@ export default function Timeline() {
     const daysInView = useAppSelector(selectNumberOfDaysInView)
     const scrollPos = useAppSelector(selectScrollPos)
 
+    const ephemeridesEvents = useAppSelector(selectEphemeridesEvents)
     const calendarRows = useAppSelector(selectCalendarRows)
     const calendarEventsByCalendarId = useAppSelector(selectCalendarEventsByCalendarId)
     const highlightedEvents = useAppSelector(selectHighlightedCalendarEvents)
 
+    const ephemeridesEventByLane = groupCardsIntoLanes(ephemeridesEvents)
     const allRows: TimelineRow[] = calendarRows
     const allCardsByRow: timelineCardsByRow = calendarEventsByCalendarId
 
@@ -89,6 +92,26 @@ export default function Timeline() {
                                             ))
                                         }
                                     </div>
+                                </div>
+                            ))
+                        }
+                    </div>
+                    <div className={style.timelineEphemerides}>
+                        {
+                            ephemeridesEventByLane.map((lane, laneIndex) => (
+                                <div className={style.timelineEphemeridesLane} key={laneIndex}>
+                                    {
+                                        lane.map(card => (
+                                            <TimelineEphemerisCard
+                                                key={card.id}
+                                                card={card}
+                                                style={{
+                                                    width: scale(card.timeWindow.daysLength, daysInView),
+                                                    left: scale(card.timeWindow.daysSinceStart, daysInView),
+                                                }}
+                                            />
+                                        ))
+                                    }
                                 </div>
                             ))
                         }

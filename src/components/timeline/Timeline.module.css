@@ -72,8 +72,27 @@
     border: 1px solid rgba(144, 120, 24, 0.8);
 }
 
+.timelineEphemerides {
+    /* position: relative; */
+}
+.timelineEphemeridesLane {
+    position: relative;
+    height: 24px;
+}
+.timelineEphemerisCard {
+    position: absolute;
+    top: 0;
+    background-color: rgb(233, 145, 239);
+    border: 1px solid rgb(144, 24, 102);
+    border-radius: 2px;
+    white-space: nowrap;
+    padding: 2px 2px;
+    transition: width 0.2s, left 0.2s;
+}
+
 .timelineRows {
     flex: 1;
+    border-top: 1px solid lightgray;
 }
 .timelineRow {
     padding-top: 4px;
