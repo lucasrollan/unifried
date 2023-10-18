@@ -2,11 +2,11 @@ import React, { useCallback, useEffect } from "react";
 import { throttle } from "lodash";
 import style from './Timeline.module.css'
 import { useAppDispatch, useAppSelector } from "@/store";
-import { selectNumberOfDaysInView, selectScrollPos, selectTimeframeLengthDays, selectTimelineCardsByRowIds, selectTimelineRows, selectTodayTimeframeDays, timelineCardsByRow } from "@/store/timeline/selectors";
+import { selectNumberOfDaysInView, selectScrollPos, selectTimeframeLengthDays, selectTodayTimeframeDays, timelineCardsByRow } from "@/store/timeline/selectors";
 import TimelineCard from "./TimelineCard";
 import TimelinePeriods from "./TimelinePeriods";
 import { classes, scale } from "./utils";
-import { fetchTimelineEntries, fetchTimelineRows, updateScrollPos } from "@/store/timeline/timelineSlice";
+import { updateScrollPos } from "@/store/timeline/timelineSlice";
 import TimelineControls from "./TimelineControls";
 import createScrollable from "../Scrollable";
 import { fetchCalendarsAndEvents } from "@/store/calendar/calendarSlice";
@@ -19,8 +19,6 @@ export default function Timeline() {
     const dispatch = useAppDispatch()
 
     useEffect(() => {
-        dispatch(fetchTimelineEntries())
-        dispatch(fetchTimelineRows())
         dispatch(fetchCalendarsAndEvents())
     }, [dispatch])
 
@@ -29,21 +27,12 @@ export default function Timeline() {
     const daysInView = useAppSelector(selectNumberOfDaysInView)
     const scrollPos = useAppSelector(selectScrollPos)
 
-    const rows = useAppSelector(selectTimelineRows)
-    const cards = useAppSelector(selectTimelineCardsByRowIds)
-
     const calendarRows = useAppSelector(selectCalendarRows)
     const calendarEventsByCalendarId = useAppSelector(selectCalendarEventsByCalendarId)
     const highlightedEvents = useAppSelector(selectHighlightedCalendarEvents)
 
-    const allRows: TimelineRow[] = [
-        ...rows,
-        ...calendarRows,
-    ]
-    const allCardsByRow: timelineCardsByRow = {
-        ...cards,
-        ...calendarEventsByCalendarId,
-    }
+    const allRows: TimelineRow[] = calendarRows
+    const allCardsByRow: timelineCardsByRow = calendarEventsByCalendarId
 
     const handleScroll = useCallback(
         throttle(

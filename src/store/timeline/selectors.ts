@@ -18,8 +18,6 @@ type Period = {
     }
 }
 
-const USE_DECIMAL_DAYS = true
-
 export const selectTimelineStart = (state: RootState) => state.timeline.startDate
 export const selectTimelineEnd = (state: RootState) => state.timeline.endDate
 export const selectTodayTimeframeDays = (state: RootState) =>
@@ -132,7 +130,7 @@ export const selectWeekPeriodsFromDates = (startDate: string, endDate: string) =
 }
 
 const pregnancyStart = moment('2023-07-16')
-const pregnancyDueDate = moment('2024-04-20')
+const pregnancyDueDate = moment('2024-04-21')
 export const selectPregnancyWeekPeriodsFromDates = createSelector(
     selectTimelineStart,
     selectTimelineEnd,
@@ -217,61 +215,10 @@ export const selectWeekPeriods = createSelector(
     selectWeekPeriodsFromDates,
 )
 
-export const selectTimelineRows = createSelector(
-    (state: RootState) => state.timeline.rowIds,
-    (state: RootState) => state.timeline.rowsById,
-    (rowIds, rowsById) =>
-        rowIds.map(rowId => rowsById[rowId])
-)
-
 function isTimelineEntryWithinTimeframe (entry: TimelineEntry, timelineStart: string, timelineEnd: string) {
     return moment(entry.end).isSameOrAfter(timelineStart)
         && moment(entry.start).isSameOrBefore(timelineEnd)
 }
-
-export const selectTimelineCardsByRowIds = createSelector(
-    selectTimelineStart,
-    selectTimelineEnd,
-    (state: RootState) => state.timeline.entryIds,
-    (state: RootState) => state.timeline.entriesById,
-    (timelineStart, timelineEnd, entryIds, entriesById) => {
-        const byRowId = entryIds.reduce((acc, entryId) => {
-            const entry = entriesById[entryId]
-
-            if (!isTimelineEntryWithinTimeframe(entry, timelineStart, timelineEnd)) {
-                return acc
-            }
-
-            const useStart = moment.max(moment(entry.start), moment(timelineStart))
-            const useEnd = moment.min(moment(entry.end), moment(timelineEnd))
-
-            const card: TimelineCard =({
-                id: entry.id,
-                label: entry.label,
-                start: moment(entry.start),
-                end: moment(entry.end),
-                isHighlighted: entry.isHighlighted,
-                color: entry.color,
-                timeWindow: { // how this entry relates to the selected time window
-                    daysSinceStart: useStart.diff(timelineStart, 'day', USE_DECIMAL_DAYS),
-                    daysLength: useEnd.diff(entry.start, 'day', USE_DECIMAL_DAYS),
-                }
-            })
-
-            return {
-                ...acc,
-                [entry.rowId]: [...(acc[entry.rowId] || []), card],
-            }
-        }, {} as Record<string, TimelineCard[]>)
-
-        return Object.keys(byRowId).reduce((acc, rowId) => {
-            return ({
-                ...acc,
-                [rowId]: groupCardsIntoLanes(byRowId[rowId]),
-            })
-        }, {} as timelineCardsByRow)
-    }
-)
 
 const groupCardsIntoLanes = (cards: TimelineCard[]): Array<TimelineCard[]> => {
     let lanes: Array<TimelineCard[]> = []
@@ -296,17 +243,6 @@ const groupCardsIntoLanes = (cards: TimelineCard[]): Array<TimelineCard[]> => {
     return lanes
 }
 
-
-export const selectAllTimelineCardsByRowIds = createSelector(
-    selectTimelineStart,
-    selectTimelineEnd,
-    (state: RootState) => state.timeline.entryIds,
-    (state: RootState) => state.timeline.entriesById,
-    selectTimelineCardsByRowIds,
-    (timelineStart, timelineEnd, entryIds, entriesById, airtableCardsByRowId) => {
-
-    })
-
 function overlapsWithCardInLane(card: TimelineCard, lane: TimelineCard[]) {
     return lane.some(current => cardsOverlap(current, card))
 }
@@ -320,15 +256,4 @@ function cardsOverlap (cardA: TimelineCard, cardB: TimelineCard) {
 function segmentsOverlap (seg1: number[], seg2: number[]) {
     return seg2[0] >= seg1[0] && seg2[0] < seg1[1]
         || seg2[1] > seg1[0] && seg2[1] <= seg1[1]
-}
-
-/**
- *
- * @param number
- * @param start (inclusive)
- * @param end (not inclusive)
- * @returns
- */
-function isNumberBetween (number: number, start: number, end: number) {
-    return number >= start && number < end
 }
