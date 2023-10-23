@@ -1,12 +1,14 @@
 import { configureStore } from '@reduxjs/toolkit'
-import timelineSlice from './timeline/timelineSlice'
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux'
+import timelineSlice from './timeline/timelineSlice'
 import calendarSlice from './calendar/calendarSlice'
+import fragmentSlice from './fragments/fragmentSlice'
 
 export const store = configureStore({
   reducer: {
     timeline: timelineSlice,
     calendar: calendarSlice,
+    fragments: fragmentSlice,
   },
 })
 
