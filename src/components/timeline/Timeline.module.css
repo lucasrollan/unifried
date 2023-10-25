@@ -30,7 +30,7 @@
 .period {
     position: absolute;
     top: 0;
-    border: 1px solid rgba(var(--color-ui-text-rgb), 0.5);
+    border: 1px solid rgba(var(--color-ui-foreground-rgb), 0.5);
     border-top: none;
     border-left: none;
     padding: 2px 8px;
@@ -84,7 +84,7 @@
     position: absolute;
     top: 0;
     background-color: var(--color-ui-secondary);
-    border: 1px solid rgba(var(--color-ui-text-rgb), 0.5);
+    border: 1px solid rgba(var(--color-ui-foreground-rgb), 0.5);
     border-radius: 2px;
     white-space: nowrap;
     padding: 2px 2px;
@@ -93,12 +93,12 @@
 
 .timelineRows {
     flex: 1;
-    border-top: 1px solid rgba(var(--color-ui-text-rgb), 0.3);
+    border-top: 1px solid rgba(var(--color-ui-foreground-rgb), 0.3);
 }
 .timelineRow {
     padding-top: 4px;
     position: relative;
-    border-bottom: 1px solid rgba(var(--color-ui-text-rgb), 0.3);
+    border-bottom: 1px solid rgba(var(--color-ui-foreground-rgb), 0.3);
 }
 .timelineRowTitle {
     padding: 4px 8px;

@@ -1,4 +1,4 @@
-import DaySummaryPage from "@/components/daySummary/Page";
+import DaySummaryPage from "@/components/daySummaryPage/Page";
 import React from "react";
 
 export default function DaySummaryPage2() {

@@ -1,10 +1,12 @@
+
+import FragmentsSummary from '../fragmentsSummary/FragmentsSummary'
 import { useAppDispatch, useAppSelector } from "@/store"
 import { fetchFragments } from "@/store/fragments/fragmentSlice"
 import { selectAllFragments } from "@/store/fragments/selectors"
 import { useEffect } from "react"
+import style from './style.module.css'
 
-
-function DaySummary () {
+function DaySummaryPage() {
     const dispatch = useAppDispatch()
     useEffect(() => {
         dispatch(fetchFragments())
@@ -12,16 +14,11 @@ function DaySummary () {
 
     const fragments = useAppSelector(selectAllFragments)
 
-    return <div>
-        <h1>day summary</h1>
-        <div>
-            {
-                fragments.map(fragment => <div key={fragment.id}>
-                    {fragment.title}
-                </div>)
-            }
+    return <div className={style.page}>
+        <div className={style.pageMain}>
+            <FragmentsSummary fragments={fragments} />
         </div>
     </div>
 }
 
-export default DaySummary
+export default DaySummaryPage

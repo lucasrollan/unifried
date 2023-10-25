@@ -6,3 +6,7 @@ export const selectAllFragments = createSelector(
     fragmentState =>
         fragmentState.fragmentIds.map(id => fragmentState.fragmentsById[id])
 )
+
+export const selectFragmentById =
+    (state: RootState, id: string) =>
+        state.fragments.fragmentsById[id]

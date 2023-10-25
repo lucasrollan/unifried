@@ -1,0 +1,28 @@
+.layout {
+    display: flex;
+}
+
+.indicator {
+    width: 14px;
+    margin-right: 8px;
+    align-self: top;
+}
+
+.mainBody {
+    flex: 1;
+}
+
+.reward {
+    width: 50px;
+    align-self: top;
+    text-align: right;
+}
+
+.rewardAmount {
+    vertical-align: middle;
+}
+
+.rewardIcon {
+    width: 1.5em;
+    vertical-align: middle;
+}

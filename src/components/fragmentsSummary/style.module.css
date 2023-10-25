@@ -2,3 +2,11 @@
     height: 100%;
     background-color: var(--color-ui-background);
 }
+
+.list {
+    padding: 12px;
+}
+
+.item {
+    margin-bottom: 8px;
+}
