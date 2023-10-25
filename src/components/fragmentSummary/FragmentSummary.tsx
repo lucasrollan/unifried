@@ -3,6 +3,7 @@ import { Card, Icon, IconName } from "@blueprintjs/core"
 import style from "./style.module.css"
 import { useAppSelector } from "@/store"
 import { selectFragmentById } from "@/store/fragments/selectors"
+import { getIndicatorIcon, getTimeDescription } from "./details"
 
 type FragmentSummaryProps = {
     fragment: Fragment,
@@ -12,48 +13,45 @@ function FragmentSummary (props: FragmentSummaryProps) {
     const parent = useAppSelector(state =>
         props.fragment.parentId && selectFragmentById(state, props.fragment.parentId))
 
+    const timeParts = getTimeDescription(props.fragment)
+
     return <Card>
         <div className={style.layout}>
             <div className={style.indicator}>
                 <Icon icon={getIndicatorIcon(props.fragment)} size={14} />
             </div>
             <div className={style.mainBody}>
-                <h3>{props.fragment.title}</h3>
-                { props.fragment.content
-                    && <div>{props.fragment.content}</div>}
-                { props.fragment.location
-                    && <div><Icon icon="map-marker" />{props.fragment.location}</div>}
-                { parent
-                    && <div><Icon icon="symbol-triangle-up" />{parent.title}</div>}
+                <h4>{props.fragment.title}</h4>
+
+                {
+                    ( props.fragment.content || props.fragment.location || parent || timeParts.length ) &&
+                    <div className={style.details}>
+                        { props.fragment.content
+                            && <div>{props.fragment.content}</div>}
+                        { timeParts.length > 0
+                            && timeParts.map(part =>
+                                <div key={part}><Icon icon="time" /> {part}</div>
+                            )}
+                        { props.fragment.location
+                            && <div><Icon icon="map-marker" /> {props.fragment.location}</div>}
+                        { parent
+                            && <div><Icon icon="symbol-triangle-up" /> {parent.title}</div>}
+                    </div>
+                }
+
             </div>
+            <div className={style.reward}>
             {
-                props.fragment.reward &&
-                <div className={style.reward}>
+                props.fragment.reward !== undefined &&
+                <>
                     <span  className={style.rewardAmount}>{props.fragment.reward}</span>
                     {' '}
                     <img  className={style.rewardIcon} src="/icons/65516_cash_currency_icon.png" />
-                </div>
+                </>
             }
-
+            </div>
         </div>
     </Card>
-}
-
-const priorityIndicatorIcons: Record<number, IconName> = {
-    0: 'high-priority',
-    1: 'double-chevron-up',
-    2: 'chevron-up',
-    3: 'minus',
-    4: 'chevron-down',
-    5: 'double-chevron-down',
-}
-function getIndicatorIcon(fragment: Fragment): IconName | undefined {
-    if (fragment.role === 'event') {
-        return 'calendar'
-    }
-    if (fragment.priority !== undefined) {
-        return priorityIndicatorIcons[fragment.priority]
-    }
 }
 
 export default FragmentSummary

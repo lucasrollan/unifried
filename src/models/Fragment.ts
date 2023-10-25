@@ -1,4 +1,5 @@
 type dateString = string
+type dateTimeString = string
 
 type Fragment = {
     id: string,
@@ -11,9 +12,12 @@ type Fragment = {
     relatedTo?: string[],
     parentId?: string,
     status?: string,
-    earliestStart?: dateString,
-    start?: dateString,
-    end?: dateString,
+    earliestStart?: dateTimeString,
+    earliestStartDate?: dateString,
+    start?: dateTimeString,
+    startDate?: dateString,
+    end?: dateTimeString,
+    endDate?: dateString,
     location?: string,
     reward?: number,
 }
