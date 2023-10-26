@@ -1,5 +1,5 @@
 .bp5-card {
     border-radius: 8px;
     padding: 12px;
-    background-color: color-mix(in srgb, var(--color-ui-tertiary) 5%, white)
+    background-color: color-mix(in srgb, var(--color-ui-tertiary) 15%, white)
 }
