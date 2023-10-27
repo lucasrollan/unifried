@@ -21,7 +21,7 @@ type Fragment = {
     location?: string,
     reward?: number,
     isCompleted: boolean,
-    completionDate?: dateTimeString,g
+    completionDate?: dateTimeString,
 }
 
 export default Fragment
