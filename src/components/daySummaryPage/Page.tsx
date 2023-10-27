@@ -2,7 +2,7 @@
 import FragmentsSummary from '../fragmentsSummary/FragmentsSummary'
 import { useAppDispatch, useAppSelector } from "@/store"
 import { fetchFragments } from "@/store/fragments/fragmentSlice"
-import { selectAllFragments } from "@/store/fragments/selectors"
+import { selectAllFragments, selectFragmentsRelevantForDate } from "@/store/fragments/selectors"
 import { useEffect } from "react"
 import style from './style.module.css'
 
@@ -12,7 +12,8 @@ function DaySummaryPage() {
         dispatch(fetchFragments())
     }, [dispatch])
 
-    const fragments = useAppSelector(selectAllFragments)
+    const dateString = (new Date()).toISOString()
+    const fragments = useAppSelector(state => selectFragmentsRelevantForDate(state, dateString))
 
     return <div className={style.page}>
         <div className={style.pageMain}>
