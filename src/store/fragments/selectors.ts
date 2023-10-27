@@ -3,6 +3,9 @@ import { RootState } from "@/store"
 import { createSelector } from "@reduxjs/toolkit"
 import moment, { MomentInput } from "moment"
 
+export const selectSummaryDateSelected = (state: RootState) =>
+    state.fragments.fragmentSummaryDateSelected
+
 export const selectAllFragments = createSelector(
     (state: RootState) => state.fragments,
     fragmentState =>
@@ -15,14 +18,16 @@ export const selectFragmentById =
 
 
 export const selectFragmentsRelevantForDate = createSelector(
-    (state: RootState, date: string) => date,
+    (state: RootState) => state.fragments.fragmentSummaryDateSelected,
     selectAllFragments,
     (date, fragments) =>
-        fragments.filter(fragment =>
-            isFragmentRelevantForDate(
-                fragment,
-                moment(date).startOf('day'),
-                moment(date).add(1, 'day').startOf('day')
+        sortFragmentsForSummary(
+            fragments.filter(fragment =>
+                isFragmentRelevantForDate(
+                    fragment,
+                    moment(date).startOf('day'),
+                    moment(date).add(1, 'day').startOf('day')
+                )
             )
         )
 )
@@ -31,36 +36,54 @@ function isFragmentRelevantForDate(fragment: Fragment, dateStart: MomentInput, d
     const earliestStart = fragment.earliestStart || fragment.earliestStartDate
     const start = fragment.start || fragment.startDate
     const end = fragment.end || fragment.endDate
-    const isOpen = fragment.status !== 'done' && fragment.status !== 'cancelled'
 
     if (fragment.role === 'event') {
-        const isEarliestStartWithinRange = earliestStart
-            ? isDateWithinRange(earliestStart, dateStart, dateEndExclusive)
-            : false
-        const isStartWithinRange = start
-            ? isDateWithinRange(start, dateStart, dateEndExclusive)
-            : false
-        const isEndWithinRange = start
-            ? isDateWithinRange(end, dateStart, dateEndExclusive)
-            : false
+        if (fragment.status === 'cancelled') {
+            return false
+        }
 
-        return isOpen && (isEarliestStartWithinRange || isStartWithinRange || isEndWithinRange)
+        const eventStartsAfterRangeEnd = moment(start).isSameOrAfter(dateEndExclusive)
+        const eventEndsAfterRangeStart = moment(end).isSameOrBefore(dateStart)
+        return !(eventStartsAfterRangeEnd || eventEndsAfterRangeStart)
     } else {
-        const isEarliestStartAfterRangeStart = earliestStart
-            ? moment(earliestStart).isSameOrAfter(dateStart)
+        const isEarliestStartBeforeRangeEnd = earliestStart
+            ? moment(earliestStart).isBefore(dateEndExclusive)
             : false
-        const isStartAfterRangeStart = start
-            ? moment(start).isSameOrAfter(dateStart)
+        const isStartBeforeRangeEnd = start
+            ? moment(start).isBefore(dateEndExclusive)
             : false
-        const isEndBeforeRangeStart = end
-            ? moment(end).isSameOrBefore(dateStart)
+        const isEndBeforeRangeEnd = end
+            ? moment(end).isBefore(dateEndExclusive)
+            : false
+        const happensBeforeRangeEnd = isEarliestStartBeforeRangeEnd || isStartBeforeRangeEnd || isEndBeforeRangeEnd
+
+        const wasCompletedBeforeRangeEnd = fragment.completionDate
+            ? moment(fragment.completionDate).isBefore(dateEndExclusive)
             : false
 
-        return isOpen && (isEarliestStartAfterRangeStart || isStartAfterRangeStart || isEndBeforeRangeStart)
+        // TODO: should we show open tasks after today?
+        //   - if yes, then we are assuming that all tasks not be done on time // after today
+        //   - if no, then they will be carrying them over one day at a time
+
+        // TODO: include tasks done that day, and tasks done after the day too
+
+        if (fragment.isCompleted) {
+            return wasCompletedBeforeRangeEnd
+        } else {
+            return happensBeforeRangeEnd
+        }
     }
 }
 
 function isDateWithinRange(date: MomentInput, start: MomentInput, exclusiveEnd: MomentInput): boolean {
     const dateMoment = moment(date)
     return dateMoment.isSameOrAfter(start) && dateMoment.isBefore(start)
+}
+
+function sortFragmentsForSummary(fragments: Fragment[]): Fragment[] {
+    return sortFragmentsByUrgencyScore(fragments)
+}
+
+function sortFragmentsByUrgencyScore(fragments: Fragment[]): Fragment[] {
+    return fragments
 }

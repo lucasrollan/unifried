@@ -3,8 +3,19 @@
     background-color: var(--color-ui-background);
 }
 
-.list {
+.header {
+    display: flex;
     padding: 12px;
+}
+
+.title {
+    flex: 1;
+    margin: 0 12px;
+    text-align: center;
+}
+
+.list {
+    padding: 0 12px 12px;
 }
 
 .item {

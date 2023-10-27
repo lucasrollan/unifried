@@ -1,14 +1,16 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
-import type { PayloadAction } from '@reduxjs/toolkit'
+import type { Action, PayloadAction } from '@reduxjs/toolkit'
 import moment from 'moment'
 import Fragment from '@/models/Fragment'
 
 export interface FragmentsState {
+    fragmentSummaryDateSelected: string,
     fragmentIds: string[],
     fragmentsById: Record<string, Fragment>,
 }
 
 const initialState: FragmentsState = {
+    fragmentSummaryDateSelected: moment().format('YYYY-MM-DD'),
     fragmentIds: [],
     fragmentsById: {},
 }
@@ -27,6 +29,9 @@ export const timelineSlice = createSlice({
     name: 'timeline',
     initialState,
     reducers: {
+        newSummaryDateSelected: (state, action) => {
+            state.fragmentSummaryDateSelected = action.payload
+        }
     },
     extraReducers: (builder) => {
         builder.addCase(fetchFragments.fulfilled, (state, action) => {
@@ -46,6 +51,6 @@ export const timelineSlice = createSlice({
 })
 
 // Action creators are generated for each case reducer function
-export const {  } = timelineSlice.actions
+export const { newSummaryDateSelected } = timelineSlice.actions
 
 export default timelineSlice.reducer

@@ -20,6 +20,8 @@ type Fragment = {
     endDate?: dateString,
     location?: string,
     reward?: number,
+    isCompleted: boolean,
+    completionDate?: dateTimeString,g
 }
 
 export default Fragment
