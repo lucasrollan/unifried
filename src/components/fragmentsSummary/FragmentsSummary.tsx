@@ -2,6 +2,8 @@ import Fragment from "@/models/Fragment"
 import FragmentSummary from "../fragmentSummary/FragmentSummary"
 import style from './style.module.css'
 import { AnchorButton } from "@blueprintjs/core"
+import { useAppDispatch } from "@/store"
+import { completeFragment } from "@/store/fragments/fragmentSlice"
 
 type FragmentsSummaryProps = {
     title: string,
@@ -11,6 +13,12 @@ type FragmentsSummaryProps = {
 }
 
 function FragmentsSummary (props: FragmentsSummaryProps) {
+    const dispatch = useAppDispatch()
+    const handleFragmentCompleted = (fragmentId: string) => {
+        console.log('FRAGMENT WILL BE COMPLETED')
+        dispatch(completeFragment(fragmentId))
+    }
+
     return <div>
         <div className={style.header}>
             <AnchorButton icon='chevron-left' minimal onClick={props.onPrevPageSelected} />
@@ -21,7 +29,7 @@ function FragmentsSummary (props: FragmentsSummaryProps) {
             {
                 props.fragments.map(fragment =>
                     <div className={style.item} key={fragment.id}>
-                        <FragmentSummary fragment={fragment} />
+                        <FragmentSummary fragment={fragment} onCompleted={() => handleFragmentCompleted(fragment.id)} />
                     </div>
                 )
             }

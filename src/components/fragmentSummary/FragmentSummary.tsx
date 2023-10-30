@@ -7,6 +7,7 @@ import { getIndicatorIcon, getTimeDescription } from "./details"
 
 type FragmentSummaryProps = {
     fragment: Fragment,
+    onCompleted: () => void
 }
 
 function FragmentSummary (props: FragmentSummaryProps) {
@@ -40,14 +41,22 @@ function FragmentSummary (props: FragmentSummaryProps) {
                 }
 
             </div>
-            <div className={style.reward}>
+            <div className={style.status}>
             {
-                props.fragment.reward !== undefined &&
-                <>
-                    <span  className={style.rewardAmount}>{props.fragment.reward}</span>
-                    {' '}
-                    <img  className={style.rewardIcon} src="/icons/65516_cash_currency_icon.png" />
-                </>
+                props.fragment.isCompleted
+                    ? <div style={{ color: 'green' }}>
+                        <Icon icon="tick-circle" />
+                    </div>
+                    : <div className={style.reward} onClick={props.onCompleted}>
+                    {
+                        props.fragment.reward !== undefined &&
+                        <>
+                            <span  className={style.rewardAmount}>{props.fragment.reward}</span>
+                            {' '}
+                            <img  className={style.rewardIcon} src="/icons/65516_cash_currency_icon.png" />
+                        </>
+                    }
+                    </div>
             }
             </div>
         </div>

@@ -12,9 +12,14 @@
     flex: 1;
 }
 
-.reward {
+
+.status {
     width: 50px;
     align-self: top;
+    text-align: right;
+}
+
+.reward {
     text-align: right;
 }
 
