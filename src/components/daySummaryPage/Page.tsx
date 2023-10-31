@@ -2,7 +2,7 @@
 import FragmentsSummary from '../fragmentsSummary/FragmentsSummary'
 import { useAppDispatch, useAppSelector } from "@/store"
 import { fetchFragments, newSummaryDateSelected } from "@/store/fragments/fragmentSlice"
-import { selectFragmentsRelevantForDate, selectSummaryDateSelected } from "@/store/fragments/selectors"
+import { selectFragmentsRelevantForDate, selectSummaryDateSelected, selectSummaryDateSelectedDescription } from "@/store/fragments/selectors"
 import { useEffect } from "react"
 import style from './style.module.css'
 import moment from 'moment'
@@ -14,6 +14,7 @@ function DaySummaryPage() {
     }, [dispatch])
 
     const selectedDate = useAppSelector(selectSummaryDateSelected)
+    const selectedDateDescription = useAppSelector(selectSummaryDateSelectedDescription)
     const fragments = useAppSelector(selectFragmentsRelevantForDate)
 
     const handleNextDateSelected = () => {
@@ -29,6 +30,7 @@ function DaySummaryPage() {
         <div className={style.pageMain}>
             <FragmentsSummary
                 title={selectedDate}
+                subTitle={selectedDateDescription}
                 fragments={fragments}
                 relativeToDate={selectedDate}
                 onNextPageSelected={handleNextDateSelected}

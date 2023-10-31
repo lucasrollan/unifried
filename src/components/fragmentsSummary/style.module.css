@@ -8,10 +8,17 @@
     padding: 12px;
 }
 
-.title {
+.titleContainer {
     flex: 1;
     margin: 0 12px;
     text-align: center;
+    align-self: center;
+}
+
+.subtitle {
+    font-size: 0.9em;
+    font-style: italic;
+    opacity: 0.8;
 }
 
 .list {

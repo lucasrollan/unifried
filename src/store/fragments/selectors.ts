@@ -7,6 +7,27 @@ import moment, { MomentInput } from "moment"
 export const selectSummaryDateSelected = (state: RootState) =>
     state.fragments.fragmentSummaryDateSelected
 
+export const selectSummaryDateSelectedDescription = (state: RootState) => {
+    const date = moment(selectSummaryDateSelected(state)).startOf('day')
+    const today = moment().startOf('day')
+
+    const dayName = date.format('dddd')
+    let relative = ''
+
+    if (date.isSame(today, 'day')) {
+        relative = 'today'
+    } else if (date.diff(today, 'day') === 1) {
+        relative = 'tomorrow'
+    } else if (date.diff(today, 'day') === -1) {
+        relative = 'yesterday'
+    }
+
+    if (!relative) {
+        relative = moment().to(date)
+    }
+    return [dayName, relative].join(', ')
+}
+
 export const selectAllFragments = createSelector(
     (state: RootState) => state.fragments,
     fragmentState =>
