@@ -141,9 +141,8 @@ function sortFragmentsForSummary(fragments: Fragment[]): Fragment[] {
 
 function sortFragmentsByUrgencyScore(fragments: Fragment[]): Fragment[] {
     let sorted = sortBy(fragments, [
-        fragment => fragment.role === 'event'
-            ? 0
-            : 1,
+        fragment => fragment.role === 'event' ? 0 : 1, // events first
+        fragment => fragment.isCompleted ? 1 : 0, // completed last
         fragment => fragment.priority
     ])
     return sorted
