@@ -30,6 +30,7 @@ function DaySummaryPage() {
             <FragmentsSummary
                 title={selectedDate}
                 fragments={fragments}
+                relativeToDate={selectedDate}
                 onNextPageSelected={handleNextDateSelected}
                 onPrevPageSelected={handlePrevDateSelected}
             />

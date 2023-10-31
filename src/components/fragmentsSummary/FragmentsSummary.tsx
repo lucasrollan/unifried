@@ -8,6 +8,7 @@ import { completeFragment } from "@/store/fragments/fragmentSlice"
 type FragmentsSummaryProps = {
     title: string,
     fragments: Fragment[],
+    relativeToDate: string,
     onPrevPageSelected: () => void,
     onNextPageSelected: () => void,
 }
@@ -29,7 +30,11 @@ function FragmentsSummary (props: FragmentsSummaryProps) {
             {
                 props.fragments.map(fragment =>
                     <div className={style.item} key={fragment.id}>
-                        <FragmentSummary fragment={fragment} onCompleted={() => handleFragmentCompleted(fragment.id)} />
+                        <FragmentSummary
+                            fragment={fragment}
+                            relativeToDate={props.relativeToDate}
+                            onCompleted={() => handleFragmentCompleted(fragment.id)}
+                        />
                     </div>
                 )
             }

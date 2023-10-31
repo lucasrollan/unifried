@@ -4,15 +4,20 @@ import style from "./style.module.css"
 import { useAppSelector } from "@/store"
 import { selectFragmentById } from "@/store/fragments/selectors"
 import { getIndicatorIcon, getTimeDescription } from "./details"
+import moment from "moment"
 
 type FragmentSummaryProps = {
     fragment: Fragment,
+    relativeToDate: string,
     onCompleted: () => void
 }
 
 function FragmentSummary (props: FragmentSummaryProps) {
     const parent = useAppSelector(state =>
         props.fragment.parentId && selectFragmentById(state, props.fragment.parentId))
+    const wasCompletedToday = props.fragment.isCompleted && props.fragment.completionDate
+        ? moment(props.fragment.completionDate).isSame(props.relativeToDate, 'day')
+        : false
 
     const timeParts = getTimeDescription(props.fragment)
 
@@ -45,7 +50,11 @@ function FragmentSummary (props: FragmentSummaryProps) {
             {
                 props.fragment.isCompleted
                     ? <div style={{ color: 'green' }}>
-                        <Icon icon="tick-circle" />
+                        {
+                            wasCompletedToday
+                                ? <Icon icon="tick-circle" />
+                                : <Icon icon="double-chevron-right" />
+                        }
                     </div>
                     : <div className={style.reward} onClick={props.onCompleted}>
                     {

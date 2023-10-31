@@ -1,6 +1,6 @@
 import Fragment from "@/models/Fragment";
 import { IconName } from "@blueprintjs/core";
-import moment, { Moment } from "moment";
+import moment, { Moment, MomentInput } from "moment";
 
 const priorityIndicatorIcons: Record<number, IconName> = {
     0: 'high-priority',
@@ -33,9 +33,6 @@ export function getTimeDescription(fragment: Fragment): string[] {
 
     if (fragment.role === 'task') {
         let parts = []
-        if (earliestStartDate) {
-            parts.push(`start ${formatDateWithOptionalTime(earliestStartDate, earliestStart)}`)
-        }
         if (startDate) {
             parts.push(`scheduled ${formatDateWithOptionalTime(startDate, start)}`)
         }
