@@ -33,7 +33,7 @@ const initialState: ActorsState = {
 }
 
 const api_addRewardTokens = async function (characterId: string, amount: number, date: string): Promise<UpdatedRewardTokensResponse> {
-    const result = await fetch(`/api/characters/${characterId}/rewardTokens}`, {
+    const result = await fetch(`/api/characters/${characterId}/rewardTokens`, {
         method: 'POST',
         body: JSON.stringify({
             amount,
