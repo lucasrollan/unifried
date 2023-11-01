@@ -3,12 +3,14 @@ import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux'
 import timelineSlice from './timeline/timelineSlice'
 import calendarSlice from './calendar/calendarSlice'
 import fragmentSlice from './fragments/fragmentSlice'
+import actorsSlice from './actors/actorsSlice'
 
 export const store = configureStore({
   reducer: {
     timeline: timelineSlice,
     calendar: calendarSlice,
     fragments: fragmentSlice,
+    actors: actorsSlice,
   },
 })
 

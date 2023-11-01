@@ -8,6 +8,7 @@ import { completeFragment } from "@/store/fragments/fragmentSlice"
 type FragmentsSummaryProps = {
     title: string,
     subTitle?: string,
+    tokens?: number,
     fragments: Fragment[],
     relativeToDate: string,
     onPrevPageSelected: () => void,
@@ -27,6 +28,11 @@ function FragmentsSummary (props: FragmentsSummaryProps) {
             <div className={style.titleContainer}>
                 <h3>{props.title}</h3>
                 <div className={style.subtitle}>{props.subTitle}</div>
+                {
+                    props.tokens
+                        ? <div className={style.subtitle}>Tokens: {props.tokens}</div>
+                        : ''
+                }
             </div>
             <AnchorButton icon='chevron-right' minimal onClick={props.onNextPageSelected} />
         </div>

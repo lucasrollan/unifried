@@ -3,6 +3,7 @@ import type { Action, PayloadAction } from '@reduxjs/toolkit'
 import moment from 'moment'
 import Fragment from '@/models/Fragment'
 import { RootState } from '..'
+import { grantRewardTokensToCurrentCharacter } from '../actors/actorsSlice'
 
 export interface FragmentsState {
     fragmentSummaryDateSelected: string,
@@ -48,6 +49,9 @@ export const completeFragment = createAsyncThunk(
         }
 
         await thunkApi.dispatch(updateFragment(fragmentToUpdate))
+        if (fragment.reward) {
+            await thunkApi.dispatch(grantRewardTokensToCurrentCharacter(fragment.reward))
+        }
     }
 )
 

@@ -6,16 +6,24 @@ import { selectFragmentsRelevantForDate, selectSummaryDateSelected, selectSummar
 import { useEffect } from "react"
 import style from './style.module.css'
 import moment from 'moment'
+import { fetchCharacters, fetchDailyRewardTokens } from '@/store/actors/actorsSlice'
+import { selectCurrentCharacter, selectSelectedDateTokens } from '@/store/actors/selectors'
 
 function DaySummaryPage() {
     const dispatch = useAppDispatch()
     useEffect(() => {
         dispatch(fetchFragments())
+        dispatch(fetchCharacters())
+        dispatch(fetchDailyRewardTokens())
     }, [dispatch])
+
+    const currentCharacter = useAppSelector(selectCurrentCharacter)
 
     const selectedDate = useAppSelector(selectSummaryDateSelected)
     const selectedDateDescription = useAppSelector(selectSummaryDateSelectedDescription)
+    const selectedDateTokens = useAppSelector(selectSelectedDateTokens)
     const fragments = useAppSelector(selectFragmentsRelevantForDate)
+
 
     const handleNextDateSelected = () => {
         const newDate = moment(selectedDate).add(1, 'day').format('YYYY-MM-DD')
@@ -28,9 +36,13 @@ function DaySummaryPage() {
 
     return <div className={style.page}>
         <div className={style.pageMain}>
+            <div>
+                tokens: {currentCharacter?.tokens}
+            </div>
             <FragmentsSummary
                 title={selectedDate}
                 subTitle={selectedDateDescription}
+                tokens={selectedDateTokens}
                 fragments={fragments}
                 relativeToDate={selectedDate}
                 onNextPageSelected={handleNextDateSelected}
