@@ -1,4 +1,4 @@
-import Fragment from "@/models/Fragment"
+import IFragment from "@/models/IFragment"
 import { Card, Icon, IconName } from "@blueprintjs/core"
 import style from "./style.module.css"
 import { useAppSelector } from "@/store"
@@ -7,7 +7,7 @@ import { getIndicatorIcon, getTimeDescription } from "./details"
 import moment from "moment"
 
 type FragmentSummaryProps = {
-    fragment: Fragment,
+    fragment: IFragment,
     relativeToDate: string,
     onCompleted: () => void
 }

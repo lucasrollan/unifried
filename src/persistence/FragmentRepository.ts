@@ -1,7 +1,8 @@
-import Fragment from "@/models/Fragment";
+import IFragment from "@/models/IFragment";
 import Airtable from "airtable";
 import { AirtableBase } from "airtable/lib/airtable_base";
-import { AirtableDbEntry, projectAirtableDbEntryToEntity } from "./AirtableDbEntry";
+import { AirtableDbEntry } from "./AirtableDbEntry";
+import FragmentFactory from "@/models/FragmentFactory";
 
 class FragmentRepository {
     private static instance: FragmentRepository | null = null
@@ -18,34 +19,42 @@ class FragmentRepository {
         return FragmentRepository.instance
     }
 
-    public async getAll(): Promise<Fragment[]> {
+    public async getAll(): Promise<IFragment[]> {
         return new Promise((resolve, reject) => {
-            const results: Fragment[] = []
+            const results: IFragment[] = []
 
-            this.airtableDB('fragments').select({
-                view: "Grid view"
-            }).eachPage(function page(records, fetchNextPage) {
-                const theRecords: AirtableDbEntry<Fragment>[] = records as any
-                results.push(...theRecords.map(FragmentRepository.projectAirtableRowToFragment))
+            console.log('FragmentRepository.getAll')
+                this.airtableDB('fragments').select({
+                    view: "Grid view"
+                }).eachPage(function page(records, fetchNextPage) {
+                    try {
+                        const theRecords: AirtableDbEntry<IFragment>[] = records as any
+                        results.push(...theRecords.map(FragmentFactory.fromAirtableRow))
 
-                fetchNextPage();
-            }, function done(err) {
-                if (err) {
-                    console.error(err);
-                    reject(err)
-                    return;
-                }
+                        fetchNextPage();
+                    } catch (e) {
+                        console.error('FragmentRepository.getAll failed')
+                        console.error(e)
+                    }
+                }, function done(err) {
+                    if (err) {
+                        console.error(err);
+                        reject(err)
+                        return;
+                    }
 
-                resolve(results)
-            });
+                    console.log('FragmentRepository.getAll results', results)
+                    resolve(results)
+                });
         })
     }
 
-    public async getById(id: string): Promise<Fragment> {
+    public async getById(id: string): Promise<IFragment> {
         return new Promise((resolve, reject) => {
-            let result: Fragment | null = null
-            const airtableId = FragmentRepository.projectFragmentIdToAirtable(id)
+            let result: IFragment | null = null
+            const airtableId = FragmentFactory.projectFragmentIdToAirtable(id)
 
+            console.log('FragmentRepository.getById', id)
             this.airtableDB('fragments').find(airtableId, function (err, record) {
                 if (err) { console.error(err); return; }
                 if (!record) {
@@ -54,8 +63,8 @@ class FragmentRepository {
                     return
                 }
 
-                const theRecord: AirtableDbEntry<Fragment> = record as any
-                result = FragmentRepository.projectAirtableRowToFragment(theRecord)
+                const theRecord: AirtableDbEntry<IFragment> = record as any
+                result = FragmentFactory.fromAirtableRow(theRecord)
                 console.log('Retrieved fragment by id', result.id);
 
                 resolve(result)
@@ -63,7 +72,7 @@ class FragmentRepository {
         })
     }
 
-    async create(fragment: Fragment): Promise<Fragment> {
+    async create(fragment: IFragment): Promise<IFragment> {
         return new Promise((resolve, reject) => {
             this.airtableDB('fragments').create([fragment], function (err, records) {
                 if (err) {
@@ -75,15 +84,19 @@ class FragmentRepository {
                     return undefined
                 }
 
-                const theRecord: AirtableDbEntry<Fragment> = records[0] as any
-                resolve(FragmentRepository.projectAirtableRowToFragment(theRecord))
+                console.log('FragmentRepository.create')
+                const theRecord: AirtableDbEntry<IFragment> = records[0] as any
+                resolve(FragmentFactory.fromAirtableRow(theRecord))
             })
         })
     }
 
-    async patch(fragment: Fragment): Promise<Fragment> {
+    async patch(fragment: IFragment): Promise<IFragment> {
         return new Promise((resolve, reject) => {
-            const dbEntry = FragmentRepository.projectFragmentToAirtableRow(fragment)
+            // FragmentFactory.validateInvariants(fragment)
+
+            console.log('FragmentRepository.patch', fragment.id)
+            const dbEntry = FragmentFactory.toAirtableRow(fragment)
             console.log('dbEntry', dbEntry)
             this.airtableDB('fragments').update([dbEntry], function (err: any, records: any) {
                 if (err) {
@@ -94,42 +107,10 @@ class FragmentRepository {
                 if (!records) {
                     return undefined
                 }
-                const theRecord: AirtableDbEntry<Fragment> = records[0] as any
-                resolve(FragmentRepository.projectAirtableRowToFragment(theRecord))
+                const theRecord: AirtableDbEntry<IFragment> = records[0] as any
+                resolve(FragmentFactory.fromAirtableRow(theRecord))
             })
         })
-    }
-
-    static projectAirtableRowToFragment(row: AirtableDbEntry<Fragment>): Fragment {
-        return {
-            ...row.fields,
-            id: FragmentRepository.projectAirtableIdToFragment(row.id),
-        }
-    }
-
-    static projectFragmentToAirtableRow(fragment: Fragment): AirtableDbEntry<Fragment> {
-        const id = FragmentRepository.projectFragmentIdToAirtable(fragment.id)
-
-        const fields = {
-            ...fragment,
-            id: undefined,
-            created: undefined,
-            modified: undefined,
-        }
-
-        return {
-            id,
-            fields,
-        }
-    }
-
-    static projectAirtableIdToFragment(airtableId: string): string {
-        return `airtable:::fragments:::${airtableId}`
-    }
-
-    static projectFragmentIdToAirtable(fragmentId: string): string {
-        const [system, container, id] = fragmentId.split(':::')
-        return id
     }
 }
 

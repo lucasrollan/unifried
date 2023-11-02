@@ -1,4 +1,4 @@
-import Fragment from "@/models/Fragment";
+import IFragment from "@/models/IFragment";
 import { IconName } from "@blueprintjs/core";
 import moment, { Moment, MomentInput } from "moment";
 
@@ -10,7 +10,7 @@ const priorityIndicatorIcons: Record<number, IconName> = {
     4: 'chevron-down',
     5: 'double-chevron-down',
 }
-export function getIndicatorIcon(fragment: Fragment): IconName | undefined {
+export function getIndicatorIcon(fragment: IFragment): IconName | undefined {
     if (fragment.role === 'event') {
         return 'calendar'
     }
@@ -19,7 +19,7 @@ export function getIndicatorIcon(fragment: Fragment): IconName | undefined {
     }
 }
 
-export function getTimeDescription(fragment: Fragment): string[] {
+export function getTimeDescription(fragment: IFragment): string[] {
     const startDate = fragment.startDate ? moment(fragment.startDate) : undefined
     const start = fragment.start ? moment(fragment.start) : undefined
     const endDate = fragment.endDate ? moment(fragment.endDate) : undefined
@@ -86,7 +86,7 @@ function formatDifferentDayTimeRange(start: Moment, end: Moment) {
     return `from ${formatDateTime(start)} to ${formatDateTime(end)}`
 }
 
-function isFullDay(fragment: Fragment) {
+function isFullDay(fragment: IFragment) {
     return (fragment.earliestStartDate && !fragment.earliestStartDate)
         || (fragment.startDate && !fragment.start)
         || (fragment.endDate && !fragment.end)

@@ -1,4 +1,4 @@
-import Fragment from "@/models/Fragment"
+import IFragment from "@/models/IFragment"
 import { RootState } from "@/store"
 import { createSelector } from "@reduxjs/toolkit"
 import { sortBy } from "lodash"
@@ -54,7 +54,7 @@ export const selectFragmentsRelevantForDate = createSelector(
         )
 )
 
-function isFragmentRelevantForDate(fragment: Fragment, dateStart: MomentInput, dateEndExclusive: MomentInput): boolean {
+function isFragmentRelevantForDate(fragment: IFragment, dateStart: MomentInput, dateEndExclusive: MomentInput): boolean {
     const earliestStart = fragment.earliestStart || fragment.earliestStartDate
     const start = fragment.start || fragment.startDate
     const end = fragment.end || fragment.endDate
@@ -94,7 +94,7 @@ function isFragmentRelevantForDate(fragment: Fragment, dateStart: MomentInput, d
     }
 }
 
-function fragmentHappensBefore(fragment: Fragment, date: MomentInput) {
+function fragmentHappensBefore(fragment: IFragment, date: MomentInput) {
     const earliestStart = fragment.earliestStart || fragment.earliestStartDate
     const start = fragment.start || fragment.startDate
     const end = fragment.end || fragment.endDate
@@ -112,7 +112,7 @@ function fragmentHappensBefore(fragment: Fragment, date: MomentInput) {
     return happensBeforeDate
 }
 
-function fragmentHappensOnOrAfter(fragment: Fragment, date: MomentInput) {
+function fragmentHappensOnOrAfter(fragment: IFragment, date: MomentInput) {
     const earliestStart = fragment.earliestStart || fragment.earliestStartDate
     const start = fragment.start || fragment.startDate
     const end = fragment.end || fragment.endDate
@@ -135,11 +135,11 @@ function isDateWithinRange(date: MomentInput, start: MomentInput, exclusiveEnd: 
     return dateMoment.isSameOrAfter(start) && dateMoment.isBefore(start)
 }
 
-function sortFragmentsForSummary(fragments: Fragment[]): Fragment[] {
+function sortFragmentsForSummary(fragments: IFragment[]): IFragment[] {
     return sortFragmentsByUrgencyScore(fragments)
 }
 
-function sortFragmentsByUrgencyScore(fragments: Fragment[]): Fragment[] {
+function sortFragmentsByUrgencyScore(fragments: IFragment[]): IFragment[] {
     let sorted = sortBy(fragments, [
         fragment => fragment.role === 'event' ? 0 : 1, // events first
         fragment => fragment.isCompleted ? 1 : 0, // completed last

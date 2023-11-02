@@ -1,14 +1,14 @@
 import { getServerSession } from 'next-auth/next'
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { authOptions } from "../auth/[...nextauth]"
-import Fragment from '@/models/Fragment';
+import IFragment from '@/models/IFragment';
 import FragmentRepository from '@/persistence/FragmentRepository';
 
 const fragmentRepository = FragmentRepository.getInstance()
 
 export default async function handler(
     req: NextApiRequest,
-    res: NextApiResponse<Fragment[]>
+    res: NextApiResponse<IFragment[]>
 ) {
     const session = await getServerSession(req, res, authOptions)
     if (session) {

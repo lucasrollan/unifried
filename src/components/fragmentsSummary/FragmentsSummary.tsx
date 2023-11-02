@@ -1,4 +1,4 @@
-import Fragment from "@/models/Fragment"
+import IFragment from "@/models/IFragment"
 import FragmentSummary from "../fragmentSummary/FragmentSummary"
 import style from './style.module.css'
 import { AnchorButton } from "@blueprintjs/core"
@@ -9,7 +9,7 @@ type FragmentsSummaryProps = {
     title: string,
     subTitle?: string,
     tokens?: number,
-    fragments: Fragment[],
+    fragments: IFragment[],
     relativeToDate: string,
     onPrevPageSelected: () => void,
     onNextPageSelected: () => void,

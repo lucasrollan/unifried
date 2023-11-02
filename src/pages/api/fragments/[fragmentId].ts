@@ -1,4 +1,4 @@
-import Fragment from '@/models/Fragment';
+import IFragment from '@/models/IFragment';
 import Airtable from 'airtable';
 
 import type { NextApiRequest, NextApiResponse } from 'next'
@@ -12,7 +12,7 @@ var base = new Airtable().base('applyggDoSgqTOMEs');
 
 export default async function handler(
     req: NextApiRequest,
-    res: NextApiResponse<Fragment | null>
+    res: NextApiResponse<IFragment | null>
 ) {
     const session = await getServerSession(req, res, authOptions)
     if (session) {

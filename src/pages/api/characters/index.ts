@@ -1,7 +1,6 @@
 import Airtable from 'airtable';
 import { getServerSession } from 'next-auth/next'
 import { authOptions } from "../auth/[...nextauth]"
-import Fragment from '@/models/Fragment';
 
 import type { NextApiRequest, NextApiResponse } from 'next'
 import Character from '@/models/Character';
@@ -31,6 +30,7 @@ export async function fetchCharactersFromAirtable(): Promise<Character[]> {
   return new Promise((resolve, reject) => {
     const results: Character[] = []
 
+    console.log('fetchCharactersFromAirtable')
     base('characters').select({
       view: "Grid view"
     }).eachPage(function page(records, fetchNextPage) {

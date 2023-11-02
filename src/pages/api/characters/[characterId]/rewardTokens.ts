@@ -76,6 +76,8 @@ async function fetchRewardTokensForCharacter(characterId: string): Promise<Rewar
 
         console.log('FORMULA=', `characterId='${characterId}'`)
 
+        console.log('fetchRewardTokensForCharacter')
+
         base('rewardTokens').select({
             filterByFormula: `characterId='${characterId}'`
         }).eachPage(function page(records, fetchNextPage) {

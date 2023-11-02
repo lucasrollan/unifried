@@ -1,7 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import type { Action, PayloadAction } from '@reduxjs/toolkit'
 import moment from 'moment'
-import Fragment from '@/models/Fragment'
 import { RootState } from '..'
 import Character from '@/models/Character'
 import Player from '@/models/Player'

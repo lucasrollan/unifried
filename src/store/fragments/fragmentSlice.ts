@@ -1,14 +1,13 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
-import type { Action, PayloadAction } from '@reduxjs/toolkit'
 import moment from 'moment'
-import Fragment from '@/models/Fragment'
+import IFragment from '@/models/IFragment'
 import { RootState } from '..'
 import { grantRewardTokensToCurrentCharacter } from '../actors/actorsSlice'
 
 export interface FragmentsState {
     fragmentSummaryDateSelected: string,
     fragmentIds: string[],
-    fragmentsById: Record<string, Fragment>,
+    fragmentsById: Record<string, IFragment>,
 }
 
 const initialState: FragmentsState = {
@@ -17,12 +16,12 @@ const initialState: FragmentsState = {
     fragmentsById: {},
 }
 
-const api_fetchFragments = async function (): Promise<Fragment[]> {
+const api_fetchFragments = async function (): Promise<IFragment[]> {
     const result = await fetch('/api/fragments')
     return result.json()
 }
 
-const api_updateFragment = async function (fragment: Fragment): Promise<Fragment> {
+const api_updateFragment = async function (fragment: IFragment): Promise<IFragment> {
     const result = await fetch(`/api/fragments/${fragment.id}`, {
         method: 'PATCH',
         body: JSON.stringify(fragment)
@@ -57,7 +56,7 @@ export const completeFragment = createAsyncThunk(
 
 export const updateFragment = createAsyncThunk(
     'fragment/update',
-    async (fragment: Fragment, thunkApi) => {
+    async (fragment: IFragment, thunkApi) => {
         thunkApi.dispatch(timelineSlice.actions.fragmentUpdated(fragment))
 
         const updatedFragment = await api_updateFragment(fragment)
@@ -76,7 +75,7 @@ export const timelineSlice = createSlice({
         },
         fragmentUpdated: (state, action) => {
             console.log('action fragmentUpdated', fragmentUpdated)
-            const updatedFragment: Fragment = action.payload
+            const updatedFragment: IFragment = action.payload
 
             state.fragmentsById[updatedFragment.id] = updatedFragment
 
