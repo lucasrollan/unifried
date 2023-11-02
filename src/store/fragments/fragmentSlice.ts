@@ -16,8 +16,13 @@ const initialState: FragmentsState = {
     fragmentsById: {},
 }
 
-const api_fetchFragments = async function (): Promise<IFragment[]> {
-    const result = await fetch('/api/fragments')
+const api_fetchFragments = async function (dateStart: string, dateEndExclusive: string): Promise<IFragment[]> {
+    const params = new URLSearchParams({
+        start: dateStart,
+        end: dateEndExclusive,
+    })
+
+    const result = await fetch(`/api/fragments?${params}`)
     return result.json()
 }
 
@@ -31,7 +36,24 @@ const api_updateFragment = async function (fragment: IFragment): Promise<IFragme
 
 export const fetchFragments = createAsyncThunk(
     'fragments/fetch',
-    async () => await api_fetchFragments()
+    async (arg: {start: string, end: string}) => {
+        const result = await api_fetchFragments(arg.start, arg.end)
+        console.log('fragments/fetch result', result)
+        return result
+    }
+)
+
+export const initialSummaryFragmentsRequested = createAsyncThunk(
+    'fragments/initialSummaryRequested',
+    async (arg: void, thunkApi) => {
+        const state = thunkApi.getState() as RootState
+
+        const date = state.fragments.fragmentSummaryDateSelected
+        const start = moment(date).subtract(3, 'day').format('YYYY-MM-DD')
+        const end = moment(date).add(4, 'day').format('YYYY-MM-DD')
+
+        await thunkApi.dispatch(fetchFragments({ start, end }))
+    }
 )
 
 export const completeFragment = createAsyncThunk(
@@ -66,6 +88,32 @@ export const updateFragment = createAsyncThunk(
     }
 )
 
+export const changedSummaryDate = createAsyncThunk(
+    'fragments/changedSummaryDate',
+    async (date: string, thunkApi) => {
+        const state = thunkApi.getState() as RootState
+
+        const previousDate = state.fragments.fragmentSummaryDateSelected
+        const diff = moment(previousDate).diff(date, 'day')
+
+        let start
+        let end
+        if (diff === 1) {
+            start = moment(date).subtract(3, 'day').format('YYYY-MM-DD')
+            end = moment(start).add(1, 'day').format('YYYY-MM-DD')
+        } else if (diff === -1) {
+            start = moment(date).add(3, 'day').format('YYYY-MM-DD')
+            end = moment(start).add(1, 'day').format('YYYY-MM-DD')
+        } else {
+            start = moment(date).subtract(3, 'day').format('YYYY-MM-DD')
+            end = moment(date).add(4, 'day').format('YYYY-MM-DD')
+        }
+
+        thunkApi.dispatch(newSummaryDateSelected(date))
+        await thunkApi.dispatch(fetchFragments({ start, end }))
+    }
+)
+
 export const timelineSlice = createSlice({
     name: 'timeline',
     initialState,
@@ -78,7 +126,6 @@ export const timelineSlice = createSlice({
             const updatedFragment: IFragment = action.payload
 
             state.fragmentsById[updatedFragment.id] = updatedFragment
-
         },
     },
     extraReducers: (builder) => {

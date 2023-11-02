@@ -11,8 +11,15 @@ export default async function handler(
     res: NextApiResponse<IFragment[]>
 ) {
     const session = await getServerSession(req, res, authOptions)
+
     if (session) {
-        const fragments = await fragmentRepository.getAll()
+        const { start, end } = req.query
+        const rangeStart = start as string
+        const exclusiveRangeEnd = end as string
+
+        console.log(`GET fragments for range ${rangeStart} - ${exclusiveRangeEnd}`)
+        const fragments = await fragmentRepository.getByDateRange(rangeStart, exclusiveRangeEnd)
+        console.log('GET fragments response', fragments)
 
         // Signed in
         res.status(200).json(fragments)

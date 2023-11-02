@@ -1,7 +1,7 @@
 
 import FragmentsSummary from '../fragmentsSummary/FragmentsSummary'
 import { useAppDispatch, useAppSelector } from "@/store"
-import { fetchFragments, newSummaryDateSelected } from "@/store/fragments/fragmentSlice"
+import { changedSummaryDate, initialSummaryFragmentsRequested } from "@/store/fragments/fragmentSlice"
 import { selectFragmentsRelevantForDate, selectSummaryDateSelected, selectSummaryDateSelectedDescription } from "@/store/fragments/selectors"
 import { useEffect } from "react"
 import style from './style.module.css'
@@ -12,7 +12,7 @@ import { selectCurrentCharacter, selectSelectedDateTokens } from '@/store/actors
 function DaySummaryPage() {
     const dispatch = useAppDispatch()
     useEffect(() => {
-        dispatch(fetchFragments())
+        dispatch(initialSummaryFragmentsRequested())
         dispatch(fetchCharacters())
         dispatch(fetchDailyRewardTokens())
     }, [dispatch])
@@ -24,14 +24,13 @@ function DaySummaryPage() {
     const selectedDateTokens = useAppSelector(selectSelectedDateTokens)
     const fragments = useAppSelector(selectFragmentsRelevantForDate)
 
-
     const handleNextDateSelected = () => {
         const newDate = moment(selectedDate).add(1, 'day').format('YYYY-MM-DD')
-        dispatch(newSummaryDateSelected(newDate))
+        dispatch(changedSummaryDate(newDate))
     }
     const handlePrevDateSelected = () => {
         const newDate = moment(selectedDate).subtract(1, 'day').format('YYYY-MM-DD')
-        dispatch(newSummaryDateSelected(newDate))
+        dispatch(changedSummaryDate(newDate))
     }
 
     return <div className={style.page}>
