@@ -23,12 +23,12 @@ class FragmentRepository {
 
     public async getAll(): Promise<IFragment[]> {
         const airtable = AirtableConnector.getInstance()
-        return await airtable.getAll()
+        return await airtable.getAllFragments()
     }
 
     public async getByDateRange(periodStart: string, periodEnd: string): Promise<IFragment[]> {
         const airtable = AirtableConnector.getInstance()
-        const airtableResults = await airtable.getAll()
+        const airtableResults = await airtable.getAllFragments()
 
         const filteredResults = airtableResults.filter(fragment =>
             FragmentService.isFragmentRelevantForDate(fragment, periodStart, periodEnd)

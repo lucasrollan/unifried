@@ -19,7 +19,7 @@ class AirtableConnector {
         return AirtableConnector.instance
     }
 
-    public async getAll(): Promise<IFragment[]> {
+    public async getAllFragments(): Promise<IFragment[]> {
         return new Promise((resolve, reject) => {
             const results: IFragment[] = []
 
