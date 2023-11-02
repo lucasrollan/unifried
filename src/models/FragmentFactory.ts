@@ -1,5 +1,7 @@
 import { AirtableDbEntry } from "@/persistence/AirtableDbEntry"
 import IFragment from "./IFragment"
+import { GcalEvent } from "./gcal"
+import moment from "moment"
 
 class FragmentFactory {
     static validateInvariants(fragment: IFragment) {
@@ -50,6 +52,28 @@ class FragmentFactory {
         return {
             id,
             fields,
+        }
+    }
+
+    static fromGcalEvent (event: GcalEvent) {
+        return {
+            id: event.id!,
+            title: event.summary!,
+            role: 'event',
+            content: event.description || undefined,
+            createdDate: event.created!,
+            modifiedDate: event.updated!,
+            status: event.status || undefined,
+            earliestStart: undefined,
+            earliestStartDate: undefined,
+            start: event.start!.dateTime || undefined,
+            startDate: event.start!.date || moment(event.start!.dateTime).format('YYYY-MM-DD'),
+            end: event.end?.dateTime || undefined,
+            endDate: event.end?.date ||  moment(event.end!.dateTime).format('YYYY-MM-DD'),
+            location: event.location || undefined,
+            reward: undefined,
+            isCompleted: false,
+            completionDate: undefined,
         }
     }
 

@@ -5,6 +5,7 @@ import { AirtableDbEntry } from "./AirtableDbEntry";
 import FragmentFactory from "@/models/FragmentFactory";
 import FragmentService from "@/models/FragmentService";
 import AirtableConnector from "./AirtableConnector";
+import GoogleCalendarConnector from "./GoogleCalendarConnector";
 
 class FragmentRepository {
     private static instance: FragmentRepository | null = null
@@ -28,13 +29,21 @@ class FragmentRepository {
 
     public async getByDateRange(periodStart: string, periodEnd: string): Promise<IFragment[]> {
         const airtable = AirtableConnector.getInstance()
+        const googleCalendar = GoogleCalendarConnector.getInstance()
+
         const airtableResults = await airtable.getAllFragments()
 
         const filteredResults = airtableResults.filter(fragment =>
             FragmentService.isFragmentRelevantForDate(fragment, periodStart, periodEnd)
         )
 
-        return filteredResults
+        const googleCalendarResults = await googleCalendar.getEventsByDateRange(periodStart, periodEnd)
+        const googleCalendarFragments = googleCalendarResults.map(FragmentFactory.fromGcalEvent)
+
+        return [
+            ...googleCalendarFragments,
+            ...filteredResults,
+        ]
     }
 
     public async getById(id: string): Promise<IFragment> {

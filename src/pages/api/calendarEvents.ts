@@ -4,6 +4,7 @@ import { authOptions } from "./auth/[...nextauth]"
 import type { NextApiRequest, NextApiResponse } from 'next'
 import Event from '@/models/Event';
 import GoogleCalendarConnector from '@/persistence/GoogleCalendarConnector';
+import { GcalEvent } from '@/models/gcal';
 
 export default async function handler(
     req: NextApiRequest,
@@ -34,7 +35,7 @@ async function fetchEventsFromGoogleCalendar(calendarIds: string[], startDate: s
         calendarIds.map(async (calendarId) => {
             const events = await googleCalendar.getEventsForCalendar(calendarId, startDate, endDate)
             return {
-                [calendarId]: events
+                [calendarId]: events.map(projectGcalEventToApp)
             }
         })
     )
@@ -46,4 +47,13 @@ async function fetchEventsFromGoogleCalendar(calendarIds: string[], startDate: s
         }), {})
 
     return eventsByCalendar
+}
+
+function projectGcalEventToApp (gcalEvent: GcalEvent): Event {
+    return ({
+        id: gcalEvent.id || '',
+        label: gcalEvent.summary || '',
+        start: gcalEvent.start?.dateTime || gcalEvent.start?.date || '',
+        end: gcalEvent.end?.dateTime || gcalEvent.end?.date || '',
+    })
 }
