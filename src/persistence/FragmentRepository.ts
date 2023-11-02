@@ -3,6 +3,8 @@ import Airtable from "airtable";
 import { AirtableBase } from "airtable/lib/airtable_base";
 import { AirtableDbEntry } from "./AirtableDbEntry";
 import FragmentFactory from "@/models/FragmentFactory";
+import FragmentService from "@/models/FragmentService";
+import AirtableConnector from "./AirtableConnector";
 
 class FragmentRepository {
     private static instance: FragmentRepository | null = null
@@ -20,33 +22,19 @@ class FragmentRepository {
     }
 
     public async getAll(): Promise<IFragment[]> {
-        return new Promise((resolve, reject) => {
-            const results: IFragment[] = []
+        const airtable = AirtableConnector.getInstance()
+        return await airtable.getAll()
+    }
 
-            console.log('FragmentRepository.getAll')
-                this.airtableDB('fragments').select({
-                    view: "Grid view"
-                }).eachPage(function page(records, fetchNextPage) {
-                    try {
-                        const theRecords: AirtableDbEntry<IFragment>[] = records as any
-                        results.push(...theRecords.map(FragmentFactory.fromAirtableRow))
+    public async getByDateRange(periodStart: string, periodEnd: string): Promise<IFragment[]> {
+        const airtable = AirtableConnector.getInstance()
+        const airtableResults = await airtable.getAll()
 
-                        fetchNextPage();
-                    } catch (e) {
-                        console.error('FragmentRepository.getAll failed')
-                        console.error(e)
-                    }
-                }, function done(err) {
-                    if (err) {
-                        console.error(err);
-                        reject(err)
-                        return;
-                    }
+        const filteredResults = airtableResults.filter(fragment =>
+            FragmentService.isFragmentRelevantForDate(fragment, periodStart, periodEnd)
+        )
 
-                    console.log('FragmentRepository.getAll results', results)
-                    resolve(results)
-                });
-        })
+        return filteredResults
     }
 
     public async getById(id: string): Promise<IFragment> {
