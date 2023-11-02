@@ -1,7 +1,8 @@
 import { calendar_v3, google } from 'googleapis'
 import getGoogleAuth from "@/pages/api/getGoogleAuth";
 import Calendar from '@/models/Calendar';
-import { GcalCalendar } from '@/models/gcal';
+import Event from '@/models/Event';
+import { GcalCalendar, GcalEvent } from '@/models/gcal';
 
 const HIGHLIGHTED_CALENDARS_IDS = [
     '4ef5086e1cd0b60a8fc47e3e530b1144244b93b6b119e71f455f46a7f647286a@group.calendar.google.com', // PTOs
@@ -47,6 +48,20 @@ class GoogleCalendarConnector {
         }
     }
 
+    async getEventsForCalendar(calendarId: string, startDate: string, endDate: string) {
+        const timeMin = startDate ? (new Date(startDate)).toISOString() : undefined
+        const timeMax = endDate ? (new Date(endDate)).toISOString() : undefined
+
+        const response = await this.googleCalendar.events.list({
+            calendarId,
+            timeMin,
+            timeMax,
+            singleEvents: true,
+            orderBy: 'startTime',
+        })
+
+        return (response.data.items || []).map(projectGcalEventToApp)
+    }
 }
 
 function projectGcalCalendarToApp (gcalCalendar: GcalCalendar): Calendar {
@@ -57,6 +72,15 @@ function projectGcalCalendarToApp (gcalCalendar: GcalCalendar): Calendar {
         isVisible: true,
         label: gcalCalendar.summary!,
         isHighlighted,
+    })
+}
+
+function projectGcalEventToApp (gcalEvent: GcalEvent): Event {
+    return ({
+        id: gcalEvent.id || '',
+        label: gcalEvent.summary || '',
+        start: gcalEvent.start?.dateTime || gcalEvent.start?.date || '',
+        end: gcalEvent.end?.dateTime || gcalEvent.end?.date || '',
     })
 }
 

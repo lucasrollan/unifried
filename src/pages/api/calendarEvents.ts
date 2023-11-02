@@ -1,11 +1,9 @@
 import { getServerSession } from 'next-auth/next'
 import { authOptions } from "./auth/[...nextauth]"
-import { google } from 'googleapis'
 
 import type { NextApiRequest, NextApiResponse } from 'next'
-import getGoogleAuth from './getGoogleAuth';
-import { GcalEvent } from '@/models/gcal';
 import Event from '@/models/Event';
+import GoogleCalendarConnector from '@/persistence/GoogleCalendarConnector';
 
 export default async function handler(
     req: NextApiRequest,
@@ -29,30 +27,17 @@ export default async function handler(
     }
 }
 
-const googleAuth = getGoogleAuth()
-
 async function fetchEventsFromGoogleCalendar(calendarIds: string[], startDate: string, endDate: string) {
-    const calendarApi = google.calendar({ version: 'v3', auth: googleAuth })
-    const timeMin = startDate ? (new Date(startDate)).toISOString() : undefined
-    const timeMax = endDate ? (new Date(endDate)).toISOString() : undefined
-
-    console.log('startDate,endDate: ', startDate, endDate)
+    const googleCalendar = GoogleCalendarConnector.getInstance()
 
     const pairs = await Promise.all(
         calendarIds.map(async (calendarId) => {
-            const response = await calendarApi.events.list({
-                calendarId,
-                timeMin,
-                timeMax,
-                singleEvents: true,
-                orderBy: 'startTime',
-            })
+            const events = await googleCalendar.getEventsForCalendar(calendarId, startDate, endDate)
             return {
-                [calendarId]: (response.data.items || []).map(projectGcalEventToApp)
+                [calendarId]: events
             }
         })
     )
-
 
     const eventsByCalendar: Record<string, Event[]> =
         pairs.reduce((acc, pair) => ({
@@ -61,13 +46,4 @@ async function fetchEventsFromGoogleCalendar(calendarIds: string[], startDate: s
         }), {})
 
     return eventsByCalendar
-}
-
-function projectGcalEventToApp (gcalEvent: GcalEvent): Event {
-    return ({
-        id: gcalEvent.id || '',
-        label: gcalEvent.summary || '',
-        start: gcalEvent.start?.dateTime || gcalEvent.start?.date || '',
-        end: gcalEvent.end?.dateTime || gcalEvent.end?.date || '',
-    })
 }
