@@ -1,0 +1,6 @@
+- blue hat
+- white hat
+- red hat
+- green hat
+- yellow hat
+- black hat
