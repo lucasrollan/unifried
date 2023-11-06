@@ -1,0 +1,51 @@
+.card {
+    --scale: 1.3
+}
+
+.card {
+    width: calc(var(--scale) * 240px);
+    height: calc(var(--scale) * 350px);
+    background-color: gray;
+    box-shadow: 1px 1px 0.8px rgba(0, 0, 0, 0.2);
+    border: calc(var(--scale) * 5px) solid gray;
+    padding: calc(var(--scale) * 6px);
+    font-size: calc(var(--scale) * 12px);
+    border-radius: calc(var(--scale) * 10px);
+}
+
+.name {
+    background: lightgray;
+    border: calc(var(--scale) * 1px) solid lightgray;
+    height: calc(var(--scale) * 21px);
+}
+
+.illustration {
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    border: calc(var(--scale) * 1px) solid lightgray;
+    height: calc(var(--scale) * 190px);
+}
+
+.illustrationContent {
+    width: 100%;
+}
+
+.categories {
+    background: lightgray;
+    border: calc(var(--scale) * 1px) solid lightgray;
+    height: calc(var(--scale) * 19px);
+}
+
+.abilities {
+    background: whitesmoke;
+    border: calc(var(--scale) * 1px) solid lightgray;
+    height: calc(var(--scale) * 100px);
+    font-size: calc(var(--scale) * 11px);
+}
+
+.setIcon {
+    width: calc(var(--scale) * 18px);
+    height: calc(var(--scale) * 18px);
+    float: right;
+}
