@@ -28,7 +28,7 @@ function ToolCard(props: ToolCardProps) {
         </div>
         <div className={style.abilities}>
             {
-                props.abilities.map(ability => <div className={style.ability}>
+                props.abilities.map(ability => <div className={style.ability} key={ability}>
                     {ability}
                 </div>)
             }
