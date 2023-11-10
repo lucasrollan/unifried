@@ -4,6 +4,13 @@ import IFragment from "@/models/IFragment";
 import { AirtableDbEntry } from "./AirtableDbEntry";
 import FragmentFactory from "@/models/FragmentFactory";
 
+export type CompletedChallenge = {
+    id: string,
+    date: string,
+    fragmentId: string,
+}
+
+
 class AirtableConnector {
     private static instance: AirtableConnector | null = null
     private airtableDB: AirtableBase
@@ -19,7 +26,9 @@ class AirtableConnector {
         return AirtableConnector.instance
     }
 
-    public async getAllFragments(): Promise<IFragment[]> {
+    public async getFragmentsByDateRange(periodStart: string, periodEnd: string): Promise<IFragment[]> {
+        const completedChallenges = await this.getCompletedChallenges()
+
         return new Promise((resolve, reject) => {
             const results: IFragment[] = []
 
@@ -43,11 +52,70 @@ class AirtableConnector {
                     return;
                 }
 
-                console.log('AirtableConnector.getAll results', results)
+                const instantiatedResults: IFragment[] = []
+
+                results.forEach(r => {
+                    if (r.role === 'challenge') {
+                        instantiatedResults.push(...FragmentFactory.instantiateChallengeFragments(r, periodStart, periodEnd, completedChallenges))
+                    } else {
+                        instantiatedResults.push(r)
+                    }
+                })
+
+                resolve(instantiatedResults)
+            });
+        })
+    }
+
+    public async getCompletedChallenges(): Promise<CompletedChallenge[]> {
+        return new Promise((resolve, reject) => {
+            const results: CompletedChallenge[] = []
+
+            console.log('AirtableConnector.completedChallenges')
+            this.airtableDB('completedChallenges').select({
+                view: "Grid view",
+            }).eachPage(function page(records, fetchNextPage) {
+                try {
+                    const theRecords: AirtableDbEntry<CompletedChallenge>[] = records as any
+                    results.push(...theRecords.map(projectChallengesCompletedRecordFromAirtable))
+
+                    fetchNextPage();
+                } catch (e) {
+                    console.error('AirtableConnector.completedChallenges failed')
+                    console.error(e)
+                }
+            }, function done(err) {
+                if (err) {
+                    console.error(err);
+                    reject(err)
+                    return;
+                }
+
+                console.log('AirtableConnector.completedChallenges results', results)
                 resolve(results)
             });
         })
     }
 }
+
+function projectChallengesCompletedRecordFromAirtable(record: AirtableDbEntry<CompletedChallenge>): CompletedChallenge {
+    return {
+        ...record.fields,
+        id: record.id,
+    }
+}
+
+function projectChallengesCompletedRecordToAirtable(record: CompletedChallenge): AirtableDbEntry<CompletedChallenge> {
+    const fields = {
+        ...record,
+        id: undefined,
+    }
+
+    return {
+        id: record.id,
+        fields,
+    }
+}
+
 
 export default AirtableConnector

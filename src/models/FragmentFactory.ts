@@ -2,6 +2,7 @@ import { AirtableDbEntry } from "@/persistence/AirtableDbEntry"
 import IFragment from "./IFragment"
 import { GcalEvent } from "./gcal"
 import moment from "moment"
+import { CompletedChallenge } from "@/persistence/AirtableConnector"
 
 class FragmentFactory {
     static validateInvariants(fragment: IFragment) {
@@ -84,6 +85,43 @@ class FragmentFactory {
     static projectFragmentIdToAirtable(fragmentId: string): string {
         const [system, container, id] = fragmentId.split(':::')
         return id
+    }
+
+    static instantiateChallengeFragments(fragment: IFragment, periodStart: string, periodEnd: string, completedRecords: CompletedChallenge[]): IFragment[] {
+        let current = moment(periodStart).startOf('day')
+        let exclusiveEnd = moment(periodEnd)
+        let result: IFragment[] = []
+
+        while (current.isBefore(exclusiveEnd)) {
+            const next = moment(current).add(1, 'day')
+            const currentFormatted = current.format('YYYY-MM-DD')
+
+            const completedInDate = completedRecords.some(record =>
+                current.isSame(record.date, 'day') && record.fragmentId === fragment.id
+            )
+
+            const status = completedInDate
+                ? 'completed'
+                : fragment.status
+
+            const completionDate = completedInDate
+                ? currentFormatted
+                : fragment.completionDate
+
+            result.push({
+                ...fragment,
+                id: `${fragment.id}:::${currentFormatted}`,
+                startDate: currentFormatted,
+                endDate: next.format('YYYY-MM-DD'),
+                status,
+                completionDate,
+                isCompleted: completedInDate,
+            })
+
+            current = next
+        }
+
+        return result
     }
 }
 

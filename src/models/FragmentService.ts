@@ -11,6 +11,16 @@ class FragmentService {
         const earliestStart = fragment.earliestStart || fragment.earliestStartDate
         const start = fragment.start || fragment.startDate
         const end = fragment.end || fragment.endDate
+        let meta: any = undefined
+
+        if (fragment.meta) {
+            try {
+                meta = JSON.parse(fragment.meta)
+            } catch(e) {
+                console.error(`Failed to parse fragment meta for ${fragment.id}`)
+                console.error(e)
+            }
+        }
 
         if (fragment.role === 'event') {
             if (fragment.status === 'cancelled') {
@@ -21,7 +31,7 @@ class FragmentService {
             const eventEndsAfterRangeStart = moment(end).isSameOrBefore(dateStart)
             return !(eventStartsAfterRangeEnd || eventEndsAfterRangeStart)
         } else if (fragment.role === 'task') {
-           const happensBeforeRangeEnd = FragmentService.fragmentHappensBefore(fragment, dateEndExclusive)
+            const happensBeforeRangeEnd = FragmentService.fragmentHappensBefore(fragment, dateEndExclusive)
             const happensOnOrAfterRangeStart = FragmentService.fragmentHappensOnOrAfter(fragment, dateStart)
 
             const wasCompletedWithinRange = isDateWithinRange(fragment.completionDate, dateStart, dateEndExclusive)
@@ -36,6 +46,8 @@ class FragmentService {
             }
 
             //tasks that (earlyStart, start, or due on-or-before today and are not done) or that are done on-or-after today
+        } else if (fragment.role === 'challenge') {
+            return isDateWithinRange(fragment.startDate, dateStart, dateEndExclusive)
         } else {
             return false
         }

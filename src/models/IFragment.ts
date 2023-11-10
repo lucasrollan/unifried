@@ -22,6 +22,11 @@ type IFragment = {
     reward?: number,
     isCompleted: boolean,
     completionDate?: dateTimeString,
+    meta?: string,
+}
+
+type IFragmentChallenge = IFragment | {
+    type: 'challenge',
 }
 
 export default IFragment

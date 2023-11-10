@@ -62,14 +62,19 @@ export const completeFragment = createAsyncThunk(
         const state = thunkApi.getState() as RootState
         const fragment = state.fragments.fragmentsById[fragmentId]
 
-        const fragmentToUpdate = {
-            ...fragment,
-            isCompleted: true,
-            completionDate: moment().format('YYYY-MM-DD'),
-            status: 'complete',
+        if (fragment.role === 'challenge') {
+            // TODO: Move all of this logic to the API
+        } else {
+            const fragmentToUpdate = {
+                ...fragment,
+                isCompleted: true,
+                completionDate: moment().format('YYYY-MM-DD'),
+                status: 'complete',
+            }
+
+            await thunkApi.dispatch(updateFragment(fragmentToUpdate))
         }
 
-        await thunkApi.dispatch(updateFragment(fragmentToUpdate))
         if (fragment.reward) {
             await thunkApi.dispatch(grantRewardTokensToCurrentCharacter(fragment.reward))
         }
