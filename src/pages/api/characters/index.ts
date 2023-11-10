@@ -30,7 +30,6 @@ export async function fetchCharactersFromAirtable(): Promise<Character[]> {
   return new Promise((resolve, reject) => {
     const results: Character[] = []
 
-    console.log('fetchCharactersFromAirtable')
     base('characters').select({
       view: "Grid view"
     }).eachPage(function page(records, fetchNextPage) {

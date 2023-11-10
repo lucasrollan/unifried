@@ -1,9 +1,7 @@
 import { calendar_v3, google } from 'googleapis'
 import getGoogleAuth from "@/pages/api/getGoogleAuth";
 import Calendar from '@/models/Calendar';
-import Event from '@/models/Event';
 import { GcalCalendar, GcalEvent } from '@/models/gcal';
-import IFragment from '@/models/IFragment';
 
 const HIGHLIGHTED_CALENDARS_IDS = [
     '4ef5086e1cd0b60a8fc47e3e530b1144244b93b6b119e71f455f46a7f647286a@group.calendar.google.com', // PTOs

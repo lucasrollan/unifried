@@ -98,7 +98,6 @@ async function fetchRewardTokensForCharacter(characterId: string): Promise<Rewar
                 return;
             }
 
-            console.log('RESULTS=', results)
             resolve(results)
         });
     })
@@ -119,8 +118,6 @@ async function fetchRewardTokensForDate(date: string): Promise<AirtableDbEntry<R
 
 async function updateRewardTokensForDate(dbRecord: AirtableDbEntry<RewardTokensDayEntry>): Promise<RewardTokensDayEntry> {
     return new Promise((resolve, reject) => {
-        console.log('dbRecord', dbRecord)
-
         base('rewardTokens').update([dbRecord], function (err: any, records: any) {
             if (err) {
                 console.error(err);
@@ -139,7 +136,6 @@ async function updateRewardTokensForDate(dbRecord: AirtableDbEntry<RewardTokensD
 async function updateCharacterInAirtable(character: Character): Promise<Character> {
     return new Promise((resolve, reject) => {
         const dbEntry = projectEntityToAirtableDbEntry(character)
-        console.log('dbEntry', dbEntry)
         base('characters').update([dbEntry], function (err: any, records: any) {
             if (err) {
                 console.error(err);
