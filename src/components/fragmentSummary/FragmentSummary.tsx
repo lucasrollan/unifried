@@ -21,8 +21,10 @@ function FragmentSummary (props: FragmentSummaryProps) {
 
     const timeParts = getTimeDescription(props.fragment)
 
-    return <Card>
-        <div className={style.layout}>
+    const isCompleted = props.fragment.isCompleted
+
+    return <Card className={isCompleted ? style.completed : ''}>
+        <div className={style.summary}>
             <div className={style.indicator}>
                 <Icon icon={getIndicatorIcon(props.fragment)} size={14} />
             </div>

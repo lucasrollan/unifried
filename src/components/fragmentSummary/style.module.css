@@ -1,5 +1,9 @@
-.layout {
+.summary {
     display: flex;
+}
+
+.completed {
+    background-color: color-mix(in srgb, var(--color-ui-custom-2) 30%, white)
 }
 
 .indicator {
