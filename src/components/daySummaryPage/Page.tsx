@@ -8,16 +8,14 @@ import style from './style.module.css'
 import moment from 'moment'
 import { fetchCharacters, fetchDailyRewardTokens } from '@/store/actors/actorsSlice'
 import { selectCurrentCharacter, selectSelectedDateTokens } from '@/store/actors/selectors'
+import CharacterSummary from '../characterSummaryBanner/Page'
 
 function DaySummaryPage() {
     const dispatch = useAppDispatch()
     useEffect(() => {
         dispatch(initialSummaryFragmentsRequested())
-        dispatch(fetchCharacters())
         dispatch(fetchDailyRewardTokens())
     }, [dispatch])
-
-    const currentCharacter = useAppSelector(selectCurrentCharacter)
 
     const selectedDate = useAppSelector(selectSummaryDateSelected)
     const selectedDateDescription = useAppSelector(selectSummaryDateSelectedDescription)
@@ -35,9 +33,7 @@ function DaySummaryPage() {
 
     return <div className={style.page}>
         <div className={style.pageMain}>
-            <div>
-                tokens: {currentCharacter?.tokens}
-            </div>
+            <CharacterSummary />
             <FragmentsSummary
                 title={selectedDate}
                 subTitle={selectedDateDescription}
