@@ -1,38 +1,52 @@
 import IFragment from "./IFragment"
 
 class Fragment {
-    fragment: IFragment
+    data: IFragment
 
-    constructor(fragment: IFragment) {
-        this.fragment = fragment
+    constructor(fragmentData: IFragment) {
+        this.data = fragmentData
     }
 
     validateInvariants(): void {
-        if (this.fragment.role === 'task') {
-            if (this.fragment.status === 'completed' || this.fragment.completionDate || this.fragment.isCompleted) {
+        if (this.data.role === 'task') {
+            if (this.data.status === 'completed' || this.data.completionDate || this.data.isCompleted) {
                 // if one of these is defined, the all have to be defined
-                if (this.fragment.status !== 'completed' || !this.fragment.completionDate || !this.fragment.isCompleted) {
+                if (this.data.status !== 'completed' || !this.data.completionDate || !this.data.isCompleted) {
                     console.log('INVALID FRAGMENT')
-                    console.log(this.fragment)
+                    console.log(this.data)
                     throw new Error('Task completed with invalid values')
                 }
             }
         }
     }
 
-    update(fragment: IFragment, updates: Partial<IFragment>): void {
-        const updatedFragment = {
-            ...fragment,
+    update(updates: Partial<IFragment>): void {
+        const previousData = this.data
+
+        const updatedData = {
+            ...this.data,
             ...updates,
         }
+        this.data = updatedData
 
-        this.validateInvariants()
-
-        this.fragment = updatedFragment
+        try {
+            this.validateInvariants()
+        } catch (e) {
+            this.data = previousData // roll back
+            throw e
+        }
     }
 
     serialize(): string {
-        return JSON.stringify(this.fragment)
+        return JSON.stringify(this.data)
+    }
+
+    markAsComplete() {
+        this.update({
+            completionDate: (new Date()).toISOString(),
+            isCompleted: true,
+            status: 'done',
+        })
     }
 }
 
