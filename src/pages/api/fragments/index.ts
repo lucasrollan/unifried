@@ -13,16 +13,19 @@ export default async function handler(
     const session = await getServerSession(req, res, authOptions)
 
     if (session) {
-        const { start, end } = req.query
-        const rangeStart = start as string
-        const exclusiveRangeEnd = end as string
-
-        console.log(`GET fragments for range ${rangeStart} - ${exclusiveRangeEnd}`)
-        const fragments = await fragmentRepository.getByDateRange(rangeStart, exclusiveRangeEnd)
-        console.log('GET fragments response', fragments)
-
         // Signed in
-        res.status(200).json(fragments)
+
+        if (req.method === 'GET') {
+            const { start, end } = req.query
+            const rangeStart = start as string
+            const exclusiveRangeEnd = end as string
+
+            console.log(`GET fragments for range ${rangeStart} - ${exclusiveRangeEnd}`)
+            const fragments = await fragmentRepository.getByDateRange(rangeStart, exclusiveRangeEnd)
+            console.log('GET fragments response', fragments)
+
+            res.status(200).json(fragments)
+        }
     } else {
         // Not Signed in
         res.status(401).json([])

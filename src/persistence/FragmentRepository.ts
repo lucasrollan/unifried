@@ -66,7 +66,16 @@ class FragmentRepository {
 
     async create(fragment: IFragment): Promise<IFragment> {
         return new Promise((resolve, reject) => {
-            this.airtableDB('fragments').create([fragment], function (err, records) {
+            const forAirtable = FragmentFactory.toAirtableRow(fragment)
+            const newRow = {
+                fields: {
+                    ...forAirtable.fields,
+                    createdDate: undefined,
+                    modifiedDate: undefined,
+                }
+            }
+            console.log('AT newRow create', newRow)
+            this.airtableDB('fragments').create([newRow], function (err, records) {
                 if (err) {
                     console.error(err);
                     reject()

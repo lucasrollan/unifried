@@ -48,7 +48,9 @@ export default async function handler(
         return
     }
 
-    const action: ApiRequestAction = req.body.action
+    const body = JSON.parse(req.body)
+    const action: ApiRequestAction = body.action
+    console.log('action', action, 'type', typeof action)
 
     if (!action) {
         res.status(400).json({
@@ -60,6 +62,7 @@ export default async function handler(
     }
 
     if (action.type === 'fragmentCreated') {
+        console.log('ACTION fragmentCreated')
         const fragmentPayload = action.payload.fragment as IFragment
         const fragmentData = await FragmentRepository.getInstance().create(fragmentPayload)
         const fragment = new Fragment(fragmentData)

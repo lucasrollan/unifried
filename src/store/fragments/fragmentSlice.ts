@@ -34,6 +34,25 @@ const api_updateFragment = async function (fragment: IFragment): Promise<IFragme
     return result.json()
 }
 
+const api_createFragment = async function (fragment: IFragment): Promise<IFragment> {
+    const body = {
+        action: {
+            type: 'fragmentCreated',
+            payload: {
+                fragment
+            },
+        }
+    }
+    const result = await fetch(`/api/actions`, {
+        method: 'POST',
+        body: JSON.stringify(body)
+    })
+    const resultData = await result.json()
+    const newFragment = resultData.updatedEntities?.fragments[0] as IFragment
+
+    return newFragment
+}
+
 export const fetchFragments = createAsyncThunk(
     'fragments/fetch',
     async (arg: {start: string, end: string}) => {
@@ -93,6 +112,19 @@ export const updateFragment = createAsyncThunk(
     }
 )
 
+export const createFragment = createAsyncThunk(
+    'fragment/created',
+    async (fragment: IFragment, thunkApi) => {
+        console.log('fragment/created ACTION')
+        // thunkApi.dispatch(timelineSlice.actions.fragmentUpdated(fragment))
+
+        const newFragment = await api_createFragment(fragment)
+        thunkApi.dispatch(timelineSlice.actions.fragmentUpdated(newFragment))
+
+        return newFragment
+    }
+)
+
 export const changedSummaryDate = createAsyncThunk(
     'fragments/changedSummaryDate',
     async (date: string, thunkApi) => {
@@ -131,6 +163,9 @@ export const timelineSlice = createSlice({
             const updatedFragment: IFragment = action.payload
 
             state.fragmentsById[updatedFragment.id] = updatedFragment
+            if (!state.fragmentIds.includes(updatedFragment.id)) {
+                state.fragmentIds.push(updatedFragment.id)
+            }
         },
     },
     extraReducers: (builder) => {
