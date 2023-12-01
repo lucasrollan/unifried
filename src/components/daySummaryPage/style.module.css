@@ -14,3 +14,25 @@
     border-top: none;
     border-bottom: none;
 }
+
+.bannerContainer {
+    /* padding: 12px 12px 0; */
+    text-align: center;
+    position: sticky;
+    bottom: 12px;
+}
+
+.banner {
+    margin: 0 auto;
+    height: 56px;
+    width: 56px;
+    padding: 5px;
+    border-radius: 30px;
+    background-color: color-mix(in srgb, var(--color-ui-custom-2) 60%, white);
+    border: 2px solid color-mix(in srgb, var(--color-ui-custom-2) 100%, white);
+    border-bottom-width: 4px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    justify-content: center;
+}

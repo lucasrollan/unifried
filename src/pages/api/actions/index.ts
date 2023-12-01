@@ -59,6 +59,18 @@ export default async function handler(
         return
     }
 
+    if (action.type === 'fragmentCreated') {
+        const fragmentPayload = action.payload.fragment as IFragment
+        const fragmentData = await FragmentRepository.getInstance().create(fragmentPayload)
+        const fragment = new Fragment(fragmentData)
+
+        res.status(200).json({
+            updatedEntities: {
+                fragments: [fragment.data],
+            }
+        })
+    }
+
     if (action.type === 'fragmentMarkedAsComplete') {
         const fragmentId = action.payload.fragmentId as string
         const fragmentData = await FragmentRepository.getInstance().getById(fragmentId)

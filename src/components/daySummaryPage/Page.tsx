@@ -8,7 +8,8 @@ import style from './style.module.css'
 import moment from 'moment'
 import { fetchCharacters, fetchDailyRewardTokens } from '@/store/actors/actorsSlice'
 import { selectCurrentCharacter, selectSelectedDateTokens } from '@/store/actors/selectors'
-import CharacterSummary from '../characterSummaryBanner/Page'
+import CharacterSummary from '../characterSummaryBanner'
+import { Button } from '@blueprintjs/core'
 
 function DaySummaryPage() {
     const dispatch = useAppDispatch()
@@ -43,6 +44,11 @@ function DaySummaryPage() {
                 onNextPageSelected={handleNextDateSelected}
                 onPrevPageSelected={handlePrevDateSelected}
             />
+            <div className={style.bannerContainer}>
+                <div className={style.banner}>
+                    <Button minimal>+</Button>
+                </div>
+            </div>
         </div>
     </div>
 }
