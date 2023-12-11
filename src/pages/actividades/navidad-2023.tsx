@@ -17,7 +17,7 @@ const ChristmasActivities: React.FC<Props> = ({ activities }) => {
                 <ul>
                     {activities.map((activity) => (
                         <li key={activity.name} style={{position: 'relative', listStyleType: 'none'}}>
-                            {activity.completed && <span style={{ color: 'green', position: 'Absolute', left: '-25px' }}>✅</span>}
+                            {activity.completed && <span style={{ color: 'green', position: 'absolute', left: '-25px' }}>✅</span>}
                             <span
                                 style={{
                                     color: activity.completed ? 'Darkgreen' : 'black',
