@@ -4,6 +4,7 @@ import Airtable from 'airtable';
 interface Activity {
     name: string;
     completed: boolean;
+    required: boolean;
 }
 
 interface Props {
@@ -11,12 +12,24 @@ interface Props {
 }
 
 const ChristmasActivities: React.FC<Props> = ({ activities }) => {
+    const completedActivities = activities.filter((activity) => activity.completed).length;
+    const percentageCompleted = Math.round((completedActivities / activities.length) * 100);
+    const orderedActivities = activities
+        .sort((a, b) =>
+            a.name.startsWith('🇮🇹') && !b.name.startsWith('🇮🇹') ? 1 :
+            !a.name.startsWith('🇮🇹') && b.name.startsWith('🇮🇹') ? -1 :
+            a.name.localeCompare(b.name, 'es', { sensitivity: 'base', ignorePunctuation: true })
+        )
+
     return (
         <div style={{ padding: '20px 40px', fontSize: '20px', textAlign: 'center' }}>
             <div style={{ maxWidth: '600px', margin: '0 auto', textAlign: 'left' }}>
                 <h1>Actividades Navideñas</h1>
+                <p style={{ marginBottom: '20px', color: 'gray', fontSize: '0.8em' }}>
+                    <i>{percentageCompleted}% completadas ({completedActivities}/{activities.length})</i>
+                </p>
                 <ul>
-                    {activities.map((activity) => (
+                    {orderedActivities.map((activity) => (
                         <li key={activity.name} style={{position: 'relative', listStyleType: 'none'}}>
                             {activity.completed && <span style={{ color: 'green', position: 'absolute', left: '-25px' }}>✅</span>}
                             <span
@@ -24,6 +37,7 @@ const ChristmasActivities: React.FC<Props> = ({ activities }) => {
                                     color: activity.completed ? 'Darkgreen' : 'black',
                                 }}
                             >{activity.name}</span>
+                            {!activity.required && <span style={{ color: 'gray' }}> (opcional)</span>}
                         </li>
                     ))}
                 </ul>
@@ -74,6 +88,7 @@ function projectEntry(entry: any): Activity {
     return {
         name: entry.fields.Name,
         completed: entry.fields.Completed || false,
+        required: entry.fields.Required || false,
     }
 }
 
