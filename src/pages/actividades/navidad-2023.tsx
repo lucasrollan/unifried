@@ -1,5 +1,6 @@
 import React from 'react';
 import Airtable from 'airtable';
+import Head from 'next/head';
 
 interface Activity {
     name: string;
@@ -22,27 +23,32 @@ const ChristmasActivities: React.FC<Props> = ({ activities }) => {
         )
 
     return (
-        <div style={{ padding: '20px 40px', fontSize: '20px', textAlign: 'center' }}>
-            <div style={{ maxWidth: '600px', margin: '0 auto', textAlign: 'left' }}>
-                <h1>Actividades Navideñas</h1>
-                <p style={{ marginBottom: '20px', color: 'gray', fontSize: '0.8em' }}>
-                    <i>{percentageCompleted}% completadas ({completedActivities}/{activities.length})</i>
-                </p>
-                <ul>
-                    {orderedActivities.map((activity) => (
-                        <li key={activity.name} style={{position: 'relative', listStyleType: 'none'}}>
-                            {activity.completed && <span style={{ color: 'green', position: 'absolute', left: '-25px' }}>✅</span>}
-                            <span
-                                style={{
-                                    color: activity.completed ? 'Darkgreen' : 'black',
-                                }}
-                            >{activity.name}</span>
-                            {!activity.required && <span style={{ color: 'gray' }}> (opcional)</span>}
-                        </li>
-                    ))}
-                </ul>
+        <>
+            <Head>
+                <title>Actividades Navideñas 2023</title>
+            </Head>
+            <div style={{ padding: '20px 40px', fontSize: '20px', textAlign: 'center' }}>
+                <div style={{ maxWidth: '600px', margin: '0 auto', textAlign: 'left' }}>
+                    <h1>Actividades Navideñas 2023</h1>
+                    <p style={{ marginBottom: '20px', color: 'gray', fontSize: '0.8em' }}>
+                        <i>{percentageCompleted}% completadas ({completedActivities}/{activities.length})</i>
+                    </p>
+                    <ul>
+                        {orderedActivities.map((activity) => (
+                            <li key={activity.name} style={{position: 'relative', listStyleType: 'none'}}>
+                                {activity.completed && <span style={{ color: 'green', position: 'absolute', left: '-25px' }}>✅</span>}
+                                <span
+                                    style={{
+                                        color: activity.completed ? 'Darkgreen' : 'black',
+                                    }}
+                                >{activity.name}</span>
+                                {!activity.required && <span style={{ color: 'gray' }}> (opcional)</span>}
+                            </li>
+                        ))}
+                    </ul>
+                </div>
             </div>
-        </div>
+        </>
     );
 };
 
