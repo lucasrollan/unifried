@@ -4,6 +4,7 @@ import style from './style.module.css'
 import { AnchorButton } from "@blueprintjs/core"
 import { useAppDispatch } from "@/store"
 import { completeFragment } from "@/store/fragments/fragmentSlice"
+import EditableFragmentSummary from "../fragmentSummary/EditableFragmentSummary"
 
 type FragmentsSummaryProps = {
     title: string,
@@ -40,7 +41,7 @@ function FragmentsSummary (props: FragmentsSummaryProps) {
             {
                 props.fragments.map(fragment =>
                     <div className={style.item} key={fragment.id}>
-                        <FragmentSummary
+                        <EditableFragmentSummary
                             fragment={fragment}
                             relativeToDate={props.relativeToDate}
                             onCompleted={() => handleFragmentCompleted(fragment.id)}

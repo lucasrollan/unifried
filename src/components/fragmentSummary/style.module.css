@@ -1,5 +1,5 @@
 .summary {
-    display: flex;
+
 }
 
 .completed {
@@ -12,7 +12,11 @@
     align-self: top;
 }
 
-.mainBody {
+.header {
+    display: flex;
+}
+
+.title {
     flex: 1;
 }
 
@@ -34,6 +38,17 @@
 .rewardIcon {
     width: 1.5em;
     vertical-align: middle;
+}
+
+.editableForm {
+    margin: 0 50px 0 22px;
+    margin-top: 8px;
+    padding-top: 8px;
+    border-top: 1px solid color-mix(in srgb, var(--color-ui-foreground) 15%, white);
+}
+
+.mainBody {
+    margin: 0 50px 0 22px;
 }
 
 .details {
