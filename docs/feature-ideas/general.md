@@ -17,3 +17,12 @@ Tree editor of goals/project/tasks, like:
     - project 2
         - task
 Track processes that I need to follow up on / remember later
+
+
+My professional stuff:
+Curriculum Vitae
+Links to stuff I've done
+
+Other:
+My games
+A blog?
