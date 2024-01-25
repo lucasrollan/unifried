@@ -3,6 +3,7 @@ import IFragment from "./IFragment"
 import { GcalEvent } from "./gcal"
 import moment from "moment"
 import { CompletedChallenge } from "@/persistence/AirtableConnector"
+import Fragment from "./Fragment"
 
 class FragmentFactory {
     static validateInvariants(fragment: IFragment) {
@@ -27,6 +28,10 @@ class FragmentFactory {
         FragmentFactory.validateInvariants(updatedFragment)
 
         return updatedFragment
+    }
+
+    static fromData(data: IFragment): Fragment {
+        return new Fragment(data)
     }
 
     static fromAirtableRow (row: AirtableDbEntry<IFragment>): IFragment {

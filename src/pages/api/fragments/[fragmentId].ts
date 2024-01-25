@@ -19,7 +19,7 @@ export default async function handler(
         const fragmentId = req.query.fragmentId as string
 
         if (req.method === 'GET') {
-            const fragment = await fragmentRepository.getById(fragmentId)
+            const fragment = await fragmentRepository.getDataById(fragmentId)
 
             // Signed in
             res.status(200).json(fragment)

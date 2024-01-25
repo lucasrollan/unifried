@@ -3,7 +3,7 @@ import Airtable from 'airtable';
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { getServerSession } from 'next-auth';
 import { authOptions } from '../../auth/[...nextauth]';
-import Character from '@/models/Character';
+import ICharacter from '@/models/ICharacter';
 import RewardTokensDayEntry from '@/models/RewardTokensDayEntry';
 import { AirtableDbEntry, projectAirtableDbEntryToEntity, projectEntityToAirtableDbEntry } from '@/persistence/AirtableDbEntry';
 import { fetchCharactersFromAirtable } from '..';
@@ -11,7 +11,7 @@ import { fetchCharactersFromAirtable } from '..';
 var base = new Airtable().base('applyggDoSgqTOMEs');
 
 export type UpdatedRewardTokensResponse = {
-    character?: Character,
+    character?: ICharacter,
     rewardTokens: RewardTokensDayEntry[],
 }
 
@@ -133,7 +133,7 @@ async function updateRewardTokensForDate(dbRecord: AirtableDbEntry<RewardTokensD
     })
 }
 
-async function updateCharacterInAirtable(character: Character): Promise<Character> {
+async function updateCharacterInAirtable(character: ICharacter): Promise<ICharacter> {
     return new Promise((resolve, reject) => {
         const dbEntry = projectEntityToAirtableDbEntry(character)
         base('characters').update([dbEntry], function (err: any, records: any) {
@@ -145,7 +145,7 @@ async function updateCharacterInAirtable(character: Character): Promise<Characte
             if (!records) {
                 return undefined
             }
-            const firstRecord = records[0] as AirtableDbEntry<Character>
+            const firstRecord = records[0] as AirtableDbEntry<ICharacter>
             resolve(projectAirtableDbEntryToEntity(firstRecord))
         })
     })

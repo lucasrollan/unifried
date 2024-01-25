@@ -2,7 +2,7 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import type { Action, PayloadAction } from '@reduxjs/toolkit'
 import moment from 'moment'
 import { RootState } from '..'
-import Character from '@/models/Character'
+import ICharacter from '@/models/ICharacter'
 import Player from '@/models/Player'
 import Party from '@/models/Party'
 import { UpdatedRewardTokensResponse } from '@/pages/api/characters/[characterId]/rewardTokens'
@@ -13,7 +13,7 @@ export interface ActorsState {
     rewardTokensByDate: Record<string, RewardTokensDayEntry>,
     currentCharacterId: string,
     characterIds: string[],
-    charactersById: Record<string, Character>,
+    charactersById: Record<string, ICharacter>,
     // partyIds: string[],
     // partiesById: Record<string, Party>,
     // playerIds: string[],
@@ -47,7 +47,7 @@ const api_fetchRewardTokens = async function (characterId: string): Promise<Upda
     return result.json()
 }
 
-const api_fetchCharacters = async function (): Promise<Character[]> {
+const api_fetchCharacters = async function (): Promise<ICharacter[]> {
     const result = await fetch('/api/characters')
     return result.json()
 }
@@ -59,7 +59,7 @@ export const grantRewardTokensToCurrentCharacter = createAsyncThunk(
         const currentCharacterId = state.actors.currentCharacterId
         const currentCharacter = state.actors.charactersById[currentCharacterId]
 
-        const optimisticallyUpdatedCharacter: Character = {
+        const optimisticallyUpdatedCharacter: ICharacter = {
             ...currentCharacter,
             tokens: currentCharacter.tokens + amount,
         }
@@ -90,11 +90,11 @@ export const fetchDailyRewardTokens = createAsyncThunk(
     }
 )
 
-export const timelineSlice = createSlice({
-    name: 'timeline',
+export const actorsSlice = createSlice({
+    name: 'actors',
     initialState,
     reducers: {
-        characterUpdated: (state, action: PayloadAction<Character>) => {
+        characterUpdated: (state, action: PayloadAction<ICharacter>) => {
             console.log('action characterUpdated')
             const updatedCharacter = action.payload
 
@@ -133,6 +133,6 @@ export const timelineSlice = createSlice({
 })
 
 // Action creators are generated for each case reducer function
-export const { characterUpdated, dailyRewardTokensUpdated } = timelineSlice.actions
+export const { characterUpdated, dailyRewardTokensUpdated } = actorsSlice.actions
 
-export default timelineSlice.reducer
+export default actorsSlice.reducer

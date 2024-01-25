@@ -82,7 +82,7 @@ function EditableFragmentSummary(props: EditableFragmentSummaryProps) {
                                         <HTMLSelect>
                                             <option value="waiting" selected={props.fragment.priority === 0}>⏳ Waiting</option>
                                             <option value="ongoing" selected={props.fragment.priority === 1}>▶️ Ongoing</option>
-                                            <option value="done" selected={props.fragment.priority === 2}>✅ Done</option>
+                                            <option value="complete" selected={props.fragment.priority === 2}>✅ Done</option>
                                             <option value="cancelled" selected={props.fragment.priority === 3}>❌ Cancelled</option>
                                         </HTMLSelect>
                                     </Label>

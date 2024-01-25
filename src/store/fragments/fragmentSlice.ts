@@ -2,7 +2,8 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import moment from 'moment'
 import IFragment from '@/models/IFragment'
 import { RootState } from '..'
-import { grantRewardTokensToCurrentCharacter } from '../actors/actorsSlice'
+import { characterUpdated, grantRewardTokensToCurrentCharacter } from '../actors/actorsSlice'
+import { ActionApiResponse, ApiRequestAction } from '@/pages/api/actions'
 
 export interface FragmentsState {
     fragmentSummaryDateSelected: string,
@@ -53,6 +54,43 @@ const api_createFragment = async function (fragment: IFragment): Promise<IFragme
     return newFragment
 }
 
+
+const api_sendAction = async function (action: ApiRequestAction): Promise<ActionApiResponse> {
+    const body = {
+        action,
+    }
+    const result = await fetch(`/api/actions`, {
+        method: 'POST',
+        body: JSON.stringify(body)
+    })
+    const resultData = await result.json()
+
+    return resultData
+}
+
+export const sendAction = createAsyncThunk(
+    'comms/sendAction',
+    async (action: ApiRequestAction, thunkApi) => {
+        const response = await api_sendAction(action)
+        console.log('comms/sendAction', response)
+
+        if (response.updatedEntities) {
+            if (response.updatedEntities.fragments) {
+                response.updatedEntities.fragments.forEach(fragment => {
+                    thunkApi.dispatch(fragmentSlice.actions.fragmentUpdated(fragment))
+                })
+            }
+            if (response.updatedEntities.characters) {
+                response.updatedEntities.characters.forEach(character => {
+                    thunkApi.dispatch(characterUpdated(character))
+                })
+            }
+        }
+
+        return response
+    }
+)
+
 export const fetchFragments = createAsyncThunk(
     'fragments/fetch',
     async (arg: {start: string, end: string}) => {
@@ -78,35 +116,43 @@ export const initialSummaryFragmentsRequested = createAsyncThunk(
 export const completeFragment = createAsyncThunk(
     'fragment/complete',
     async (fragmentId: string, thunkApi) => {
-        const state = thunkApi.getState() as RootState
-        const fragment = state.fragments.fragmentsById[fragmentId]
-
-        if (fragment.role === 'challenge') {
-            // TODO: Move all of this logic to the API
-        } else {
-            const fragmentToUpdate = {
-                ...fragment,
-                isCompleted: true,
-                completionDate: moment().format('YYYY-MM-DD'),
-                status: 'complete',
-            }
-
-            await thunkApi.dispatch(updateFragment(fragmentToUpdate))
+        const action: ApiRequestAction = {
+            type: "fragmentMarkedAsComplete",
+            payload: {
+                fragmentId,
+            },
         }
+        await thunkApi.dispatch(sendAction(action))
 
-        if (fragment.reward) {
-            await thunkApi.dispatch(grantRewardTokensToCurrentCharacter(fragment.reward))
-        }
+        // const state = thunkApi.getState() as RootState
+        // const fragment = state.fragments.fragmentsById[fragmentId]
+
+        // if (fragment.role === 'challenge') {
+        //     // TODO: Move all of this logic to the API
+        // } else {
+        //     const fragmentToUpdate = {
+        //         ...fragment,
+        //         isCompleted: true,
+        //         completionDate: moment().format('YYYY-MM-DD'),
+        //         status: 'complete',
+        //     }
+
+        //     await thunkApi.dispatch(updateFragment(fragmentToUpdate))
+        // }
+
+        // if (fragment.reward) {
+        //     await thunkApi.dispatch(grantRewardTokensToCurrentCharacter(fragment.reward))
+        // }
     }
 )
 
 export const updateFragment = createAsyncThunk(
     'fragment/update',
     async (fragment: IFragment, thunkApi) => {
-        thunkApi.dispatch(timelineSlice.actions.fragmentUpdated(fragment))
+        thunkApi.dispatch(fragmentSlice.actions.fragmentUpdated(fragment))
 
         const updatedFragment = await api_updateFragment(fragment)
-        thunkApi.dispatch(timelineSlice.actions.fragmentUpdated(updatedFragment))
+        thunkApi.dispatch(fragmentSlice.actions.fragmentUpdated(updatedFragment))
 
         return updatedFragment
     }
@@ -119,7 +165,7 @@ export const createFragment = createAsyncThunk(
         // thunkApi.dispatch(timelineSlice.actions.fragmentUpdated(fragment))
 
         const newFragment = await api_createFragment(fragment)
-        thunkApi.dispatch(timelineSlice.actions.fragmentUpdated(newFragment))
+        thunkApi.dispatch(fragmentSlice.actions.fragmentUpdated(newFragment))
 
         return newFragment
     }
@@ -151,8 +197,8 @@ export const changedSummaryDate = createAsyncThunk(
     }
 )
 
-export const timelineSlice = createSlice({
-    name: 'timeline',
+export const fragmentSlice = createSlice({
+    name: 'fragments',
     initialState,
     reducers: {
         newSummaryDateSelected: (state, action) => {
@@ -186,6 +232,6 @@ export const timelineSlice = createSlice({
 })
 
 // Action creators are generated for each case reducer function
-export const { newSummaryDateSelected, fragmentUpdated } = timelineSlice.actions
+export const { newSummaryDateSelected, fragmentUpdated } = fragmentSlice.actions
 
-export default timelineSlice.reducer
+export default fragmentSlice.reducer

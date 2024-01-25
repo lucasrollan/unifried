@@ -1,9 +1,9 @@
-import FragmentService from "@/models/FragmentService"
+import FragmentHelper from "@/models/FragmentHelper"
 import IFragment from "@/models/IFragment"
 import { RootState } from "@/store"
 import { createSelector } from "@reduxjs/toolkit"
 import { sortBy } from "lodash"
-import moment, { MomentInput } from "moment"
+import moment from "moment"
 
 export const selectSummaryDateSelected = (state: RootState) =>
     state.fragments.fragmentSummaryDateSelected
@@ -46,7 +46,7 @@ export const selectFragmentsRelevantForDate = createSelector(
     (date, fragments) =>
         sortFragmentsForSummary(
             fragments.filter(fragment =>
-                FragmentService.isFragmentRelevantForDate(
+                FragmentHelper.isFragmentRelevantForDate(
                     fragment,
                     moment(date).startOf('day'),
                     moment(date).add(1, 'day').startOf('day')

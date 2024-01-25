@@ -42,11 +42,7 @@ class Fragment {
     }
 
     markAsComplete() {
-        this.update({
-            completionDate: (new Date()).toISOString(),
-            isCompleted: true,
-            status: 'done',
-        })
+        this
     }
 }
 

@@ -3,13 +3,13 @@ import { getServerSession } from 'next-auth/next'
 import { authOptions } from "../auth/[...nextauth]"
 
 import type { NextApiRequest, NextApiResponse } from 'next'
-import Character from '@/models/Character';
+import ICharacter from '@/models/ICharacter';
 import { AirtableDbEntry, projectAirtableDbEntryToEntity } from '@/persistence/AirtableDbEntry';
 var base = new Airtable().base('applyggDoSgqTOMEs');
 
 export default async function handler(
     req: NextApiRequest,
-    res: NextApiResponse<Character[]>
+    res: NextApiResponse<ICharacter[]>
 ) {
     const session = await getServerSession(req, res, authOptions)
     if (session) {
@@ -26,16 +26,16 @@ export default async function handler(
 }
 
 
-export async function fetchCharactersFromAirtable(): Promise<Character[]> {
+export async function fetchCharactersFromAirtable(): Promise<ICharacter[]> {
   return new Promise((resolve, reject) => {
-    const results: Character[] = []
+    const results: ICharacter[] = []
 
     base('characters').select({
       view: "Grid view"
     }).eachPage(function page(records, fetchNextPage) {
       // This function (`page`) will get called for each page of records.
 
-      const theRecords: Array<AirtableDbEntry<Character>> = records as any[]
+      const theRecords: Array<AirtableDbEntry<ICharacter>> = records as any[]
       results.push(...(theRecords).map(projectAirtableDbEntryToEntity))
 
       // To fetch the next page of records, call `fetchNextPage`.

@@ -3,30 +3,32 @@ import { authOptions } from "../auth/[...nextauth]"
 
 import type { NextApiRequest, NextApiResponse } from 'next'
 import IFragment from '@/models/IFragment'
-import Character from '@/models/Character'
+import ICharacter from '@/models/ICharacter'
 import FragmentRepository from '@/persistence/FragmentRepository'
 import Fragment from '@/models/Fragment'
+import FragmentService from '@/models/FragmentService'
+import CharacterRepository from '@/persistence/CharacterRepository'
 
 
 type ApiResponseError = {
     code: string,
     description: string,
 }
-type ApiResponse = {
+export type ActionApiResponse = {
     errors?: ApiResponseError[],
     updatedEntities?: {
         fragments?: IFragment[],
-        characters?: Character[],
+        characters?: ICharacter[],
     }
 }
-type ApiRequestAction = {
+export type ApiRequestAction = {
     type: string,
     payload: Record<string, unknown>,
 }
 
 export default async function handler(
     req: NextApiRequest,
-    res: NextApiResponse<ApiResponse>
+    res: NextApiResponse<ActionApiResponse>
 ) {
     const session = await getServerSession(req, res, authOptions)
     if (!session) {
@@ -75,21 +77,17 @@ export default async function handler(
     }
 
     if (action.type === 'fragmentMarkedAsComplete') {
+        console.log('ACTION fragmentMarkedAsComplete')
         const fragmentId = action.payload.fragmentId as string
-        const fragmentData = await FragmentRepository.getInstance().getById(fragmentId)
-        const fragment = new Fragment(fragmentData)
+        const fragment = await FragmentRepository.getInstance().getById(fragmentId)
 
-        fragment.markAsComplete()
-
-        if (fragment.data.reward) {
-            // const character = await CharacterRepository.getInstance().getCurrentCharacter()
-            // character.addDailyReward(fragment.reward)
-        }
+        const updatedFragment = await FragmentService.markFragmentAsCompleted(fragment)
+        const updatedCharacter = await CharacterRepository.getInstance().getCurrentCharacter()
 
         res.status(200).json({
             updatedEntities: {
-                fragments: [fragment.data],
-                // characters: [character],
+                fragments: [updatedFragment.data],
+                characters: [updatedCharacter.data],
             }
         })
     }
