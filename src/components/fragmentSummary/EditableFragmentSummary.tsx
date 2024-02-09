@@ -6,11 +6,13 @@ import { selectFragmentById } from "@/store/fragments/selectors"
 import { getIndicatorIcon, getTimeDescription } from "./details"
 import moment from "moment"
 import { useState } from "react"
+import FragmentEditForm from "./FragmentEditForm"
 
 type EditableFragmentSummaryProps = {
     fragment: IFragment,
     relativeToDate: string,
     onCompleted: () => void
+    onUpdated: (fragmentData: IFragment) => void
 }
 
 function EditableFragmentSummary(props: EditableFragmentSummaryProps) {
@@ -62,72 +64,11 @@ function EditableFragmentSummary(props: EditableFragmentSummaryProps) {
             {
                 isEditing
                     ? (
-                        <div className={style.editableForm}>
-                            <div>
-                                <ControlGroup fill={true} vertical={false}>
-                                    <Label>
-                                        Criticality
-                                        <HTMLSelect>
-                                            <option value="" selected={!props.fragment.priority && props.fragment.priority !== 0}>--</option>
-                                            <option value="0" selected={props.fragment.priority === 0}>Critical</option>
-                                            <option value="1" selected={props.fragment.priority === 1}>Higher</option>
-                                            <option value="2" selected={props.fragment.priority === 2}>High</option>
-                                            <option value="3" selected={props.fragment.priority === 3}>Mid</option>
-                                            <option value="4" selected={props.fragment.priority === 4}>Low</option>
-                                            <option value="5" selected={props.fragment.priority === 5}>Lowest</option>
-                                        </HTMLSelect>
-                                    </Label>
-                                    <Label>
-                                        Status
-                                        <HTMLSelect>
-                                            <option value="waiting" selected={props.fragment.priority === 0}>⏳ Waiting</option>
-                                            <option value="ongoing" selected={props.fragment.priority === 1}>▶️ Ongoing</option>
-                                            <option value="complete" selected={props.fragment.priority === 2}>✅ Done</option>
-                                            <option value="cancelled" selected={props.fragment.priority === 3}>❌ Cancelled</option>
-                                        </HTMLSelect>
-                                    </Label>
-                                    <Label style={{ width: '20px' }}>
-                                        Reward
-                                        <InputGroup placeholder="reward" type="number" value={props.fragment.reward?.toString()} />
-                                    </Label>
-                                </ControlGroup>
-
-                                <Label>
-                                    Title
-                                    <InputGroup placeholder="title" value={props.fragment.title} />
-                                </Label>
-                                <Label>
-                                    Description
-                                    <TextArea placeholder="description" value={props.fragment.content} fill autoResize />
-                                </Label>
-                                <Label>
-                                    Parent
-                                    <HTMLSelect>
-                                        <option value="ND_IT">Stay in the Netherlands as a EU citizen</option>
-                                        <option value="Matsu">Buy a car</option>
-                                    </HTMLSelect>
-                                </Label>
-                                <ControlGroup>
-                                    <Label style={{ 'width': '33%' }}>
-                                        Start
-                                        <InputGroup placeholder="Start" value={props.fragment.content} />
-                                    </Label>
-                                    <Label style={{ 'width': '33%' }}>
-                                        Scheduled
-                                        <InputGroup placeholder="Scheduled" value={props.fragment.content} />
-                                    </Label>
-                                    <Label style={{ 'width': '33%' }}>
-                                        Due
-                                        <InputGroup placeholder="Due" value={props.fragment.content} />
-                                    </Label>
-                                </ControlGroup>
-                            </div>
-                            <div style={{ textAlign: 'right'}}>
-                                <Button intent="danger" onClick={() => setIsEditing(false)}>Cancel</Button>
-                                {' '}
-                                <Button intent="primary">Save</Button>
-                            </div>
-                        </div>
+                        <FragmentEditForm
+                            fragmentData={props.fragment}
+                            onCancel={() => setIsEditing(false)}
+                            onUpdated={props.onUpdated}
+                        />
                     ) : (
                         <div className={style.mainBody}>
                             {

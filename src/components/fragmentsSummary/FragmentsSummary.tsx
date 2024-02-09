@@ -3,7 +3,7 @@ import FragmentSummary from "../fragmentSummary/FragmentSummary"
 import style from './style.module.css'
 import { AnchorButton } from "@blueprintjs/core"
 import { useAppDispatch } from "@/store"
-import { completeFragment } from "@/store/fragments/fragmentSlice"
+import { completeFragment, updateFragment } from "@/store/fragments/fragmentSlice"
 import EditableFragmentSummary from "../fragmentSummary/EditableFragmentSummary"
 
 type FragmentsSummaryProps = {
@@ -19,8 +19,13 @@ type FragmentsSummaryProps = {
 function FragmentsSummary (props: FragmentsSummaryProps) {
     const dispatch = useAppDispatch()
     const handleFragmentCompleted = (fragmentId: string) => {
-        console.log('FRAGMENT WILL BE COMPLETED')
+        console.log('FRAGMENT WILL BE COMPLETED', fragmentId)
         dispatch(completeFragment(fragmentId))
+    }
+
+    const handleFragmentUpdated = (fragmentData: IFragment) => {
+        console.log('FRAGMENT WILL BE UPDATED', fragmentData)
+        dispatch(updateFragment(fragmentData))
     }
 
     return <div>
@@ -45,6 +50,7 @@ function FragmentsSummary (props: FragmentsSummaryProps) {
                             fragment={fragment}
                             relativeToDate={props.relativeToDate}
                             onCompleted={() => handleFragmentCompleted(fragment.id)}
+                            onUpdated={handleFragmentUpdated}
                         />
                     </div>
                 )

@@ -114,10 +114,10 @@ export const initialSummaryFragmentsRequested = createAsyncThunk(
 )
 
 export const completeFragment = createAsyncThunk(
-    'fragment/complete',
+    'fragment/completed',
     async (fragmentId: string, thunkApi) => {
         const action: ApiRequestAction = {
-            type: "fragmentMarkedAsComplete",
+            type: "fragmentMarkedAsCompleted",
             payload: {
                 fragmentId,
             },
@@ -134,7 +134,7 @@ export const completeFragment = createAsyncThunk(
         //         ...fragment,
         //         isCompleted: true,
         //         completionDate: moment().format('YYYY-MM-DD'),
-        //         status: 'complete',
+        //         status: 'completed',
         //     }
 
         //     await thunkApi.dispatch(updateFragment(fragmentToUpdate))
@@ -149,12 +149,20 @@ export const completeFragment = createAsyncThunk(
 export const updateFragment = createAsyncThunk(
     'fragment/update',
     async (fragment: IFragment, thunkApi) => {
-        thunkApi.dispatch(fragmentSlice.actions.fragmentUpdated(fragment))
+        const action: ApiRequestAction = {
+            type: "fragmentUpdated",
+            payload: {
+                fragment,
+            },
+        }
+        await thunkApi.dispatch(sendAction(action))
 
-        const updatedFragment = await api_updateFragment(fragment)
-        thunkApi.dispatch(fragmentSlice.actions.fragmentUpdated(updatedFragment))
+        // thunkApi.dispatch(fragmentSlice.actions.fragmentUpdated(fragment))
 
-        return updatedFragment
+        // const updatedFragment = await api_updateFragment(fragment)
+        // thunkApi.dispatch(fragmentSlice.actions.fragmentUpdated(updatedFragment))
+
+        // return updatedFragment
     }
 )
 

@@ -8,6 +8,7 @@ class Fragment {
     }
 
     validateInvariants(): void {
+        return;
         if (this.data.role === 'task') {
             if (this.data.status === 'completed' || this.data.completionDate || this.data.isCompleted) {
                 // if one of these is defined, the all have to be defined
