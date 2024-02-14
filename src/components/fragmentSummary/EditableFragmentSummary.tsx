@@ -28,6 +28,15 @@ function EditableFragmentSummary(props: EditableFragmentSummaryProps) {
 
     const isCompleted = props.fragment.isCompleted
 
+    const handleFragmentCompleted = (): void => {
+        setIsEditing(false)
+        props.onCompleted()
+    }
+    const handleFragmentUpdated = (fragmentData: IFragment): void => {
+        setIsEditing(false)
+        props.onUpdated(fragmentData)
+    }
+
     return <Card className={isCompleted ? style.completed : ''}>
         <div className={style.summary}>
             <div className={style.header}>
@@ -48,7 +57,7 @@ function EditableFragmentSummary(props: EditableFragmentSummaryProps) {
                                         : <Icon icon="double-chevron-right" />
                                 }
                             </div>
-                            : <div className={style.reward} onClick={props.onCompleted}>
+                            : <div className={style.reward} onClick={handleFragmentCompleted}>
                                 {
                                     props.fragment.reward !== undefined &&
                                     <>
@@ -67,7 +76,7 @@ function EditableFragmentSummary(props: EditableFragmentSummaryProps) {
                         <FragmentEditForm
                             fragmentData={props.fragment}
                             onCancel={() => setIsEditing(false)}
-                            onUpdated={props.onUpdated}
+                            onUpdated={handleFragmentUpdated}
                         />
                     ) : (
                         <div className={style.mainBody}>
