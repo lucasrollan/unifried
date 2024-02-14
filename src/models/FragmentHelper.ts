@@ -6,6 +6,13 @@ function isDateWithinRange(date: MomentInput, start: MomentInput, exclusiveEnd: 
     return dateMoment.isSameOrAfter(start) && dateMoment.isBefore(exclusiveEnd)
 }
 
+function periodsOverlap(periodAStart: MomentInput, periodAEnd: MomentInput, periodBStart: MomentInput, periodBEnd: MomentInput): boolean {
+    const missedToTheLeft = moment(periodAEnd).isSameOrBefore(periodBStart) // A ends before B starts
+    const missedToTheRight = moment(periodBEnd).isSameOrBefore(periodAStart) // B ends before A starts
+
+    return !missedToTheLeft && !missedToTheRight // they don't miss each other
+}
+
 class FragmentHelper {
     static isFragmentRelevantForDate(fragment: IFragment, dateStart: MomentInput, dateEndExclusive: MomentInput): boolean {
         const earliestStart = fragment.earliestStart || fragment.earliestStartDate
@@ -31,19 +38,17 @@ class FragmentHelper {
             const eventEndsAfterRangeStart = moment(end).isSameOrBefore(dateStart)
             return !(eventStartsAfterRangeEnd || eventEndsAfterRangeStart)
         } else if (fragment.role === 'task') {
-            const happensBeforeRangeEnd = FragmentHelper.fragmentHappensBefore(fragment, dateEndExclusive)
-            const happensOnOrAfterRangeStart = FragmentHelper.fragmentHappensOnOrAfter(fragment, dateStart)
-
-            const wasCompletedWithinRange = isDateWithinRange(fragment.completionDate, dateStart, dateEndExclusive)
-            const wasCompletedAfterRangeStart = fragment.completionDate
-                ? moment(fragment.completionDate).isSameOrAfter(dateStart)
-                : false
+            const earliestDateOfRelevance: MomentInput = moment(earliestStart || start)
+            const exclusiveEnd = moment(fragment.end || moment(fragment.endDate).add(1, 'day'))
+            let latestDateOfRelevance: MomentInput = moment.max(exclusiveEnd, moment())
 
             if (fragment.isCompleted) {
-                return wasCompletedWithinRange || (happensOnOrAfterRangeStart && wasCompletedAfterRangeStart)
-            } else {
-                return happensBeforeRangeEnd
+                latestDateOfRelevance = fragment.completionDate
             }
+
+            // TODO: latestDateOfRelevance is inclusive, dateEndExclusive is not
+            // fragment end is exclusive, fragment endDate should be turned into a exclusive date by adding one day
+            return periodsOverlap(earliestDateOfRelevance, latestDateOfRelevance, dateStart, dateEndExclusive)
 
             //tasks that (earlyStart, start, or due on-or-before today and are not done) or that are done on-or-after today
         } else if (fragment.role === 'challenge') {
