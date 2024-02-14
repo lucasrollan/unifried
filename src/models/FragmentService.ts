@@ -37,11 +37,11 @@ class FragmentService {
             isCompleted: true,
             status: 'completed',
         })
-        FragmentRepository.getInstance().patch(fragment.data)
+        FragmentRepository.getInstance().patch(updatedFragment.data)
 
-        if (fragment.data.reward) {
+        if (updatedFragment.data.reward) {
             const character = await CharacterRepository.getInstance().getCurrentCharacter()
-            RewardService.grantTokensToCharacter(character, fragment.data.reward)
+            RewardService.grantTokensToCharacter(character, updatedFragment.data.reward)
         }
 
         return updatedFragment
@@ -55,12 +55,12 @@ class FragmentService {
             completionDate: undefined,
             isCompleted: false,
         })
-        FragmentRepository.getInstance().patch(fragment.data)
+        FragmentRepository.getInstance().patch(updatedFragment.data)
 
-        if (fragment.data.reward) {
+        if (updatedFragment.data.reward) {
             // remove tokens granted
             const character = await CharacterRepository.getInstance().getCurrentCharacter()
-            RewardService.grantTokensToCharacter(character, -fragment.data.reward)
+            RewardService.grantTokensToCharacter(character, -updatedFragment.data.reward)
         }
 
         return updatedFragment
