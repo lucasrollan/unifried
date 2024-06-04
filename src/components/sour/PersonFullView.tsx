@@ -1,6 +1,6 @@
 import { useAppSelector } from "@/store"
 import { selectSubjectQuadsGroupedByPredicate } from "@/store/ontologies/selectors"
-import DocumentListFullView from "./DocumentListFullView"
+import SourEntityList from "./SourEntityList"
 
 interface PersonFullViewProps {
     iri: string,
@@ -16,7 +16,10 @@ function PersonFullView (props: PersonFullViewProps) {
             <li>Last name(s): {person['http://xmlns.com/foaf/0.1/lastName'] && person['http://xmlns.com/foaf/0.1/lastName'][0].object.id}</li>
         </ul>
         Documents:
-        <DocumentListFullView holderIri={props.iri} />
+        <SourEntityList
+            graphIri={props.iri} // TODO pass it in the fourth term of the quad instead (after refactor)
+            matchTerms={[null, 'http://rollan.info/api/rdf/document#holder', props.iri, null]}
+        />
     </div>)
 }
 

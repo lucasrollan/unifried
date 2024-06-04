@@ -1,12 +1,12 @@
 import { useAppDispatch, useAppSelector } from "@/store"
 import { selectGraphFromIri, selectSubjectQuadsGroupedByPredicate, selectSubjectsQuadsGroupedByPredicate } from "@/store/ontologies/selectors"
-import AttachmentListFullView from "./AttachmentListFullView"
 import { useEffect, useState } from "react"
 import { fetchOntologyGraph } from "@/store/ontologies/ontologiesSlice"
 import { Dictionary } from "@reduxjs/toolkit"
 import { Quad } from "n3"
 import { keyBy } from "lodash"
 import { extractGraphFromIri } from "@/store/ontologies/BasicQuad"
+import SourEntityList from "./SourEntityList"
 
 interface DocumentFullViewProps {
     iri: string,
@@ -67,7 +67,9 @@ function DocumentFullView (props: DocumentFullViewProps) {
                 </ul>
             }
             Attachments:
-            <AttachmentListFullView documentIri={props.iri} />
+            <SourEntityList
+                matchTerms={[null, 'http://rollan.info/api/rdf/document#scanOf', props.iri, null]}
+            />
         </div>)
 }
 
