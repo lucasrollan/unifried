@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useAppDispatch } from "@/store"
 import { fetchOntologyGraph } from "@/store/ontologies/ontologiesSlice"
-import PersonFullView from "@/components/sour/PersonFullView";
+import SourEntity from "@/components/sour/SourEntity";
 
 export default function SourPage(props: any) {
     const dispatch = useAppDispatch()
@@ -36,7 +36,7 @@ export default function SourPage(props: any) {
 
     return <div>
         <h1>SOUR</h1>
-        <PersonFullView iri={iri} />
+        <SourEntity iri={iri} />
     </div>
 }
 

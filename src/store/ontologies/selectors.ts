@@ -27,6 +27,21 @@ export const selectGraphFromIri = createSelector(
         graphsByIri[graphIri]
 )
 
+
+export const selectQuadsFromGraphThatMatchTerms = createSelector(
+    selectGraphFromIri,
+    (state: RootState, graphIri: string, terms: OptionalTermsBasicQuad = [null, null, null, null]) => terms,
+    (graph, terms) =>
+        (graph?.quads || [])
+            .filter(quad =>
+                (isNull(terms[0]) || quad[0] === terms[0])
+                && (isNull(terms[1]) || quad[1] === terms[1])
+                && (isNull(terms[2]) || quad[2] === terms[2])
+                && (isNull(terms[3]) || quad[3] === terms[3]))
+            .map(projectBasicQuadToQuad)
+)
+
+
 export const selectQuadsBySubject = createSelector(
     (state: RootState, subjectIri: string) => subjectIri,
     (state: RootState, subjectIri: string) => selectGraphFromIri(state, subjectIri),
