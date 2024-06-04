@@ -95,13 +95,11 @@ export const actorsSlice = createSlice({
     initialState,
     reducers: {
         characterUpdated: (state, action: PayloadAction<ICharacter>) => {
-            console.log('action characterUpdated')
             const updatedCharacter = action.payload
 
             state.charactersById[updatedCharacter.id] = updatedCharacter
         },
         dailyRewardTokensUpdated: (state, action: PayloadAction<RewardTokensDayEntry[]>) => {
-            console.log('action dailyRewardTokensUpdated')
             const dailyTokens = action.payload
             const dailyTokensByDate: Record<string, RewardTokensDayEntry> =
                 dailyTokens.reduce((acc, current) => ({
@@ -118,7 +116,6 @@ export const actorsSlice = createSlice({
     extraReducers: (builder) => {
         builder.addCase(fetchCharacters.fulfilled, (state, action) => {
             const characters = action.payload
-            console.log('characters', characters)
 
             characters.forEach(character => {
                 const characterId = character.id

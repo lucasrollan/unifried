@@ -13,8 +13,6 @@ class Fragment {
             if (this.data.status === 'completed' || this.data.completionDate || this.data.isCompleted) {
                 // if one of these is defined, the all have to be defined
                 if (this.data.status !== 'completed' || !this.data.completionDate || !this.data.isCompleted) {
-                    console.log('INVALID FRAGMENT')
-                    console.log(this.data)
                     throw new Error('Task completed with invalid values')
                 }
             }

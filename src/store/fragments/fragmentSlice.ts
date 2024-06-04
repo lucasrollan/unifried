@@ -72,7 +72,6 @@ export const sendAction = createAsyncThunk(
     'comms/sendAction',
     async (action: ApiRequestAction, thunkApi) => {
         const response = await api_sendAction(action)
-        console.log('comms/sendAction', response)
 
         if (response.updatedEntities) {
             if (response.updatedEntities.fragments) {
@@ -95,7 +94,6 @@ export const fetchFragments = createAsyncThunk(
     'fragments/fetch',
     async (arg: {start: string, end: string}) => {
         const result = await api_fetchFragments(arg.start, arg.end)
-        console.log('fragments/fetch result', result)
         return result
     }
 )
@@ -169,7 +167,6 @@ export const updateFragment = createAsyncThunk(
 export const createFragment = createAsyncThunk(
     'fragment/created',
     async (fragment: IFragment, thunkApi) => {
-        console.log('fragment/created ACTION')
         // thunkApi.dispatch(timelineSlice.actions.fragmentUpdated(fragment))
 
         const newFragment = await api_createFragment(fragment)
@@ -213,7 +210,6 @@ export const fragmentSlice = createSlice({
             state.fragmentSummaryDateSelected = action.payload
         },
         fragmentUpdated: (state, action) => {
-            console.log('action fragmentUpdated', fragmentUpdated)
             const updatedFragment: IFragment = action.payload
 
             state.fragmentsById[updatedFragment.id] = updatedFragment
@@ -225,7 +221,6 @@ export const fragmentSlice = createSlice({
     extraReducers: (builder) => {
         builder.addCase(fetchFragments.fulfilled, (state, action) => {
             const fragments = action.payload
-            console.log('fragments', fragments)
 
             fragments.forEach(fragment => {
                 const fragmentId = fragment.id

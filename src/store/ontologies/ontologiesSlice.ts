@@ -1,8 +1,9 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import { Parser, Quad, NamedNode } from "n3"
-import { BasicQuad, extractGraphFromIri, projectQuadToBasicQuad } from './BasicQuad'
+import { BasicQuad, extractGraphFromIri, extractGraphsFromBasicQuads, extractPredicateGraphsFromBasicQuads, projectQuadToBasicQuad } from './BasicQuad'
 import { Dictionary } from "@reduxjs/toolkit"
-import { mapValues } from 'lodash'
+import { forEach, keys, mapValues } from 'lodash'
+import { RootState } from '..'
 
 
 export interface OntologiesState {
@@ -40,7 +41,6 @@ async function parseOntologyGraph(doc: string, iri: string): Promise<Graph> {
                     const quadWithGraph = new Quad(quad.subject, quad.predicate, quad.object, graphIri)
                     graph.quads.push(projectQuadToBasicQuad(quadWithGraph))
                 } else {
-                    console.log("# That's all, folks!", prefixes);
                     graph.prefixes = mapValues(prefixes, v => v.value)
 
                     resolve(graph)
@@ -52,13 +52,19 @@ async function parseOntologyGraph(doc: string, iri: string): Promise<Graph> {
 }
 
 const api_fetchOntologyGraph = async function (iri: string): Promise<Graph> {
-    const localizedIri = iri.replace('rollan.info', 'localhost:3000')
-    const normalizedIri = localizedIri.replace(/#.*$/, '')
-    const result = await fetch(normalizedIri)
-    const doc = await result.text()
-    console.log('DOC', doc)
+    let content = ''
 
-    const graph = await parseOntologyGraph(doc, iri)
+    if (/rollan\.info/.test(iri)) {
+        const localizedIri = iri.replace('rollan.info', 'localhost:3000')
+        const normalizedIri = localizedIri.replace(/#.*$/, '')
+        const result = await fetch(normalizedIri)
+        content = await result.text()
+    } else {
+        // const result = await fetch(`http://localhost:3000/api/rdf/proxy?iri=${iri}`)
+        // content = await result.text()
+    }
+
+    const graph = await parseOntologyGraph(content, iri)
     return graph
 }
 
@@ -66,7 +72,20 @@ export const fetchOntologyGraph = createAsyncThunk(
     'ontologies/fetch',
     async (iri: string, thunkApi) => {
         const result = await api_fetchOntologyGraph(iri)
-        console.log('ontologies/fetch result', result)
+        console.log('ontologies/fetch result for', iri, result)
+
+        const referencedGraphs = extractPredicateGraphsFromBasicQuads(result.quads)
+        console.log('referencedGraphs', referencedGraphs)
+        const state = thunkApi.getState() as RootState
+        const graphsByIri = state.ontologies.graphsByIri
+
+        for (let graphIri of referencedGraphs) {
+            if (graphIri !== iri && !graphsByIri[iri]) {
+                // Not the one that we just fetched, and not already fetched
+                console.log('will fetch referenced graph', graphIri)
+                thunkApi.dispatch(fetchOntologyGraph(graphIri))
+            }
+        }
 
         // TODO: fetch graphs referenced by the current graph
         // TODO: if the response was cached, don't process it again

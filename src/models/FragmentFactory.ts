@@ -11,8 +11,6 @@ class FragmentFactory {
         if (fragment.role === 'task') {
             if (fragment.status === 'completed' || fragment.completionDate || fragment.isCompleted) {
                 // if one of these is defined, the all have to be defined
-                console.log('INVALID FRAGMENT')
-                console.log(fragment)
                 if (fragment.status !== 'completed' || !fragment.completionDate || !fragment.isCompleted) {
                     throw new Error('Task completed with invalid values')
                 }

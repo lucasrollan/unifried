@@ -52,7 +52,6 @@ export default async function handler(
 
     const body = JSON.parse(req.body)
     const action: ApiRequestAction = body.action
-    console.log('action', action, 'type', typeof action)
 
     if (!action) {
         res.status(400).json({
@@ -64,7 +63,6 @@ export default async function handler(
     }
 
     if (action.type === 'fragmentCreated') {
-        console.log('ACTION fragmentCreated')
         const fragmentPayload = action.payload.fragment as IFragment
         const fragmentData = await FragmentRepository.getInstance().create(fragmentPayload)
         const fragment = new Fragment(fragmentData)
@@ -77,7 +75,6 @@ export default async function handler(
     }
 
     if (action.type === 'fragmentUpdated') {
-        console.log('ACTION fragmentUpdated')
         const fragmentData = action.payload.fragment as IFragment
 
         const updatedFragment = await FragmentService.patchFragment(fragmentData.id, fragmentData)
@@ -90,7 +87,6 @@ export default async function handler(
     }
 
     if (action.type === 'fragmentMarkedAsCompleted') {
-        console.log('ACTION fragmentMarkedAsCompleted')
         const fragmentId = action.payload.fragmentId as string
         const fragment = await FragmentRepository.getInstance().getById(fragmentId)
 

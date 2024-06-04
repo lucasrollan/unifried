@@ -4,9 +4,6 @@ import { useSession, signIn } from 'next-auth/react';
 export default function SessionGuard(props: any) {
   const { data, status } = useSession();
 
-  console.log('data', data)
-  console.log('status', status)
-
   if (status === 'loading') return <h4>Loading... please wait</h4>;
   if (status === 'authenticated') {
     return props.children;

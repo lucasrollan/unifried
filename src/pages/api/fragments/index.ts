@@ -20,9 +20,7 @@ export default async function handler(
             const rangeStart = start as string
             const exclusiveRangeEnd = end as string
 
-            console.log(`GET fragments for range ${rangeStart} - ${exclusiveRangeEnd}`)
             const fragments = await fragmentRepository.getByDateRange(rangeStart, exclusiveRangeEnd)
-            console.log('GET fragments response', fragments)
 
             res.status(200).json(fragments)
         }

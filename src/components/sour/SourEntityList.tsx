@@ -17,7 +17,7 @@ function SourEntityList (props: SourEntityListProps) {
     )
 
     return (<div className="SourEntityList">
-        {entities.map(a => <SourEntity iri={a.subject.id} />)}
+        {entities.map(a => <SourEntity iri={a.subject.id} key={a.subject.id} />)}
     </div>)
 }
 

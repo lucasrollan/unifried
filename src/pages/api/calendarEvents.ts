@@ -17,7 +17,6 @@ export default async function handler(
     const session = await getServerSession(req, res, authOptions)
     if (session) {
         const calendarIds = calendarIdsCsl.split(',')
-        console.log('REquest for calendar IDs', calendarIds)
         const eventsByCalendar = await fetchEventsFromGoogleCalendar(calendarIds, startDate, endDate)
 
         // Signed in

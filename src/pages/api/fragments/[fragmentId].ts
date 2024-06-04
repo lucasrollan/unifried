@@ -31,7 +31,6 @@ export default async function handler(
             res.status(200).json(createdFragment)
         } else if (req.method === 'PATCH') {
             const fragment = JSON.parse(req.body)
-            console.log('PATCH-ing fragment', fragment.id)
             const updatedFragment = await fragmentRepository.patch(fragment)
 
             // Signed in

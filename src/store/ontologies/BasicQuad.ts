@@ -35,5 +35,16 @@ export function extractGraphsFromBasicQuads(quads: BasicQuad[]) {
         graphs.add(extractGraphFromIri(quad[3]))
     })
 
-    return graphs
+    return Array.from(graphs).filter(value => (/^https?:\/\//).test(value))
+}
+
+
+export function extractPredicateGraphsFromBasicQuads(quads: BasicQuad[]) {
+    const graphs = new Set<string>()
+
+    quads.forEach(quad => {
+        graphs.add(extractGraphFromIri(quad[1]))
+    })
+
+    return Array.from(graphs)
 }

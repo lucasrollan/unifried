@@ -11,6 +11,8 @@ function PersonFullView (props: PersonFullViewProps) {
 
     return (<div className="PersonFullView">
         Person:
+        {/* TODO: extend foaf:Person to include shacl */}
+        {/* <SourPropertyTable iri={props.iri} /> */}
         <ul>
             <li>First name(s): {person['http://xmlns.com/foaf/0.1/firstName'] && person['http://xmlns.com/foaf/0.1/firstName'][0].object.id}</li>
             <li>Last name(s): {person['http://xmlns.com/foaf/0.1/lastName'] && person['http://xmlns.com/foaf/0.1/lastName'][0].object.id}</li>

@@ -1,5 +1,4 @@
 import IFragment from "@/models/IFragment"
-import FragmentSummary from "../fragmentSummary/FragmentSummary"
 import style from './style.module.css'
 import { AnchorButton } from "@blueprintjs/core"
 import { useAppDispatch } from "@/store"
@@ -19,12 +18,10 @@ type FragmentsSummaryProps = {
 function FragmentsSummary (props: FragmentsSummaryProps) {
     const dispatch = useAppDispatch()
     const handleFragmentCompleted = (fragmentId: string) => {
-        console.log('FRAGMENT WILL BE COMPLETED', fragmentId)
         dispatch(completeFragment(fragmentId))
     }
 
     const handleFragmentUpdated = (fragmentData: IFragment) => {
-        console.log('FRAGMENT WILL BE UPDATED', fragmentData)
         dispatch(updateFragment(fragmentData))
     }
 

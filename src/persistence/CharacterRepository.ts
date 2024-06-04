@@ -30,7 +30,6 @@ class CharacterRepository {
             let result: IFragment | null = null
             const airtableId = FragmentFactory.projectFragmentIdToAirtable(id)
 
-            console.log('FragmentRepository.getById', id)
             this.airtableDB('fragments').find(airtableId, function (err, record) {
                 if (err) { console.error(err); return; }
                 if (!record) {
@@ -41,7 +40,6 @@ class CharacterRepository {
 
                 const theRecord: AirtableDbEntry<IFragment> = record as any
                 result = FragmentFactory.fromAirtableRow(theRecord)
-                console.log('Retrieved fragment by id', result.id);
 
                 resolve(result)
             })
@@ -54,7 +52,6 @@ class CharacterRepository {
 
             let result: Character | null = null
 
-            console.log('CharacterRepository.getCurrentCharacter', id)
             this.airtableDB('characters').find(id, function (err, record) {
                 if (err) { console.error(err); return; }
                 if (!record) {
@@ -65,7 +62,6 @@ class CharacterRepository {
 
                 const theRecord: AirtableDbEntry<ICharacter> = record as any
                 result = CharacterFactory.fromAirtableRow(theRecord)
-                console.log('Retrieved fragment by id', result.data.id);
 
                 resolve(result)
             })
@@ -74,10 +70,8 @@ class CharacterRepository {
 
     async patch(character: Character): Promise<Character> {
         return new Promise((resolve, reject) => {
-            console.log('CharacterRepository.patch', character.data.id)
 
             const dbEntry = CharacterFactory.toAirtableRow(character.data)
-            console.log('dbEntry', dbEntry)
 
             this.airtableDB('characters').update([dbEntry], function (err: any, records: any) {
                 if (err) {

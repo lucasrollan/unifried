@@ -16,10 +16,8 @@ export default async function handler(
         // Signed in
 
         const filePath = castArray(req.query.filePath)
-        console.log('fileName', filePath)
         const basePath = path.join(process.cwd(), 'rdf')
         const fullPath = path.join(basePath, ...filePath) + '.ttl'
-        console.log('fullPath', fullPath)
 
         const data = await readFile(fullPath)
 
@@ -32,6 +30,6 @@ export default async function handler(
         res.send(data)
     } else {
         // Not Signed in
-        throw new Error('ERR00005', {cause: 'Not authenticated'})
+        throw new Error('ERR00008', {cause: 'Not authenticated'})
     }
 }

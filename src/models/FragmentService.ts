@@ -7,8 +7,6 @@ import IFragment from "./IFragment"
 
 class FragmentService {
     static async patchFragment(id: string, data: IFragment): Promise<Fragment> {
-        console.log('FragmentService.updateFragment')
-
         const currentFragment = await FragmentRepository.getInstance().getById(id)
         if (!currentFragment) {
             throw new Error('ERR00004')
@@ -29,8 +27,6 @@ class FragmentService {
     }
 
     static async markFragmentAsCompleted(fragment: Fragment): Promise<Fragment> {
-        console.log('FragmentService.markFragmentAsCompleted')
-
         const updatedFragment = FragmentFactory.fromData(fragment.data)
         updatedFragment.update({
             completionDate: (new Date()).toISOString(),
@@ -48,8 +44,6 @@ class FragmentService {
     }
 
     static async unmarkFragmentAsCompleted(fragment: Fragment): Promise<Fragment> {
-        console.log('FragmentService.markFragmentAsCompleted')
-
         const updatedFragment = FragmentFactory.fromData(fragment.data)
         updatedFragment.update({
             completionDate: undefined,

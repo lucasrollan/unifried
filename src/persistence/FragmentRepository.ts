@@ -48,7 +48,6 @@ class FragmentRepository {
             let result: IFragment | null = null
             const airtableId = FragmentFactory.projectFragmentIdToAirtable(id)
 
-            console.log('FragmentRepository.getById', id)
             this.airtableDB('fragments').find(airtableId, function (err, record) {
                 if (err) { console.error(err); return; }
                 if (!record) {
@@ -59,7 +58,6 @@ class FragmentRepository {
 
                 const theRecord: AirtableDbEntry<IFragment> = record as any
                 result = FragmentFactory.fromAirtableRow(theRecord)
-                console.log('Retrieved fragment by id', result.id);
 
                 resolve(result)
             })
@@ -81,7 +79,6 @@ class FragmentRepository {
                     modifiedDate: undefined,
                 }
             }
-            console.log('AT newRow create', newRow)
             this.airtableDB('fragments').create([newRow], function (err, records) {
                 if (err) {
                     console.error(err);
@@ -92,7 +89,6 @@ class FragmentRepository {
                     return undefined
                 }
 
-                console.log('FragmentRepository.create')
                 const theRecord: AirtableDbEntry<IFragment> = records[0] as any
                 resolve(FragmentFactory.fromAirtableRow(theRecord))
             })
@@ -103,9 +99,7 @@ class FragmentRepository {
         return new Promise((resolve, reject) => {
             // FragmentFactory.validateInvariants(fragment)
 
-            console.log('FragmentRepository.patch', fragment.id)
             const dbEntry = FragmentFactory.toAirtableRow(fragment)
-            console.log('dbEntry', dbEntry)
             this.airtableDB('fragments').update([dbEntry], function (err: any, records: any) {
                 if (err) {
                     console.error(err);

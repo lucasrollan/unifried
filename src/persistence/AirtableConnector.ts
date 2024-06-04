@@ -32,7 +32,6 @@ class AirtableConnector {
         return new Promise((resolve, reject) => {
             const results: IFragment[] = []
 
-            console.log('AirtableConnector.getAll')
             this.airtableDB('fragments').select({
                 view: "Grid view",
             }).eachPage(function page(records, fetchNextPage) {
@@ -71,7 +70,6 @@ class AirtableConnector {
         return new Promise((resolve, reject) => {
             const results: CompletedChallenge[] = []
 
-            console.log('AirtableConnector.completedChallenges')
             this.airtableDB('completedChallenges').select({
                 view: "Grid view",
             }).eachPage(function page(records, fetchNextPage) {
@@ -91,7 +89,6 @@ class AirtableConnector {
                     return;
                 }
 
-                console.log('AirtableConnector.completedChallenges results', results)
                 resolve(results)
             });
         })

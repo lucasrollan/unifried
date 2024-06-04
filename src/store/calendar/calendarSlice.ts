@@ -50,7 +50,6 @@ export const fetchCalendarsAndEvents = createAsyncThunk(
     'gcal/fetchCalendarsAndEvents',
     async (args, thunkAPI) => {
         const action = await thunkAPI.dispatch(fetchCalendars())
-        console.log('calendars action payload', action.payload)
         await thunkAPI.dispatch(fetchCalendarEvents())
     }
 )
@@ -68,7 +67,6 @@ export const fetchCalendarEvents = createAsyncThunk(
     'gcal/fetchCalendarEvents',
     async (args, thunkAPI) => {
         const state = thunkAPI.getState() as RootState
-        console.log('state.calendar.calendarIds', state.calendar.calendarIds)
         const calendarIds = state.calendar.calendarIds
             .filter(calendarId =>
                 !state.calendar.ignoredCalendarIds.includes(calendarId))
@@ -87,7 +85,6 @@ export const gcalSlice = createSlice({
         // Add reducers for additional action types here, and handle loading state as needed
         builder.addCase(fetchCalendarEvents.fulfilled, (state, action) => {
             const eventsByCalendarId = action.payload
-            console.log('eventsByCalendarId', eventsByCalendarId)
 
             Object.keys(eventsByCalendarId).forEach(calendarId => {
                 const events = eventsByCalendarId[calendarId]
@@ -106,7 +103,6 @@ export const gcalSlice = createSlice({
         })
         builder.addCase(fetchCalendars.fulfilled, (state, action) => {
             const calendars = action.payload
-            console.log('calendars', calendars)
 
             calendars.forEach(calendar => {
                 const calendarId: string = calendar.id!
