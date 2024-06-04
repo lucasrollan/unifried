@@ -1,0 +1,37 @@
+@prefix geo: <http://rollan.info/api/rdf/geography#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix dc: <http://purl.org/dc/elements/1.1/> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix dash: <http://datashapes.org/dash#> .
+
+
+geo:Country a dash:ShapeClass ;
+    rdfs:isDefinedBy <http://rollan.info/api/rdf/geography> ;
+    rdfs:label "A country" ;
+    rdfs:comment "Represents a country" ;
+    sh:property geo:name .
+
+geo:name a sh:PropertyShape ;
+    rdfs:isDefinedBy <http://rollan.info/api/rdf/geography> ;
+    sh:path geo:name ;
+    rdfs:label "Name of the territory" ;
+    rdfs:comment "" ;
+    rdfs:domain geo:Country;
+    rdfs:range sh:Literal .
+
+geo:IT a geo:Country ;
+    geo:name "Italy"@en ;
+    geo:name "Italia"@es ;
+    geo:name "Italia"@it .
+
+geo:AR a geo:Country ;
+    geo:name "Argentina"@en ;
+    geo:name "Argentina"@es ;
+    geo:name "Argentina"@it .
+
+geo:NL a geo:Country ;
+    geo:name "Netherlands"@en ;
+    geo:name "Paises Bajos"@es ;
+    geo:name "Paesi Bassi"@it .

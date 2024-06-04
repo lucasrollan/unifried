@@ -1,0 +1,29 @@
+@prefix ler: <http://rollan.info/api/rdf/people/RollanLucas#> .
+@prefix person: <http://rollan.info/api/rdf/person#> .
+@prefix geo: <http://rollan.info/api/rdf/geography#> .
+@prefix doc: <http://rollan.info/api/rdf/document#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix dc: <http://purl.org/dc/elements/1.1/> .
+
+ler: a foaf:Person ;
+    foaf:lastName "Rollan" ;
+    foaf:firstName "Lucas Emiliano" .
+
+ler:ItalianPassport a doc:ID ;
+    doc:number 'YCD1238162937' ;
+    doc:holder ler: ;
+    doc:issuedBy geo:IT .
+
+ler:ItalianPassportScanPdf a doc:Scan ;
+    doc:scanOf ler:ItalianPassport;
+    doc:fileFormat 'jpg';
+    doc:fileName '/api/private/rollan_lucas_it_passport.jpg'.
+
+ler:ArgentinianPassport a doc:ID ;
+    doc:number 'AAC8128312931' ;
+    doc:holder ler: ;
+    doc:issuedBy geo:AR .
+

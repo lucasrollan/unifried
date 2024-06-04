@@ -24,7 +24,9 @@
     "eslint-config-next": "13.4.19",
     "googleapis": "^126.0.1",
     "lodash": "^4.17.21",
+    "mime-types": "^2.1.35",
     "moment": "^2.29.4",
+    "n3": "^1.17.3",
     "next": "13.4.19",
     "next-auth": "^4.22.1",
     "react": "18.2.0",
@@ -34,6 +36,8 @@
     "typescript": "5.2.2"
   },
   "devDependencies": {
-    "@types/lodash": "^4.14.199"
+    "@types/lodash": "^4.14.199",
+    "@types/mime-types": "^2.1.4",
+    "@types/n3": "^1.16.4"
   }
 }

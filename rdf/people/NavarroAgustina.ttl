@@ -1,0 +1,18 @@
+@prefix an: <http://rollan.info/api/rdf/people/NavarroAgustina#> .
+@prefix person: <http://rollan.info/api/rdf/person#> .
+@prefix geo: <http://rollan.info/api/rdf/geography#> .
+@prefix doc: <http://rollan.info/api/rdf/document#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix dc: <http://purl.org/dc/elements/1.1/> .
+
+an: a foaf:Person ;
+    foaf:lastName "Navarro" ;
+    foaf:firstName "Agustina" .
+
+an:ArgentinianPassport a doc:Passport ;
+    doc:holder an: ;
+    doc:issuedBy geo:AR .
+

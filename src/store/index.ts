@@ -4,6 +4,7 @@ import timelineSlice from './timeline/timelineSlice'
 import calendarSlice from './calendar/calendarSlice'
 import fragmentSlice from './fragments/fragmentSlice'
 import actorsSlice from './actors/actorsSlice'
+import ontologiesSlice from './ontologies/ontologiesSlice'
 
 export const store = configureStore({
   reducer: {
@@ -11,6 +12,7 @@ export const store = configureStore({
     calendar: calendarSlice,
     fragments: fragmentSlice,
     actors: actorsSlice,
+    ontologies: ontologiesSlice,
   },
 })
 
