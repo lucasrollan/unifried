@@ -35,7 +35,7 @@ function SourPropertyTable (props: SourPropertyTableProps) {
         <ul>
             {
                 values(entity).flat().map(quad =>
-                    <li>{quad.predicate.id}: {quad.object.id}</li>
+                    <li key={quad.predicate.id}>{quad.predicate.id}: {quad.object.id}</li>
                 )
             }
             {/* {
