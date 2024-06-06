@@ -1,18 +1,13 @@
 import { useEffect, useState } from "react";
-import { useAppDispatch } from "@/store"
-import { fetchOntologyGraph } from "@/store/ontologies/ontologiesSlice"
 import SourEntity from "@/components/sour/SourEntity";
 
-export default function SourPage(props: any) {
-    const dispatch = useAppDispatch()
-
+export default function SourPage() {
     const [iri, setIri] = useState<string>('')
 
     useEffect(() => {
         const pathname = window.location.pathname.replace(/^\/sour/, '')
         const newIri = `http://rollan.info/api/rdf${pathname}#`
         setIri(newIri)
-        dispatch(fetchOntologyGraph(newIri))
     }, [iri])
 
 /**

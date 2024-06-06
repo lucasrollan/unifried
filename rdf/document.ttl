@@ -1,4 +1,5 @@
 @prefix doc: <http://rollan.info/api/rdf/document#> .
+@prefix geo: <http://rollan.info/api/rdf/social#> .
 @prefix geo: <http://rollan.info/api/rdf/geography#> .
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
@@ -6,76 +7,69 @@
 @prefix dc: <http://purl.org/dc/elements/1.1/> .
 @prefix sh: <http://www.w3.org/ns/shacl#> .
 @prefix dash: <http://datashapes.org/dash#> .
-@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+doc: a dash:ShapeClass ;
+    rdfs:label "Document"@en ;
+    rdfs:comment "Official document"@en .
 
 doc:ID a dash:ShapeClass ;
-    rdfs:isDefinedBy <http://rollan.info/api/rdf/document> ;
-    rdfs:subClassOf foaf:Document ;
+    rdfs:subClassOf doc: ;
     rdfs:label "Identification"@en ;
-    rdfs:comment "Identification of a person" ;
+    rdfs:comment "Identification of a person"@en ;
     sh:property doc:number ;
     sh:property doc:holder ;
     sh:property doc:issuedBy .
 
 doc:number a sh:PropertyShape ;
-    rdfs:isDefinedBy <http://rollan.info/api/rdf/document> ;
     sh:path doc:number ;
     rdfs:label "Number"@en ;
-    rdfs:comment "ID number" ;
-    sh:class sh:Literal.
+    rdfs:comment "ID number"@en ;
+    sh:class sh:Literal .
 
 doc:holder a sh:PropertyShape ;
-    rdfs:isDefinedBy <http://rollan.info/api/rdf/document> ;
     sh:path doc:holder ;
     rdfs:label "Holder"@en ;
-    rdfs:comment "Person identified by this ID" ;
-    sh:class foaf:Person .
+    rdfs:comment "Person identified by this ID"@en ;
+    sh:class social:Person .
 
 doc:issuedBy a sh:PropertyShape ;
-    rdfs:isDefinedBy <http://rollan.info/api/rdf/document> ;
     sh:path doc:issuedBy ;
-    rdfs:label "Issuer"@en ;
-    rdfs:comment "Country who issued the id" ;
+    rdfs:label "sssuer"@en ;
+    rdfs:comment "Country who issued the id"@en ;
     sh:class geo:Country .
 
 doc:scan a sh:PropertyShape ;
-    rdfs:isDefinedBy <http://rollan.info/api/rdf/document> ;
     sh:path doc:scan ;
-    rdfs:label "Scan of the ID" ;
-    rdfs:comment "" ;
+    rdfs:label "scan"@en ;
+    rdfs:comment "Scan of the ID"@en ;
     sh:class sh:Literal .
 
 doc:Passport a dash:ShapeClass ;
-    rdfs:isDefinedBy <http://rollan.info/api/rdf/document> ;
-    rdfs:label "Passport" ;
-    rdfs:comment "A passport" ;
+    rdfs:label "passport" ;
+    rdfs:comment "A passport"@en ;
     rdfs:subClassOf doc:ID .
 
 doc:Scan a dash:ShapeClass ;
-    rdfs:isDefinedBy <http://rollan.info/api/rdf/document> ;
-    rdfs:label "Scan" ;
-    rdfs:comment "Scan of an ID or document" ;
+    rdfs:label "scan"@en ;
+    rdfs:comment "Scan of an ID or document"@en ;
     sh:property doc:scanOf ;
     sh:property doc:fileFormat ;
     sh:property doc:fileName .
 
 doc:scanOf a sh:PropertyShape ;
-    rdfs:isDefinedBy <http://rollan.info/api/rdf/document> ;
     sh:path doc:scanOf ;
-    rdfs:label "Id or document this is a scan of" ;
-    rdfs:comment "" ;
+    rdfs:label "scan of"@en ;
+    rdfs:comment "Id or document this is a scan of"@en ;
     sh:class doc:Id .
 
 doc:fileFormat a sh:PropertyShape ;
-    rdfs:isDefinedBy <http://rollan.info/api/rdf/document> ;
     sh:path doc:fileFormat ;
-    rdfs:label "Format of this file" ;
-    rdfs:comment "e.g.: jpg, png, pdf" ;
+    rdfs:label "sormat"@en ;
+    rdfs:comment "e.g.: jpg, png, pdf"@en ;
     sh:class sh:Literal .
 
 doc:fileName a sh:PropertyShape ;
-    rdfs:isDefinedBy <http://rollan.info/api/rdf/document> ;
     sh:path doc:fileName ;
-    rdfs:label "Path of the file" ;
-    rdfs:comment "" ;
+    rdfs:label "URL"@en ;
+    rdfs:comment "Location of the file"@en ;
     sh:class sh:Literal .

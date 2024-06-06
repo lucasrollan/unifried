@@ -1,0 +1,32 @@
+@prefix social: <http://rollan.info/api/rdf/social#> .
+@prefix geo: <http://rollan.info/api/rdf/geography#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix dc: <http://purl.org/dc/elements/1.1/> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix dash: <http://datashapes.org/dash#> .
+
+social:SocialEntity a dash:ShapeClass ;
+    rdfs:label "person"@en ;
+    rdfs:comment "A person" .
+
+social:Person a dash:ShapeClass ;
+    rdfs:subClassOf social:SocialEntity ;
+    rdfs:label "person"@en ;
+    rdfs:comment "A person" ;
+    sh:property social:firstName ;
+    sh:property social:lastName .
+
+social:firstName a sh:PropertyShape ;
+    sh:path social:firstName ;
+    rdfs:label "first name(s)"@en ;
+    rdfs:comment "First name(s)"@en ;
+    sh:class sh:Literal .
+
+social:lastName a sh:PropertyShape ;
+    sh:path social:firstName ;
+    rdfs:label "last name(s)"@en ;
+    rdfs:comment "Last name(s)"@en ;
+    sh:class sh:Literal .
+

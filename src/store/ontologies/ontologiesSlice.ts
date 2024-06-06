@@ -1,13 +1,12 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import { Parser, Quad, NamedNode } from "n3"
-import { BasicQuad, extractGraphFromIri, extractGraphsFromBasicQuads, extractPredicateGraphsFromBasicQuads, projectQuadToBasicQuad } from './BasicQuad'
+import { BasicQuad, extractGraphFromIri, projectQuadToBasicQuad } from './BasicQuad'
 import { Dictionary } from "@reduxjs/toolkit"
-import { forEach, keys, mapValues } from 'lodash'
-import { RootState } from '..'
+import { mapValues } from 'lodash'
 
 
 export interface OntologiesState {
-    graphsByIri: Dictionary<Graph>,
+    graphsByIri: Dictionary<Graph | null>, // null means it is being fetched
 }
 
 export type Graph = {
@@ -60,8 +59,7 @@ const api_fetchOntologyGraph = async function (iri: string): Promise<Graph> {
         const result = await fetch(normalizedIri)
         content = await result.text()
     } else {
-        // const result = await fetch(`http://localhost:3000/api/rdf/proxy?iri=${iri}`)
-        // content = await result.text()
+        console.warn('SKIPPED EXTERNAL DOC', iri)
     }
 
     const graph = await parseOntologyGraph(content, iri)
@@ -71,46 +69,42 @@ const api_fetchOntologyGraph = async function (iri: string): Promise<Graph> {
 export const fetchOntologyGraph = createAsyncThunk(
     'ontologies/fetch',
     async (iri: string, thunkApi) => {
-        const result = await api_fetchOntologyGraph(iri)
-        console.log('ontologies/fetch result for', iri, result)
+        const normalizedIri = iri.replace(/#.*$/, '')
+        thunkApi.dispatch(fetchOntologyGraphStarted(iri))
 
-        const referencedGraphs = extractPredicateGraphsFromBasicQuads(result.quads)
-        console.log('referencedGraphs', referencedGraphs)
-        const state = thunkApi.getState() as RootState
-        const graphsByIri = state.ontologies.graphsByIri
+        try {
+            const result = await api_fetchOntologyGraph(normalizedIri)
 
-        for (let graphIri of referencedGraphs) {
-            if (graphIri !== iri && !graphsByIri[iri]) {
-                // Not the one that we just fetched, and not already fetched
-                console.log('will fetch referenced graph', graphIri)
-                thunkApi.dispatch(fetchOntologyGraph(graphIri))
-            }
+            return result
+        } catch(e) {
+            thunkApi.dispatch(fetchOntologyGraphFailed(iri))
         }
-
-        // TODO: fetch graphs referenced by the current graph
-        // TODO: if the response was cached, don't process it again
-        // TODO: How do I deal with local modifications that were not yet persisted?
-
-        return result
     }
 )
 
 export const ontologiesSlice = createSlice({
     name: 'ontologies',
     initialState,
-    reducers: {},
+    reducers: {
+        fetchOntologyGraphStarted: (state, action) => {
+            state.graphsByIri[action.payload] = null
+        },
+        fetchOntologyGraphFailed: (state, action) => {
+            state.graphsByIri[action.payload] = undefined
+        },
+    },
     extraReducers: (builder) => {
         builder.addCase(fetchOntologyGraph.fulfilled, (state, action) => {
             const fetchedGraph = action.payload
 
-            console.log('graph', fetchedGraph)
-
-            state.graphsByIri[fetchedGraph.iri] = fetchedGraph
+            if (fetchedGraph) {
+                state.graphsByIri[fetchedGraph.iri] = fetchedGraph
+            }
         })
     },
 })
 
 // Action creators are generated for each case reducer function
-export const { } = ontologiesSlice.actions
+export const { fetchOntologyGraphStarted, fetchOntologyGraphFailed } = ontologiesSlice.actions
 
 export default ontologiesSlice.reducer
