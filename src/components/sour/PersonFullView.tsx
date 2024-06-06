@@ -1,22 +1,14 @@
-import { useAppSelector } from "@/store"
-import { selectSubjectQuadsGroupedByPredicate } from "@/store/ontologies/selectors"
 import SourEntityList from "./SourEntityList"
+import SourPropertyTable from "./SourPropertyTable"
 
 interface PersonFullViewProps {
     iri: string,
 }
 
 function PersonFullView (props: PersonFullViewProps) {
-    const person = useAppSelector(selectSubjectQuadsGroupedByPredicate(props.iri))
-
     return (<div className="PersonFullView">
         Person:
-        {/* TODO: extend foaf:Person to include shacl */}
-        {/* <SourPropertyTable iri={props.iri} /> */}
-        <ul>
-            <li>First name(s): {person['http://xmlns.com/foaf/0.1/firstName'] && person['http://xmlns.com/foaf/0.1/firstName'][0].object.id}</li>
-            <li>Last name(s): {person['http://xmlns.com/foaf/0.1/lastName'] && person['http://xmlns.com/foaf/0.1/lastName'][0].object.id}</li>
-        </ul>
+        <SourPropertyTable iri={props.iri} />
         Documents:
         <SourEntityList
             graphIri={props.iri} // TODO pass it in the fourth term of the quad instead (after refactor)
