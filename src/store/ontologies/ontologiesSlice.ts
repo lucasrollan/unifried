@@ -3,6 +3,7 @@ import { Parser, Quad, NamedNode } from "n3"
 import { BasicQuad, extractGraphFromIri, projectQuadToBasicQuad } from './BasicQuad'
 import { Dictionary } from "@reduxjs/toolkit"
 import { mapValues } from 'lodash'
+import { RootState } from '..'
 
 
 export interface OntologiesState {
@@ -12,7 +13,8 @@ export interface OntologiesState {
 export type Graph = {
     iri: string,
     prefixes: Dictionary<string>,
-    quads: Array<BasicQuad>
+    quads: Array<BasicQuad>,
+    fetching: boolean,
 }
 
 const initialState: OntologiesState = {
@@ -25,6 +27,7 @@ async function parseOntologyGraph(doc: string, iri: string): Promise<Graph> {
         iri: extractGraphFromIri(iri),
         prefixes: {},
         quads: [],
+        fetching: false,
     }
 
     const promise: Promise<Graph> = new Promise((resolve, reject) => {
@@ -71,6 +74,15 @@ export const fetchOntologyGraph = createAsyncThunk(
     'ontologies/fetch',
     async (iri: string, thunkApi) => {
         const normalizedIri = iri.replace(/#.*$/, '')
+
+        const state = thunkApi.getState() as RootState
+        const graph = state.ontologies.graphsByIri[iri]
+
+        if (graph && (graph.quads.length || graph.fetching)) {
+            // already fetched, or fetching now
+            return
+        }
+
         thunkApi.dispatch(fetchOntologyGraphStarted(iri))
 
         try {
@@ -88,10 +100,18 @@ export const ontologiesSlice = createSlice({
     initialState,
     reducers: {
         fetchOntologyGraphStarted: (state, action) => {
-            state.graphsByIri[action.payload] = null
+            state.graphsByIri[action.payload] = state.graphsByIri[action.payload] || {
+                iri: action.payload,
+                prefixes: {},
+                quads: [],
+                fetching: true,
+            }
         },
         fetchOntologyGraphFailed: (state, action) => {
-            state.graphsByIri[action.payload] = undefined
+            const graph = state.graphsByIri[action.payload]
+            if (graph) {
+                graph.fetching = false
+            }
         },
     },
     extraReducers: (builder) => {
@@ -99,7 +119,10 @@ export const ontologiesSlice = createSlice({
             const fetchedGraph = action.payload
 
             if (fetchedGraph) {
-                state.graphsByIri[fetchedGraph.iri] = fetchedGraph
+                state.graphsByIri[fetchedGraph.iri] = {
+                    ...fetchedGraph,
+                    fetching: false,
+                }
             }
         })
     },
