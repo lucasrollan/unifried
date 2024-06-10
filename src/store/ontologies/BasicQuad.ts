@@ -14,15 +14,21 @@ export function projectBasicQuadToQuad(basicQuad: BasicQuad): Quad {
 
 export function projectQuadToBasicQuad(quad: Quad): BasicQuad {
     return [
-        quad.subject.value,
-        quad.predicate.value,
-        quad.object.value,
-        quad.graph.value,
+        normalizeIri(quad.subject.value),
+        normalizeIri(quad.predicate.value),
+        normalizeIri(quad.object.value),
+        normalizeIri(quad.graph.value),
     ]
 }
 
 export function extractGraphFromIri(iri: string) {
     return iri.replace(/#.*$/, '')
+}
+
+export function normalizeIri(iri: string) {
+    return iri
+        .replace(/#$/, '')
+        .replace(/\/$/, '')
 }
 
 export function extractGraphsFromBasicQuads(quads: BasicQuad[]) {

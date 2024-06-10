@@ -1,4 +1,4 @@
-@prefix ler: <http://rollan.info/api/rdf/people/RollanLucas#> .
+@prefix : <http://rollan.info/api/rdf/people/RollanLucas#> .
 @prefix person: <http://rollan.info/api/rdf/person#> .
 @prefix social: <http://rollan.info/api/rdf/social#> .
 @prefix geo: <http://rollan.info/api/rdf/geography#> .
@@ -9,22 +9,22 @@
 @prefix dc: <http://purl.org/dc/elements/1.1/> .
 @prefix pim: <http://www.w3.org/2000/10/swap/pim/contact> .
 
-ler: a social:Person ;
+: a social:Person ;
     social:lastName "Rollan" ;
     social:firstName "Lucas Emiliano" .
 
-ler:ItalianPassport a doc:ID ;
+:ItalianPassport a doc:Passport ;
     doc:number 'YCD1238162937' ;
-    doc:holder ler: ;
+    doc:holder : ;
     doc:issuedBy geo:IT .
 
-ler:ItalianPassportScanPdf a doc:Scan ;
-    doc:scanOf ler:ItalianPassport;
+:ItalianPassportScanPdf a doc:Scan ;
+    doc:scanOf :ItalianPassport;
     doc:fileFormat 'jpg';
     doc:fileName '/api/private/rollan_lucas_it_passport.jpg'.
 
-ler:ArgentinianPassport a doc:ID ;
+:ArgentinianPassport a doc:Passport ;
     doc:number 'AAC8128312931' ;
-    doc:holder ler: ;
+    doc:holder : ;
     doc:issuedBy geo:AR .
 

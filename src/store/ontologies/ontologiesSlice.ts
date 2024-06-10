@@ -42,6 +42,7 @@ async function parseOntologyGraph(doc: string, iri: string): Promise<Graph> {
                 } else {
                     graph.prefixes = mapValues(prefixes, v => v.value)
 
+                    console.log('document', doc, 'graph', graph)
                     resolve(graph)
                 }
             });

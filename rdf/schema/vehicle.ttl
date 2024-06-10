@@ -1,0 +1,53 @@
+@prefix vehicle: <http://rollan.info/api/rdf/schema/vehicle#> .
+@prefix social: <http://rollan.info/api/rdf/social#> .
+@prefix geo: <http://rollan.info/api/rdf/geography#> .
+@prefix doc: <http://rollan.info/api/rdf/document#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix dc: <http://purl.org/dc/elements/1.1/> .
+@prefix pim: <http://www.w3.org/2000/10/swap/pim/contact> .
+
+vehicle: a dash:ShapeClass ;
+    rdfs:label "vehicle"@en ;
+    rdfs:comment "A vehicle"@en ;
+    sh:property vehicle:owner .
+
+vehicle:Automobile a dash:ShapeClass ;
+    rdfs:subClassOf vehicle: ;
+    rdfs:label "automobile"@en ;
+    rdfs:comment "A car"@en;
+    sh:property vehicle:licensePlate ;
+    sh:property vehicle:make ;
+    sh:property vehicle:model ;
+    sh:property vehicle:year  .
+
+vehicle:owner a sh:PropertyShape ;
+    sh:path vehicle:owner ;
+    rdfs:label "owner"@en ;
+    rdfs:comment "Owner of the vehicle"@en ;
+    sh:class social:SocialEntity .
+
+vehicle:licensePlate a sh:PropertyShape ;
+    sh:path vehicle:licensePlate ;
+    rdfs:label "license plate"@en ;
+    rdfs:comment "License plate number"@en ;
+    sh:class sh:Literal .
+
+vehicle:make a sh:PropertyShape ;
+    sh:path vehicle:make ;
+    rdfs:label "make"@en ;
+    rdfs:comment "Make/brand of the vehicle"@en ;
+    sh:class sh:Literal .
+
+vehicle:model a sh:PropertyShape ;
+    sh:path vehicle:model ;
+    rdfs:label "model"@en ;
+    rdfs:comment "Model of the vehicle"@en ;
+    sh:class sh:Literal .
+
+vehicle:year a sh:PropertyShape ;
+    sh:path vehicle:year ;
+    rdfs:label "year"@en ;
+    rdfs:comment "Year the vehicle was sold (or should be 'manufactured' instead)"@en ;
+    sh:class sh:Literal .

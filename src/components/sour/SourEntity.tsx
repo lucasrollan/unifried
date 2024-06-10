@@ -5,6 +5,7 @@ import DocumentFullView from "./DocumentFullView"
 import AttachmentFullView from "./AttachmentFullView"
 import { fetchOntologyGraph } from "@/store/ontologies/ontologiesSlice"
 import { useEffect } from "react"
+import DefaultFullView from "./DefaultFullView"
 
 export type SourEntityProps = {
     iri: string
@@ -13,7 +14,9 @@ export type SourEntityProps = {
 const RDFS_TYPE = 'http://www.w3.org/1999/02/22-rdf-syntax-ns#type'
 const SOUR_PERSON = 'http://rollan.info/api/rdf/social#Person'
 const SOUR_DOCUMENT_ID = 'http://rollan.info/api/rdf/document#ID'
+const SOUR_DOCUMENT_PASSPORT = 'http://rollan.info/api/rdf/document#Passport'
 const SOUR_DOCUMENT_SCAN = 'http://rollan.info/api/rdf/document#Scan'
+const SOUR_AUTOMOBILE = 'http://rollan.info/api/rdf/schema/vehicle#Automobile'
 
 export default function SourEntity (props: SourEntityProps) {
     const dispatch = useAppDispatch()
@@ -35,9 +38,11 @@ export default function SourEntity (props: SourEntityProps) {
             return <PersonFullView iri={props.iri} />
         case SOUR_DOCUMENT_ID:
             return <DocumentFullView iri={props.iri} />
+        case SOUR_DOCUMENT_PASSPORT:
+            return <DocumentFullView iri={props.iri} />
         case SOUR_DOCUMENT_SCAN:
             return <AttachmentFullView iri={props.iri} />
         default:
-            break;
+            return <DefaultFullView iri={props.iri} />
     }
 }

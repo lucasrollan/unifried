@@ -12,6 +12,7 @@ function SourPropertyTable (props: SourPropertyTableProps) {
     const dispatch = useAppDispatch()
 
     const entity = useAppSelector(selectSubjectQuadsGroupedByPredicate(props.iri))
+    console.log('entity', props.iri, entity)
     // const entityPredicateIris = keys(entity)
     // const entityPredicateSchemas = useAppSelector(selectSubjectsQuadsGroupedByPredicate(entityPredicateIris))
 

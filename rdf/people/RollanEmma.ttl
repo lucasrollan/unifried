@@ -1,4 +1,4 @@
-@prefix : <http://rollan.info/api/rdf/people/NavarroAgustina#> .
+@prefix : <http://rollan.info/api/rdf/people/RollanEmma#> .
 @prefix person: <http://rollan.info/api/rdf/person#> .
 @prefix social: <http://rollan.info/api/rdf/social#> .
 @prefix geo: <http://rollan.info/api/rdf/geography#> .
@@ -9,11 +9,15 @@
 @prefix dc: <http://purl.org/dc/elements/1.1/> .
 
 : a social:Person ;
-    social:lastName "Navarro" ;
-    social:firstName "Agustina" .
+    social:lastName "Emma" ;
+    social:firstName "Rollan" .
+
+:ItalianPassport a doc:Passport ;
+    doc:number 'YHD11413431' ;
+    doc:holder : ;
+    doc:issuedBy geo:IT .
 
 :ArgentinianPassport a doc:Passport ;
-    doc:number 'ARG038376626' ;
+    doc:number 'ARG44555443' ;
     doc:holder : ;
     doc:issuedBy geo:AR .
-

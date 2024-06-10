@@ -1,3 +1,4 @@
+'use client'
 import { useEffect, useState } from "react";
 import SourEntity from "@/components/sour/SourEntity";
 
@@ -6,7 +7,7 @@ export default function SourPage() {
 
     useEffect(() => {
         const pathname = window.location.pathname.replace(/^\/sour/, '')
-        const newIri = `http://rollan.info/api/rdf${pathname}#`
+        const newIri = `http://rollan.info/api/rdf${pathname}`
         setIri(newIri)
     }, [iri])
 
