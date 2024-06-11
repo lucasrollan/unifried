@@ -5,7 +5,6 @@ import { Dictionary } from "@reduxjs/toolkit"
 import { mapValues } from 'lodash'
 import { RootState } from '..'
 
-
 export interface OntologiesState {
     graphsByIri: Dictionary<Graph>,
     graphStatusByIri: Dictionary<GraphStatus>,
