@@ -1,4 +1,3 @@
-import PersonTypeChip from "./PersonTypeChip"
 import SourEntityList from "./SourEntityList"
 import SourPropertyTable from "./SourPropertyTable"
 
@@ -8,7 +7,6 @@ interface PersonFullViewProps {
 
 function PersonFullView (props: PersonFullViewProps) {
     return (<div className="PersonFullView">
-        <PersonTypeChip />
         <SourPropertyTable iri={props.iri} />
         Documents:
         <SourEntityList

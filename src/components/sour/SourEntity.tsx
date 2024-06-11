@@ -36,17 +36,27 @@ export default function SourEntity (props: SourEntityProps) {
     )
 
     const type = entityTypes[0]?.object.id
+    let element
 
     switch (type) {
         case SOUR_PERSON:
-            return <PersonFullView iri={props.iri} />
+            element = <PersonFullView iri={props.iri} />
+            break
         case SOUR_DOCUMENT_ID:
-            return <DocumentFullView iri={props.iri} />
+            element = <DocumentFullView iri={props.iri} />
+            break
         case SOUR_DOCUMENT_PASSPORT:
-            return <DocumentFullView iri={props.iri} />
+            element = <DocumentFullView iri={props.iri} />
+            break
         case SOUR_DOCUMENT_SCAN:
-            return <AttachmentFullView iri={props.iri} />
+            element = <AttachmentFullView iri={props.iri} />
+            break
         default:
-            return <DefaultFullView iri={props.iri} />
+            element = <DefaultFullView iri={props.iri} />
+            break
     }
+
+    return <div className="SourEntity" style={{ marginLeft: '12px' }}>
+        {element}
+    </div>
 }

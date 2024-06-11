@@ -11,7 +11,6 @@ function DocumentFullView (props: DocumentFullViewProps) {
     const doc = useAppSelector(state => selectSubjectQuadsGroupedByPredicate(state, props.iri))
 
     return (<div style={{border: '1px solid gray'}} className="DocumentFullView">
-        Details:
         <SourPropertyTable iri={props.iri} />
         Attachments:
         <SourEntityList
