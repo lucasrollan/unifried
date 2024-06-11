@@ -7,27 +7,34 @@ import { RootState } from '..'
 
 
 export interface OntologiesState {
-    graphsByIri: Dictionary<Graph | null>, // null means it is being fetched
+    graphsByIri: Dictionary<Graph>,
+    graphStatusByIri: Dictionary<GraphStatus>,
 }
 
 export type Graph = {
     iri: string,
     prefixes: Dictionary<string>,
     quads: Array<BasicQuad>,
-    fetching: boolean,
+}
+
+export type GraphStatus = {
+    iri: string,
+    fetching?: boolean,
+    fetchedSucceeded?: boolean,
 }
 
 const initialState: OntologiesState = {
     graphsByIri: {},
+    graphStatusByIri: {},
 }
 
 async function parseOntologyGraph(doc: string, iri: string): Promise<Graph> {
     const parser = new Parser();
+    const graphIriString = extractGraphFromIri(iri)
     const graph: Graph = {
-        iri: extractGraphFromIri(iri),
+        iri: graphIriString,
         prefixes: {},
         quads: [],
-        fetching: false,
     }
 
     const promise: Promise<Graph> = new Promise((resolve, reject) => {
@@ -39,7 +46,7 @@ async function parseOntologyGraph(doc: string, iri: string): Promise<Graph> {
                 }
 
                 if (quad) {
-                    const graphIri = new NamedNode(iri)
+                    const graphIri = new NamedNode(graphIriString)
                     const quadWithGraph = new Quad(quad.subject, quad.predicate, quad.object, graphIri)
                     graph.quads.push(projectQuadToBasicQuad(quadWithGraph))
                 } else {
@@ -57,16 +64,16 @@ async function parseOntologyGraph(doc: string, iri: string): Promise<Graph> {
 const api_fetchOntologyGraph = async function (iri: string): Promise<Graph> {
     let content = ''
 
-    if (/rollan\.info/.test(iri)) {
-        const localizedIri = iri.replace('rollan.info', 'localhost:3000')
-        const normalizedIri = localizedIri.replace(/#.*$/, '')
-        const result = await fetch(normalizedIri)
+    let normalizedIri = iri.replace(/#.*$/, '')
+    if (/rollan\.info/.test(normalizedIri)) {
+        const localizedIri = normalizedIri.replace('rollan.info', 'localhost:3000')
+        const result = await fetch(localizedIri)
         content = await result.text()
     } else {
-        console.warn('SKIPPED EXTERNAL DOC', iri)
+        console.warn('SKIPPED EXTERNAL DOC', normalizedIri)
     }
 
-    const graph = await parseOntologyGraph(content, iri)
+    const graph = await parseOntologyGraph(content, normalizedIri)
     return graph
 }
 
@@ -74,23 +81,31 @@ export const fetchOntologyGraph = createAsyncThunk(
     'ontologies/fetch',
     async (iri: string, thunkApi) => {
         const normalizedIri = iri.replace(/#.*$/, '')
+        console.log('fetching graph', normalizedIri)
 
         const state = thunkApi.getState() as RootState
-        const graph = state.ontologies.graphsByIri[iri]
+        const graph = state.ontologies.graphsByIri[normalizedIri]
+        const graphStatus = state.ontologies.graphStatusByIri[normalizedIri]
 
-        if (graph && (graph.quads.length || graph.fetching)) {
-            // already fetched, or fetching now
+        if (graph || graphStatus?.fetching) {
+            console.log('No need to fetch', normalizedIri)
             return
         }
 
-        thunkApi.dispatch(fetchOntologyGraphStarted(iri))
+        if (!/rollan\.info/.test(normalizedIri)) {
+            console.log('external resource, skip!')
+            return
+        }
+
+        thunkApi.dispatch(fetchOntologyGraphStarted(normalizedIri))
 
         try {
             const result = await api_fetchOntologyGraph(normalizedIri)
 
             return result
         } catch(e) {
-            thunkApi.dispatch(fetchOntologyGraphFailed(iri))
+            console.error(e)
+            thunkApi.dispatch(fetchOntologyGraphFailed(normalizedIri))
         }
     }
 )
@@ -100,28 +115,33 @@ export const ontologiesSlice = createSlice({
     initialState,
     reducers: {
         fetchOntologyGraphStarted: (state, action) => {
-            state.graphsByIri[action.payload] = state.graphsByIri[action.payload] || {
+            state.graphStatusByIri[action.payload] = {
                 iri: action.payload,
-                prefixes: {},
-                quads: [],
                 fetching: true,
+                fetchedSucceeded: undefined,
             }
         },
         fetchOntologyGraphFailed: (state, action) => {
-            const graph = state.graphsByIri[action.payload]
-            if (graph) {
-                graph.fetching = false
+            const graphStatus = state.graphStatusByIri[action.payload]
+            if (graphStatus) {
+                graphStatus.fetching = false
+                graphStatus.fetchedSucceeded = false
             }
         },
     },
     extraReducers: (builder) => {
         builder.addCase(fetchOntologyGraph.fulfilled, (state, action) => {
             const fetchedGraph = action.payload
+            console.log('------------ FETCHED GRAPH', fetchedGraph)
 
             if (fetchedGraph) {
                 state.graphsByIri[fetchedGraph.iri] = {
                     ...fetchedGraph,
+                }
+                state.graphStatusByIri[fetchedGraph.iri] = {
+                    iri: fetchedGraph.iri,
                     fetching: false,
+                    fetchedSucceeded: true,
                 }
             }
         })

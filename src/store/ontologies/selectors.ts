@@ -27,7 +27,6 @@ export const selectGraphFromIri = createSelector(
         graphsByIri[graphIri]
 )
 
-
 export const selectQuadsFromGraphThatMatchTerms = createSelector(
     selectGraphFromIri,
     (state: RootState, graphIri: string, terms: OptionalTermsBasicQuad = [null, null, null, null]) => terms,
@@ -72,15 +71,25 @@ export const selectQuadsByObject = createSelector(
             .map(projectBasicQuadToQuad)
 )
 
-// BUG: This is wrong, createSelector should be the main thing, otherwise memoization is useless
-export const selectSubjectQuadsGroupedByPredicate = (subject: string) =>
-    createSelector(
-        (state: RootState) => selectQuadsBySubject(state, subject),
+export const selectSubjectQuadsGroupedByPredicate = createSelector(
+        selectQuadsBySubject,
         quads =>
             groupBy(quads, 'predicate.id')
     )
 
-export const selectSubjectsQuadsGroupedByPredicate = (subjects: string[]) =>
-    (state: RootState) =>
-        subjects.map(subject => selectSubjectQuadsGroupedByPredicate(subject)(state))
+export const selectSubjectsQuadsGroupedByPredicate = createSelector(
+    (state: RootState,) => state,
+    (state: RootState, subjects: string[]) => subjects,
+    (state, subjects) =>
+        subjects.map(subject => selectSubjectQuadsGroupedByPredicate(state, subject))
+)
 
+export const selectSubjectQuadsGroupedByPredicate2 = createSelector(
+    selectAllQuads,
+    (state: RootState, subjectIri: string) => subjectIri,
+    (allQuads, subjectIri) =>
+        groupBy(
+            allQuads.filter(quad => quad[0] === subjectIri),
+            '1'
+        )
+)

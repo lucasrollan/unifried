@@ -1,5 +1,5 @@
 @prefix doc: <http://rollan.info/api/rdf/document#> .
-@prefix geo: <http://rollan.info/api/rdf/social#> .
+@prefix social: <http://rollan.info/api/rdf/social#> .
 @prefix geo: <http://rollan.info/api/rdf/geography#> .
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
@@ -9,12 +9,12 @@
 @prefix dash: <http://datashapes.org/dash#> .
 
 doc: a dash:ShapeClass ;
-    rdfs:label "Document"@en ;
+    rdfs:label "document"@en ;
     rdfs:comment "Official document"@en .
 
 doc:ID a dash:ShapeClass ;
     rdfs:subClassOf doc: ;
-    rdfs:label "Identification"@en ;
+    rdfs:label "identification"@en ;
     rdfs:comment "Identification of a person"@en ;
     sh:property doc:number ;
     sh:property doc:holder ;
@@ -22,19 +22,19 @@ doc:ID a dash:ShapeClass ;
 
 doc:number a sh:PropertyShape ;
     sh:path doc:number ;
-    rdfs:label "Number"@en ;
+    rdfs:label "number"@en ;
     rdfs:comment "ID number"@en ;
     sh:class sh:Literal .
 
 doc:holder a sh:PropertyShape ;
     sh:path doc:holder ;
-    rdfs:label "Holder"@en ;
+    rdfs:label "holder"@en ;
     rdfs:comment "Person identified by this ID"@en ;
     sh:class social:Person .
 
 doc:issuedBy a sh:PropertyShape ;
     sh:path doc:issuedBy ;
-    rdfs:label "sssuer"@en ;
+    rdfs:label "issuer"@en ;
     rdfs:comment "Country who issued the id"@en ;
     sh:class geo:Country .
 
@@ -64,7 +64,7 @@ doc:scanOf a sh:PropertyShape ;
 
 doc:fileFormat a sh:PropertyShape ;
     sh:path doc:fileFormat ;
-    rdfs:label "sormat"@en ;
+    rdfs:label "format"@en ;
     rdfs:comment "e.g.: jpg, png, pdf"@en ;
     sh:class sh:Literal .
 

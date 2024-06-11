@@ -6,7 +6,7 @@ interface AttachmentFullViewProps {
 }
 
 function AttachmentFullView (props: AttachmentFullViewProps) {
-    const attachment = useAppSelector(selectSubjectQuadsGroupedByPredicate(props.iri))
+    const attachment = useAppSelector(state => selectSubjectQuadsGroupedByPredicate(state, props.iri))
 
     const fileFormat = attachment['http://rollan.info/api/rdf/document#fileFormat'][0].object.id
 

@@ -4,8 +4,9 @@ import PersonFullView from "./PersonFullView"
 import DocumentFullView from "./DocumentFullView"
 import AttachmentFullView from "./AttachmentFullView"
 import { fetchOntologyGraph } from "@/store/ontologies/ontologiesSlice"
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import DefaultFullView from "./DefaultFullView"
+import { BasicQuad, OptionalTermsBasicQuad } from "@/store/ontologies/BasicQuad"
 
 export type SourEntityProps = {
     iri: string
@@ -20,15 +21,18 @@ const SOUR_AUTOMOBILE = 'http://rollan.info/api/rdf/schema/vehicle#Automobile'
 
 export default function SourEntity (props: SourEntityProps) {
     const dispatch = useAppDispatch()
+    const [ searchTerms, setSearchTerms ] = useState<OptionalTermsBasicQuad>([null, null, null, null])
 
     useEffect(() => {
         if (props.iri) {
             dispatch(fetchOntologyGraph(props.iri))
         }
+        setSearchTerms([props.iri, RDFS_TYPE, null, null])
+
     }, [props.iri])
 
     const entityTypes = useAppSelector(state =>
-        selectQuadsFromGraphThatMatchTerms(state, props.iri, [props.iri, RDFS_TYPE, null, null])
+        selectQuadsFromGraphThatMatchTerms(state, props.iri, searchTerms)
     )
 
     const type = entityTypes[0]?.object.id

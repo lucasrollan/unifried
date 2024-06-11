@@ -7,7 +7,8 @@ export default function SourPage() {
 
     useEffect(() => {
         const pathname = window.location.pathname.replace(/^\/sour/, '')
-        const newIri = `http://rollan.info/api/rdf${pathname}`
+        const href = `${pathname}${window.location.hash}`
+        const newIri = `http://rollan.info/api/rdf${href}`
         setIri(newIri)
     }, [iri])
 
