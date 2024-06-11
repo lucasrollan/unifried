@@ -1,10 +1,10 @@
 import { SourModule } from "@/sour/types";
 
-const module: SourModule = {
+const moduleDef: SourModule = {
     ontologies: undefined,
     dependencies: undefined,
     renderers: undefined,
     slice: undefined,
 }
 
-export default module
+export default moduleDef
