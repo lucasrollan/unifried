@@ -1,17 +1,9 @@
-@prefix vehicles: <http://rollan.info/api/rdf/vehicles/> .
-@prefix vehicle: <http://rollan.info/api/rdf/schema/vehicle#> .
-@prefix people: <http://rollan.info/api/rdf/people/> .
-@prefix social: <http://rollan.info/api/rdf/social#> .
-@prefix geo: <http://rollan.info/api/rdf/geography#> .
-@prefix doc: <http://rollan.info/api/rdf/document#> .
-@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
-@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
-@prefix owl: <http://www.w3.org/2002/07/owl#> .
-@prefix dc: <http://purl.org/dc/elements/1.1/> .
-@prefix pim: <http://www.w3.org/2000/10/swap/pim/contact> .
+@prefix : <https://lucasrollan.datapod.igrant.io/vehicles/Matsu.ttl#> .
+@prefix vehicle: <http://rollan.info/schema/schema/vehicle#> .
+@prefix social: <http://rollan.info/schema/social/> .
 
-vehicles:Matsu a vehicle:Automobile ;
-    vehicle:owner people:RollanLucas ;
+: a vehicle:Automobile ;
+    vehicle:owner social:RollanLucas ;
     vehicle:licensePlate "ZZ-123-H";
     vehicle:make "Mazda";
     vehicle:model "2";

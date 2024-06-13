@@ -7,9 +7,9 @@ export default function PimpOverview() {
         <div className="PimpOverview">
             <CollectionPanel title="Favorites">
                 <ul>
-                    <li><Link href="/sour/people/NavarroAgustina">Agustina Navarro</Link></li>
-                    <li><Link href="/sour/people/RollanEmma">Emma Rollan</Link></li>
-                    <li><Link href="/sour/people/RollanLucas">Lucas Rollan</Link></li>
+                    <li><Link href="/sour/social/NavarroAgustina">Agustina Navarro</Link></li>
+                    <li><Link href="/sour/social/RollanEmma">Emma Rollan</Link></li>
+                    <li><Link href="/sour/social/RollanLucas">Lucas Rollan</Link></li>
                     <li><Link href="/sour/vehicles/Matsu">Matsu</Link></li>
                     {/* <li><Link href="/sour/addresses/Narwalstraat5">Narwalstraat 5</Link></li>
                     <li><Link href="/sour/employment/Miro">Miro</Link></li> */}

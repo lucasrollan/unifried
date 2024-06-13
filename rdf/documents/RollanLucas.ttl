@@ -1,0 +1,18 @@
+@prefix : <https://lucasrollan.datapod.igrant.io/documents/RollanLucas.ttl#> .
+@prefix geo: <http://rollan.info/schema/geography#> .
+@prefix doc: <http://rollan.info/schema/document#> .
+
+:PassportItaly a doc:Passport ;
+    doc:number 'YCD1238162937' ;
+    doc:holder <https://lucasrollan.datapod.igrant.io/social/RollanLucas.ttl> ;
+    doc:issuedBy geo:IT .
+
+:PassportItalyScan a doc:Scan ;
+    doc:scanOf :PassportItaly;
+    doc:fileFormat 'jpg';
+    doc:fileName 'https://lucasrollan.datapod.igrant.io/documents/scans/RollanLucas_PassportIt_main.jpg' .
+
+:PassportArgentina a doc:Passport ;
+    doc:number 'AAC8128312931' ;
+    doc:holder <https://lucasrollan.datapod.igrant.io/social/RollanLucas.ttl> ;
+    doc:issuedBy geo:AR .

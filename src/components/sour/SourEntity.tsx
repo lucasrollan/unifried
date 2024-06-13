@@ -13,11 +13,11 @@ export type SourEntityProps = {
 }
 
 const RDFS_TYPE = 'http://www.w3.org/1999/02/22-rdf-syntax-ns#type'
-const SOUR_PERSON = 'http://rollan.info/api/rdf/social#Person'
-const SOUR_DOCUMENT_ID = 'http://rollan.info/api/rdf/document#ID'
-const SOUR_DOCUMENT_PASSPORT = 'http://rollan.info/api/rdf/document#Passport'
-const SOUR_DOCUMENT_SCAN = 'http://rollan.info/api/rdf/document#Scan'
-const SOUR_AUTOMOBILE = 'http://rollan.info/api/rdf/schema/vehicle#Automobile'
+const SOUR_PERSON = 'http://rollan.info/schema/social#Person'
+const SOUR_DOCUMENT_ID = 'http://rollan.info/schema/document#ID'
+const SOUR_DOCUMENT_PASSPORT = 'http://rollan.info/schema/document#Passport'
+const SOUR_DOCUMENT_SCAN = 'http://rollan.info/schema/document#Scan'
+const SOUR_AUTOMOBILE = 'http://rollan.info/schema/schema/vehicle#Automobile'
 
 export default function SourEntity (props: SourEntityProps) {
     const dispatch = useAppDispatch()

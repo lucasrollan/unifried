@@ -1,4 +1,4 @@
-@prefix geo: <http://rollan.info/api/rdf/geography#> .
+@prefix geo: <http://rollan.info/schema/geography#> .
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
@@ -8,13 +8,13 @@
 
 
 geo:Country a dash:ShapeClass ;
-    rdfs:isDefinedBy <http://rollan.info/api/rdf/geography> ;
+    rdfs:isDefinedBy <http://rollan.info/schema/geography> ;
     rdfs:label "A country" ;
     rdfs:comment "Represents a country" ;
     sh:property geo:name .
 
 geo:name a sh:PropertyShape ;
-    rdfs:isDefinedBy <http://rollan.info/api/rdf/geography> ;
+    rdfs:isDefinedBy <http://rollan.info/schema/geography> ;
     sh:path geo:name ;
     rdfs:label "Name of the territory" ;
     rdfs:comment "" ;

@@ -11,7 +11,7 @@ function PersonFullView (props: PersonFullViewProps) {
         Documents:
         <SourEntityList
             graphIri={props.iri} // TODO pass it in the fourth term of the quad instead (after refactor)
-            matchTerms={[null, 'http://rollan.info/api/rdf/document#holder', props.iri, null]}
+            matchTerms={[null, 'http://rollan.info/schema/document#holder', props.iri, null]}
         />
     </div>)
 }

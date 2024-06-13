@@ -1,0 +1,6 @@
+@prefix : <https://lucasrollan.datapod.igrant.io/social/NavarroAgustina.ttl#> .
+@prefix social: <http://rollan.info/schema/social#> .
+
+: a social:Person ;
+    social:lastName "Navarro" ;
+    social:firstName "Agustina" .

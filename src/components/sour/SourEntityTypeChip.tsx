@@ -9,11 +9,11 @@ const RDF_TYPE = 'http://www.w3.org/1999/02/22-rdf-syntax-ns#type'
 const RDFS_LABEL = 'http://www.w3.org/2000/01/rdf-schema#label'
 const DASH_SHAPECLASS = 'http://datashapes.org/dash#ShapeClass'
 const SHACL_PROPERTYSHAPE = 'http://www.w3.org/ns/shacl#PropertyShape'
-const SOCIAL_PERSON = 'http://rollan.info/api/rdf/social#Person'
-const DOCUMENT_ID = 'http://rollan.info/api/rdf/document#ID'
-const DOCUMENT_PASSPORT = 'http://rollan.info/api/rdf/document#Passport'
-const VEHICLE = 'http://rollan.info/api/rdf/schema/vehicle'
-const VEHICLE_AUTOMOBILE = 'http://rollan.info/api/rdf/schema/vehicle#Automobile'
+const SOCIAL_PERSON = 'http://rollan.info/schema/social#Person'
+const DOCUMENT_ID = 'http://rollan.info/schema/document#ID'
+const DOCUMENT_PASSPORT = 'http://rollan.info/schema/document#Passport'
+const VEHICLE = 'http://rollan.info/schema/schema/vehicle'
+const VEHICLE_AUTOMOBILE = 'http://rollan.info/schema/schema/vehicle#Automobile'
 
 interface SourEntityTypeChipProps {
     typeIri: string

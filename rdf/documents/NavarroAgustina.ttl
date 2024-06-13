@@ -1,0 +1,9 @@
+@prefix : <https://lucasrollan.datapod.igrant.io/documents/NavarroAgustina.ttl#> .
+@prefix geo: <http://rollan.info/schema/geography#> .
+@prefix doc: <http://rollan.info/schema/document#> .
+
+:PassportArgentina a doc:Passport ;
+    doc:number 'ARG038376626' ;
+    doc:holder <https://lucasrollan.datapod.igrant.io/social/NavarroAgustina.ttl> ;
+    doc:issuedBy geo:AR .
+

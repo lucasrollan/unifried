@@ -1,0 +1,14 @@
+@prefix : <https://lucasrollan.datapod.igrant.io/documents/RollanEmma.ttl#> .
+@prefix geo: <http://rollan.info/schema/geography#> .
+@prefix doc: <http://rollan.info/schema/document#> .
+
+
+:PassportItaly a doc:Passport ;
+    doc:number 'YHD11413431' ;
+    doc:holder <https://lucasrollan.datapod.igrant.io/social/RollanEmma.ttl> ;
+    doc:issuedBy geo:IT .
+
+:PassportArgentina a doc:Passport ;
+    doc:number 'ARG44555443' ;
+    doc:holder <https://lucasrollan.datapod.igrant.io/social/RollanEmma.ttl> ;
+    doc:issuedBy geo:AR .

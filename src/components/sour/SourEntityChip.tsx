@@ -13,16 +13,16 @@ interface SourEntityChipProps {
 const RDF_TYPE = 'http://www.w3.org/1999/02/22-rdf-syntax-ns#type'
 const RDFS_LABEL = 'http://www.w3.org/2000/01/rdf-schema#label'
 const SHACL_LITERAL = 'http://www.w3.org/ns/shacl#Literal'
-const SOCIAL_PERSON = 'http://rollan.info/api/rdf/social#Person'
-const SOCIAL_FIRST_NAME = 'http://rollan.info/api/rdf/social#firstName'
-const SOCIAL_LAST_NAME = 'http://rollan.info/api/rdf/social#lastName'
-const GEO_COUNTRY = 'http://rollan.info/api/rdf/geography#Country'
-const GEO_NAME = 'http://rollan.info/api/rdf/geography#name'
+const SOCIAL_PERSON = 'http://rollan.info/schema/social#Person'
+const SOCIAL_FIRST_NAME = 'http://rollan.info/schema/social#firstName'
+const SOCIAL_LAST_NAME = 'http://rollan.info/schema/social#lastName'
+const GEO_COUNTRY = 'http://rollan.info/schema/geography#Country'
+const GEO_NAME = 'http://rollan.info/schema/geography#name'
 
 const flagsByCountry: Record<string, string> = {
-    'http://rollan.info/api/rdf/geography#IT': '🇮🇹',
-    'http://rollan.info/api/rdf/geography#AR': '🇦🇷',
-    'http://rollan.info/api/rdf/geography#NL': '🇳🇱',
+    'http://rollan.info/schema/geography#IT': '🇮🇹',
+    'http://rollan.info/schema/geography#AR': '🇦🇷',
+    'http://rollan.info/schema/geography#NL': '🇳🇱',
 }
 
 function SourEntityChip (props: SourEntityChipProps) {

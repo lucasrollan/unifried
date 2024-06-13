@@ -1,0 +1,8 @@
+@prefix : <https://lucasrollan.datapod.igrant.io/social/RollanLucas.ttl#> .
+@prefix social: <http://rollan.info/schema/social#> .
+
+: a social:Person ;
+    social:lastName "Rollan" ;
+    social:firstName "Lucas Emiliano" .
+
+

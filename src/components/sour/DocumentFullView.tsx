@@ -14,7 +14,7 @@ function DocumentFullView (props: DocumentFullViewProps) {
         <SourPropertyTable iri={props.iri} />
         Attachments:
         <SourEntityList
-            matchTerms={[null, 'http://rollan.info/api/rdf/document#scanOf', props.iri, null]}
+            matchTerms={[null, 'http://rollan.info/schema/document#scanOf', props.iri, null]}
         />
     </div>)
 }
