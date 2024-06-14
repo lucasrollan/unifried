@@ -1,4 +1,5 @@
 @prefix social: <http://rollan.info/schema/social#> .
+@prefix doc: <http://rollan.info/schema/document#> .
 @prefix geo: <http://rollan.info/schema/geography#> .
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
@@ -16,7 +17,8 @@ social:Person a dash:ShapeClass ;
     rdfs:label "person"@en ;
     rdfs:comment "A person" ;
     sh:property social:firstName ;
-    sh:property social:lastName .
+    sh:property social:lastName ;
+    sh:property social:hasId .
 
 social:firstName a sh:PropertyShape ;
     sh:path social:firstName ;
@@ -25,8 +27,15 @@ social:firstName a sh:PropertyShape ;
     sh:class sh:Literal .
 
 social:lastName a sh:PropertyShape ;
-    sh:path social:firstName ;
+    sh:path social:lastName ;
     rdfs:label "last name(s)"@en ;
     rdfs:comment "Last name(s)"@en ;
     sh:class sh:Literal .
+
+social:hasId a sh:PropertyShape ;
+    sh:path social:hasId ;
+    rdfs:label "identification"@en ;
+    rdfs:comment "A form of identification"@en ;
+    sh:class doc:ID .
+
 

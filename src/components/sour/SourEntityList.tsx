@@ -10,10 +10,7 @@ interface SourEntityListProps {
 function SourEntityList (props: SourEntityListProps) {
     const entities = useAppSelector(
         state =>
-            props.graphIri
-                // TODO: the graph is already the fourth element in the quad. no need to have two methods
-                ? selectQuadsFromGraphThatMatchTerms(state, props.graphIri, props.matchTerms)
-                : selectQuadsThatMatchTerms(state, props.matchTerms)
+            selectQuadsThatMatchTerms(state, props.matchTerms)
     )
 
     return (<div className="SourEntityList">

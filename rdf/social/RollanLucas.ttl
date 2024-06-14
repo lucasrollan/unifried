@@ -4,5 +4,3 @@
 : a social:Person ;
     social:lastName "Rollan" ;
     social:firstName "Lucas Emiliano" .
-
-

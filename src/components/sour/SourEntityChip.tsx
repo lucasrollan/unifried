@@ -16,6 +16,8 @@ const SHACL_LITERAL = 'http://www.w3.org/ns/shacl#Literal'
 const SOCIAL_PERSON = 'http://rollan.info/schema/social#Person'
 const SOCIAL_FIRST_NAME = 'http://rollan.info/schema/social#firstName'
 const SOCIAL_LAST_NAME = 'http://rollan.info/schema/social#lastName'
+const DOCUMENT_PASSPORT = 'http://rollan.info/schema/document#Passport'
+const DOCUMENT_ISSUER = 'http://rollan.info/schema/document#issuedBy'
 const GEO_COUNTRY = 'http://rollan.info/schema/geography#Country'
 const GEO_NAME = 'http://rollan.info/schema/geography#name'
 
@@ -69,6 +71,23 @@ function SourEntityChip (props: SourEntityChipProps) {
                     {flagsByCountry[props.iri]}
                 </span>{' '}
                 {object[GEO_NAME][0][2]}
+            </Tag>
+        case DOCUMENT_PASSPORT:
+            return <Tag
+                icon="id-number"
+                minimal
+                interactive
+                round
+            >
+                <span style={{
+                    fontSize: '16px',
+                    lineHeight: '12px',
+                    position: 'relative',
+                    top: '2px',
+                }}>
+                    {flagsByCountry[object[DOCUMENT_ISSUER][0][2]]}
+                </span>{' '}
+                Passport
             </Tag>
     }
 

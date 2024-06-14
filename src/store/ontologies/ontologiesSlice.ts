@@ -62,15 +62,20 @@ async function parseOntologyGraph(doc: string, iri: string): Promise<Graph> {
 
 const api_fetchOntologyGraph = async function (iri: string): Promise<Graph> {
     let content = ''
+    let requestUrl: URL
 
     let normalizedIri = iri.replace(/#.*$/, '')
-    if (/rollan\.info/.test(normalizedIri)) {
-        const localizedIri = normalizedIri.replace('rollan.info', 'localhost:3000')
-        const result = await fetch(localizedIri)
-        content = await result.text()
+
+    if (normalizedIri.startsWith('http://rollan.info')) {
+        requestUrl = new URL(normalizedIri.replace('http://rollan.info', ''), window.location.href)
     } else {
-        console.warn('SKIPPED EXTERNAL DOC', normalizedIri)
+        const encodedIri = encodeURI(normalizedIri)
+        requestUrl = new URL('/api/resource', window.location.href)
+        requestUrl.searchParams.set('iri', encodedIri)
     }
+
+    const result = await fetch(requestUrl)
+    content = await result.text()
 
     const graph = await parseOntologyGraph(content, normalizedIri)
     return graph
@@ -88,11 +93,6 @@ export const fetchOntologyGraph = createAsyncThunk(
 
         if (graph || graphStatus?.fetching) {
             console.log('No need to fetch', normalizedIri)
-            return
-        }
-
-        if (!/rollan\.info/.test(normalizedIri)) {
-            console.log('external resource, skip!')
             return
         }
 
