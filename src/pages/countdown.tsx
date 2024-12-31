@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import styles from './countdown.module.css';
 
-// const TARGET_DATE = new Date('2025-01-01T00:00:00-03:00').getTime();
-const TARGET_DATE = new Date('2024-12-31T19:02:00-03:00').getTime();
+const TARGET_DATE = new Date('2025-01-01T00:00:00-03:00').getTime();
+// const TARGET_DATE = new Date('2024-12-31T19:02:00-03:00').getTime();
 
 const generateRandomPosition = () => {
     const size = 100 + Math.random() * 200
