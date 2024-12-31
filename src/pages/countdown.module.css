@@ -1,0 +1,187 @@
+.container {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    overflow: hidden;
+    background-color: #281e2d; /* Dark purple color */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.circle {
+    position: absolute;
+    width: 200px;
+    height: 200px;
+    background-color: rgba(128, 0, 128, 0.5); /* Purple */
+    border-radius: 50%;
+    filter: blur(50px);
+    animation: float1 20s infinite alternate ease-in-out;
+    mix-blend-mode: screen; /* Add brightness when overlapping */
+}
+
+.circle:nth-child(2) {
+    background-color: rgba(113, 45, 64, 0.5); /* Indigo */
+    animation: float2 25s infinite alternate ease-in-out;
+}
+
+.circle:nth-child(3) {
+    background-color: rgba(138, 43, 226, 0.5); /* Blue Violet */
+    animation: float3 30s infinite alternate ease-in-out;
+}
+
+.circle:nth-child(4) {
+    background-color: rgba(196, 141, 210, 0.5); /* Medium Orchid */
+    animation: float1 35s infinite alternate ease-in-out;
+}
+
+/* Add more circles with different colors and animation durations */
+.circle:nth-child(5) {
+    background-color: rgba(171, 142, 228, 0.5); /* Medium Purple */
+    animation: float2 40s infinite alternate ease-in-out;
+}
+
+.circle:nth-child(6) {
+    background-color: rgba(216, 191, 216, 0.5); /* Thistle */
+    animation: float3 45s infinite alternate ease-in-out;
+}
+
+.circle:nth-child(7) {
+    background-color: rgba(221, 160, 194, 0.5); /* Plum */
+    animation: float1 50s infinite alternate ease-in-out;
+}
+
+.circle:nth-child(8) {
+    background-color: rgba(159, 213, 235, 0.5); /* Violet */
+    animation: float2 55s infinite alternate ease-in-out;
+}
+
+.circle:nth-child(9) {
+    background-color: rgba(255, 182, 193, 0.5); /* Light Pink */
+    animation: float3 60s infinite alternate ease-in-out;
+}
+
+.circle:nth-child(10) {
+    background-color: rgba(255, 105, 180, 0.5); /* Hot Pink */
+    animation: float1 65s infinite alternate ease-in-out;
+}
+
+@keyframes float1 {
+    0% {
+        transform: translate(0, 0);
+    }
+    20% {
+        transform: translate(20vw, -15vh);
+    }
+    40% {
+        transform: translate(-15vw, 25vh);
+    }
+    60% {
+        transform: translate(25vw, 10vh);
+    }
+    80% {
+        transform: translate(-10vw, -20vh);
+    }
+    100% {
+        transform: translate(-25vw, -25vh);
+    }
+}
+
+@keyframes float2 {
+    0% {
+        transform: translate(0, 0);
+    }
+    20% {
+        transform: translate(-20vw, 15vh);
+    }
+    40% {
+        transform: translate(25vw, -10vh);
+    }
+    60% {
+        transform: translate(-25vw, -5vh);
+    }
+    80% {
+        transform: translate(10vw, 20vh);
+    }
+    100% {
+        transform: translate(25vw, 25vh);
+    }
+}
+
+@keyframes float3 {
+    0% {
+        transform: translate(0, 0);
+    }
+    20% {
+        transform: translate(15vw, 25vh);
+    }
+    40% {
+        transform: translate(-25vw, -15vh);
+    }
+    60% {
+        transform: translate(20vw, -25vh);
+    }
+    80% {
+        transform: translate(-15vw, 20vh);
+    }
+    100% {
+        transform: translate(-25vw, 25vh);
+    }
+}
+
+.countdown {
+    font-size: 10rem;
+    line-height: 1; /* Reduce line height to bring text closer */
+    font-family: 'Courier New', Courier, monospace;
+    text-align: center;
+    color: #FFD700; /* Golden color for contrast */
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5), 0 0 2px #FFD700, 0 0 5px #FFD700; /* Add shadow for better visibility and shine */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+
+.timeUnit {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 0 1rem;
+}
+
+.label {
+    font-size: 2rem;
+    font-family: Arial, sans-serif;
+    color: #FFD700;
+    text-shadow: none;
+    font-weight: lighter; /* Make the labels thinner */
+    font-style: italic;
+}
+
+.colon {
+    font-size: 10rem;
+    line-height: 1; /* Reduce line height to bring text closer */
+    font-family: 'Courier New', Courier, monospace;
+    color: #FFD700; /* Golden color for contrast */
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5), 0 0 2px #FFD700, 0 0 5px #FFD700; /* Add shadow for better visibility and shine */
+    display: flex;
+    align-items: center;
+}
+
+.happy {
+    font-size: 4rem;
+    font-weight: lighter;
+    color: #FFD700; /* Golden color for contrast */
+    font-family: 'Brush Script MT', cursive; /* Prettier font */
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5), 0 0 2px #FFD700, 0 0 5px #FFD700; /* Add shadow for better visibility and shine */
+    position: absolute;
+    top: -5rem;
+}
